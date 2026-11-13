@@ -237,6 +237,40 @@ body.playing .main,body.playing #game-wrap{height:100dvh}
 #dodgeTouch.ready{box-shadow:0 0 11px #77e9ff88,0 4px #061c1a}
 #dodgeTouch:disabled{filter:grayscale(.5) brightness(.6)}
 @media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:430px){.arcano-banner{display:none}#dodgeTouch .dash-glyph{width:30px;height:27px}#dodgeTouch small{font-size:7px}}
+
+/* V7 — portada, selección de partida y clasificación */
+#overlay.menu-open>.modal{display:none!important}
+#startMenu{display:none;position:relative;z-index:2;width:min(910px,96vw);max-height:94dvh;overflow:auto;background:#0b2928;border:3px solid #a2e2ab;box-shadow:0 0 0 5px #06201c,8px 10px #020f11}
+#overlay.menu-open #startMenu{display:block}
+.start-banner{display:block;width:100%;height:clamp(110px,28vh,235px);object-fit:cover;object-position:center;border-bottom:3px solid #85c691}
+.start-menu-body{display:grid;grid-template-columns:minmax(190px,1.1fr) minmax(250px,1fr);gap:18px;padding:clamp(12px,3vw,24px);align-items:center}
+.start-overline{color:#a9efbb;font:9px/1.8 'Press Start 2P',monospace}
+.start-heading{color:#fff4ae;font:clamp(14px,2.1vw,24px)/1.55 'Press Start 2P',monospace;margin:10px 0 14px;text-shadow:3px 3px #366c57}
+.start-desc{color:#cdece2;font:14px/1.7 system-ui,sans-serif}
+.start-buttons{display:grid;gap:10px}
+.start-buttons .pixel-btn{min-height:53px;width:100%;font-size:clamp(10px,1.4vw,13px);line-height:1.6;text-align:left;padding-left:22px}
+.start-buttons .pixel-btn:disabled{opacity:.52;cursor:default}
+#startFeedback{color:#ffdf96;font:12px/1.6 monospace;min-height:16px;margin:0}
+#leaderboardView{display:none;padding:16px clamp(12px,3vw,24px) 22px;text-align:left}
+#startMenu.show-ranking .start-menu-body{display:none}
+#startMenu.show-ranking #leaderboardView{display:block}
+.rank-head{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.rank-title{font:clamp(12px,2vw,18px)/1.5 'Press Start 2P',monospace;color:#ffeb9a;margin:0}
+.rank-sub{font:13px/1.5 system-ui,sans-serif;color:#b8decc;margin:7px 0 14px}
+.rank-scroller{overflow-x:auto;max-height:31vh;overflow-y:auto;border:2px solid #4c967e}
+.rank-table{width:100%;border-collapse:collapse;font:13px/1.6 monospace;text-align:left;white-space:nowrap}
+.rank-table th,.rank-table td{padding:9px 12px;border-bottom:1px solid #316456}
+.rank-table th{color:#ffe493;background:#163f37;position:sticky;top:0}
+.rank-table tr:nth-child(even){background:#12403666}
+.rank-table tr.is-me{background:#28624a;color:#fcf6b5}
+.rank-setting{margin-top:12px;padding:11px;background:#092b2b;border:1px solid #437b69;font:12px/1.7 monospace;color:#d0eade}
+.rank-setting label{display:flex;align-items:center;gap:9px;margin:9px 0}
+.rank-setting input[type=text]{min-width:0;max-width:220px;width:100%;padding:9px;background:#061b20;color:#fff;border:2px solid #75be9b;font:14px monospace}
+.rank-setting .pixel-btn,.rank-head .pixel-btn{font-size:9px;padding:10px 13px;min-height:36px}
+#rankMessage{font:12px/1.5 monospace;color:#ffe29b;margin:10px 0}
+@media(max-width:700px){.start-menu-body{grid-template-columns:1fr;gap:10px}.start-menu-body .start-desc{display:none}.start-heading{font-size:14px;margin:4px 0}.start-banner{height:clamp(88px,20vh,140px)}.start-buttons{gap:6px}.start-buttons .pixel-btn{min-height:38px;font-size:9px;padding:7px 12px}.rank-scroller{max-height:28vh}.rank-table{font-size:11px}.rank-table td,.rank-table th{padding:7px}}
+@media(max-height:430px){#startMenu{max-height:96dvh}.start-banner{height:78px}.start-menu-body{grid-template-columns:1fr 1.5fr;gap:11px;padding:10px 17px}.start-buttons .pixel-btn{min-height:36px}.start-desc{display:none}.start-heading{font-size:12px}.rank-scroller{max-height:23vh}.rank-setting{padding:6px;margin-top:6px}.rank-setting label{margin:4px 0}}
+
 </style>
 </head>
 <body>
@@ -246,7 +280,19 @@ body.playing .main,body.playing #game-wrap{height:100dvh}
   <span><b class="legend-me">◆</b> ARDEN</span><span><b class="legend-key">⚿</b> LLAVE</span><span><b class="legend-chest">▣</b> COFRE</span><span><b class="legend-room">✦</b> SALA</span><span><b class="legend-exit">⬟</b> SALIDA</span><span><b class="legend-path">▰</b> CAMINO</span><span><b class="legend-wall">▰</b> MURO</span>
 </div>
 <div id="mapZoomTools" aria-label="Zoom del mapa"><button id="mapZoomIn" aria-label="Acercar mapa">+</button><div id="mapZoomLabel">100%</div><button id="mapZoomOut" aria-label="Alejar mapa">−</button><button id="mapZoomReset" aria-label="Restablecer zoom" title="Ver todo">⌗</button><button id="mapZoomClose" aria-label="Cerrar mapa" title="Cerrar mapa">×</button></div>
-<div id="overlay"><div class="modal"><div class="modal-header">✦ ARDEN · EL LABERINTO ARCANO ✦</div><img class="arcano-banner" src="./assets/arden_banner.png" alt="Arden: El Laberinto Arcano"><div class="menu-body"><div class="menu-art"><span class="star a">✦</span><span class="star b">✧</span><span class="star c">✦</span><canvas id="heroSprite" width="96" height="96" aria-label="Arden, el caballero aventurero"></canvas></div><div class="menu-copy"><div class="menu-badge">⚔️ LA LEYENDA DE ARDEN</div><h1 id="modalTitle">ARDEN<br>EL LABERINTO ARCANO</h1><div class="sub" id="modalSub">LA AVENTURA DE ARDEN</div><p id="modalText">Explora un pantano lleno de ruinas, plantas y senderos ocultos. Encuentra llaves, descubre tesoros y esquiva a los monstruos que protegen el laberinto.</p><div class="menu-rule"></div><button class="pixel-btn primary" id="modalStart">▶ COMENZAR AVENTURA</button><div class="small">PC: WASD / FLECHAS · ENTER: ATAQUE · M: MAPA<br>MÓVIL: JOYSTICK + BOTÓN ESPADA</div></div></div><div class="enemy-roster"><div class="enemy-profile"><canvas id="portraitHunter" width="24" height="24"></canvas><span style="color:#ff8592">DEMONIO</span><small>Rastreadora</small></div><div class="enemy-profile"><canvas id="portraitPatrol" width="24" height="24"></canvas><span style="color:#90c2ff">GÓLEM</span><small>Patrullero</small></div><div class="enemy-profile"><canvas id="portraitStalker" width="24" height="24"></canvas><span style="color:#d8a0ff">ESPECTRO</span><small>Acechador</small></div><div class="enemy-profile"><canvas id="portraitChaos" width="24" height="24"></canvas><span style="color:#ffc57f">CÍCLOPE</span><small>Caótica</small></div></div></div></div></div>
+<div id="overlay"><section id="startMenu" aria-label="Menú principal de Arden">
+ <img class="start-banner" src="./assets/arden_banner.png" alt="Arden: El Laberinto Arcano">
+ <div class="start-menu-body">
+  <div><div class="start-overline">✦ TU AVENTURA TE ESPERA ✦</div><h2 class="start-heading">ELIGE TU CAMINO</h2><p class="start-desc">Explora los laberintos arcanos, supera las salas y desafía a los guardianes. Tu progreso queda guardado por cuenta.</p><p id="menuProgress" class="start-overline">Cargando progreso…</p></div>
+  <div class="start-buttons"><button id="continueGame" class="pixel-btn primary">▶ CONTINUAR</button><button id="newGameMenu" class="pixel-btn">✦ NUEVA PARTIDA</button><button id="rankingMenu" class="pixel-btn">🏆 RANKING DE JUGADORES</button><p id="startFeedback" role="status"></p></div>
+ </div>
+ <section id="leaderboardView" aria-label="Clasificación de jugadores">
+  <div class="rank-head"><h2 class="rank-title">🏆 SALÓN DE LEYENDAS</h2><button id="rankingBack" class="pixel-btn">← VOLVER</button></div>
+  <p class="rank-sub">Clasificación por niveles completados, con desempate por jefes y reliquias. Solo aparecen aventureros que aceptaron participar.</p>
+  <div class="rank-scroller"><table class="rank-table"><thead><tr><th>#</th><th>AVENTURERO</th><th>NIVELES</th><th>JEFES</th><th>RELIQUIAS</th><th>MEJOR TIEMPO</th></tr></thead><tbody id="rankingRows"><tr><td colspan="6">Cargando clasificación…</td></tr></tbody></table></div>
+  <div class="rank-setting"><strong>MI PERFIL EN EL RANKING</strong><label>Alias público <input id="rankNickname" type="text" maxlength="18" placeholder="CaballeroArden" autocomplete="off"></label><label><input id="rankOptIn" type="checkbox"> Quiero aparecer públicamente en el ranking</label><button class="pixel-btn" id="rankSave">GUARDAR MI PERFIL</button><p id="rankMessage" role="status">Tu correo electrónico nunca se publica.</p></div>
+ </section>
+</section><div class="modal"><div class="modal-header">✦ ARDEN · EL LABERINTO ARCANO ✦</div><img class="arcano-banner" src="./assets/arden_banner.png" alt="Arden: El Laberinto Arcano"><div class="menu-body"><div class="menu-art"><span class="star a">✦</span><span class="star b">✧</span><span class="star c">✦</span><canvas id="heroSprite" width="96" height="96" aria-label="Arden, el caballero aventurero"></canvas></div><div class="menu-copy"><div class="menu-badge">⚔️ LA LEYENDA DE ARDEN</div><h1 id="modalTitle">ARDEN<br>EL LABERINTO ARCANO</h1><div class="sub" id="modalSub">LA AVENTURA DE ARDEN</div><p id="modalText">Explora un pantano lleno de ruinas, plantas y senderos ocultos. Encuentra llaves, descubre tesoros y esquiva a los monstruos que protegen el laberinto.</p><div class="menu-rule"></div><button class="pixel-btn primary" id="modalStart">▶ COMENZAR AVENTURA</button><div class="small">PC: WASD / FLECHAS · ENTER: ATAQUE · M: MAPA<br>MÓVIL: JOYSTICK + BOTÓN ESPADA</div></div></div><div class="enemy-roster"><div class="enemy-profile"><canvas id="portraitHunter" width="24" height="24"></canvas><span style="color:#ff8592">DEMONIO</span><small>Rastreadora</small></div><div class="enemy-profile"><canvas id="portraitPatrol" width="24" height="24"></canvas><span style="color:#90c2ff">GÓLEM</span><small>Patrullero</small></div><div class="enemy-profile"><canvas id="portraitStalker" width="24" height="24"></canvas><span style="color:#d8a0ff">ESPECTRO</span><small>Acechador</small></div><div class="enemy-profile"><canvas id="portraitChaos" width="24" height="24"></canvas><span style="color:#ffc57f">CÍCLOPE</span><small>Caótica</small></div></div></div></div></div>
 <aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ARCANO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA<br><span class="keycap">SHIFT</span> ESQUIVAR<br><span class="keycap">Q</span> ACTIVAR ESCUDO</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
 <div id="orientationGate"><div class="rotateGlyph">▣</div><strong>GIRA TU CELULAR</strong><p>ARDEN: EL LABERINTO ARCANO se juega en horizontal. Gira el teléfono y pulsa pantalla completa para aprovechar toda la pantalla.</p><button class="pixel-btn primary" id="rotateFull">⛶ PANTALLA COMPLETA</button></div>
 
@@ -883,8 +929,66 @@ if(slashTime>0){
 // Screen corner compass helps find the distant exit only after discovering its location.
 if(vw>340&&!isTouchDevice()){pixel(14,14,160,40,'#0a1027db');ctx.font='9px monospace';ctx.fillStyle='#97b0e6';ctx.fillText(`X:${String(player.x).padStart(3,'0')}  Y:${String(player.y).padStart(3,'0')}`,23,30);ctx.fillStyle='#ffe76a';ctx.fillText(`LLAVES ${keys}/${totalKeys}`,23,45)}
 }
-function victory(){won=true;paused=true;showMap=false;updateMapControls();setOverlayRoster(false);beep(740,.2);setTimeout(()=>beep(930,.25),180);setTimeout(()=>beep(1200,.28),350);$('modalTitle').textContent='¡ESCAPASTE!';$('modalSub').textContent=`NIVEL ${level} SUPERADO`;$('modalText').textContent=`Venciste al guardián en la cámara final, reuniste ${totalKeys} llaves y superaste el nivel en ${Math.floor(elapsed/60)}m ${Math.floor(elapsed%60)}s. Recuperaste ${relics} de ${totalRelics} reliquias. El siguiente laberinto será aún más grande y completamente diferente.`;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';$('modalStart').disabled=true;$('overlay').classList.remove('hidden');persistVictory()}
-function showWelcome(){paused=true;started=false;document.body.classList.remove('playing');setOverlayRoster(true);$('modalTitle').innerHTML='ARDEN<br>EL LABERINTO ARCANO';$('modalSub').textContent='LA AVENTURA DE ARDEN';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Los pinchos alternan entre seguros, alerta y activos. Algunas salas disparan proyectiles y tendrás que esquivarlos. Completa el laberinto y entra a una cámara especial para derrotar al jefe. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Esquiva saltando con Shift (estela azul), activa el escudo guardado con Q. Memoriza las runas en los acertijos antes de que termine el tiempo. En móvil usa los botones junto a la espada. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
+function victory(){hideStartMenu();won=true;paused=true;showMap=false;updateMapControls();setOverlayRoster(false);beep(740,.2);setTimeout(()=>beep(930,.25),180);setTimeout(()=>beep(1200,.28),350);$('modalTitle').textContent='¡ESCAPASTE!';$('modalSub').textContent=`NIVEL ${level} SUPERADO`;$('modalText').textContent=`Venciste al guardián en la cámara final, reuniste ${totalKeys} llaves y superaste el nivel en ${Math.floor(elapsed/60)}m ${Math.floor(elapsed%60)}s. Recuperaste ${relics} de ${totalRelics} reliquias. El siguiente laberinto será aún más grande y completamente diferente.`;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';$('modalStart').disabled=true;$('overlay').classList.remove('hidden');persistVictory()}
+function showWelcome(){
+ paused=true;started=false;document.body.classList.remove('playing');showMap=false;updateMapControls();
+ $('startMenu').classList.remove('show-ranking');$('overlay').classList.add('menu-open');$('overlay').classList.remove('hidden');
+ $('menuProgress').textContent='NIVEL '+(accountProgress?.current_level||level)+' · '+(accountProgress?.completed_levels||0)+' COMPLETADOS';
+ $('continueGame').textContent='▶ CONTINUAR · NIVEL '+(accountProgress?.current_level||level);
+ $('startFeedback').textContent='';
+}
+function hideStartMenu(){$('overlay').classList.remove('menu-open');$('startMenu').classList.remove('show-ranking')}
+function startFromMenu(){
+ if(!account||!accountProgress)return;
+ hideStartMenu();level=Math.max(1,Number(accountProgress.current_level)||1);generate();
+ enterFullscreen();started=true;paused=false;won=false;gameOver=false;document.body.classList.add('playing');$('overlay').classList.add('hidden');
+}
+async function resetFromMenu(){
+ if(!db||!account||saveBusy)return;
+ const warning='NUEVA PARTIDA borrará tus niveles guardados, historial y estadísticas, incluido tu puesto en el ranking. Tu cuenta y alias se conservarán. ¿Deseas empezar desde el nivel 1?';
+ if(!confirm(warning))return;
+ const b=$('newGameMenu');b.disabled=true;$('startFeedback').textContent='Restableciendo aventura…';
+ try{
+  const {error}=await db.rpc('reset_arden_adventure');if(error)throw error;
+  await loadProgress();await refreshStats();startFromMenu();
+ }catch(e){console.error(e);$('startFeedback').textContent='No se pudo reiniciar: '+friendlyError(e)+' · Ejecuta MENU_Y_RANKING_SUPABASE.sql.'}
+ finally{b.disabled=false}
+}
+async function openRanking(){
+ if(!account||!db)return;
+ $('startMenu').classList.add('show-ranking');$('rankMessage').textContent='Tu correo electrónico nunca se publica.';
+ $('rankingRows').innerHTML='<tr><td colspan="6">Cargando clasificación…</td></tr>';
+ try{
+  const {data:profile,error:profileError}=await db.from('arden_ranking_profiles').select('nickname,visible').eq('user_id',account.id).maybeSingle();
+  if(profileError)throw profileError;
+  $('rankNickname').value=profile?.nickname||'';$('rankOptIn').checked=!!profile?.visible;
+  const {data,error}=await db.rpc('get_arden_ranking');if(error)throw error;
+  const body=$('rankingRows');body.replaceChildren();
+  if(!data?.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=6;td.textContent='Sin participantes todavía. Puedes ser el primero.';tr.append(td);body.append(tr);return}
+  for(const [i,p] of data.entries()){
+   const tr=document.createElement('tr');if(p.is_me)tr.classList.add('is-me');
+   const time=p.best_time_seconds==null?'—':Math.floor(p.best_time_seconds/60)+'m '+(p.best_time_seconds%60)+'s';
+   for(const v of [i+1,p.nickname,p.completed_levels,p.bosses_defeated,p.total_relics,time]){
+    const td=document.createElement('td');td.textContent=String(v??'—');tr.append(td)
+   }
+   body.append(tr)
+  }
+ }catch(e){$('rankingRows').innerHTML='<tr><td colspan="6">No se pudo cargar el ranking.</td></tr>';
+  $('rankMessage').textContent='Primero ejecuta MENU_Y_RANKING_SUPABASE.sql en Supabase. '+friendlyError(e)}
+}
+async function saveRankingProfile(){
+ if(!db||!account)return;
+ const nickname=$('rankNickname').value.trim().replace(/\s+/g,' ');
+ if(nickname.length<3||nickname.length>18||!/^[\p{L}\p{N}_ -]+$/u.test(nickname)){
+  $('rankMessage').textContent='El alias debe tener entre 3 y 18 caracteres: letras, números, guion o espacio.';return;
+ }
+ const btn=$('rankSave');btn.disabled=true;$('rankMessage').textContent='Guardando…';
+ try{
+  const {error}=await db.from('arden_ranking_profiles').upsert({user_id:account.id,nickname,visible:$('rankOptIn').checked},{onConflict:'user_id'});if(error)throw error;
+  await openRanking();$('rankMessage').textContent='Perfil actualizado. '+($('rankOptIn').checked?'Ya apareces en la clasificación.':'No apareces públicamente.');
+ }catch(e){$('rankMessage').textContent='No se pudo guardar: '+friendlyError(e)}finally{btn.disabled=false}
+}
+
 // Configuración pública de Supabase: no pegues aquí una secret key/service_role.
 const SUPABASE_URL='https://eiellhnpykzikfmjrvvr.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_b8XKRBZMu3p_Xk9n3gzIFQ_uzIEgXGT';
@@ -908,10 +1012,7 @@ async function loadProgress(){
 }
 async function enterAccount(user){
  account=user;syncAccountButton();
- try{await loadProgress();$('authGate').classList.add('hidden');started=false;paused=true;showWelcome();
-  $('modalSub').textContent='NIVEL '+level+' · '+(accountProgress.completed_levels||0)+' COMPLETADOS';
-  $('modalStart').textContent='▶ '+(level===1?'COMENZAR AVENTURA':'CONTINUAR NIVEL '+level);
-  setAuthMessage('');
+ try{await loadProgress();$('authGate').classList.add('hidden');started=false;paused=true;showWelcome();setAuthMessage('');
  }catch(e){console.error(e);setAuthMessage('No se pudo cargar tu progreso: '+friendlyError(e));$('authGate').classList.remove('hidden')}
 }
 async function loginOrRegister(mode){
@@ -983,7 +1084,7 @@ function openAccount(){if(!account)return;refreshStats();accountWasPlaying=!paus
  $('accountDetails').textContent=(account.email||'Jugador')+' · Nivel desbloqueado: '+(accountProgress?.current_level||level)+' · Niveles completados: '+(accountProgress?.completed_levels||0)+' · Se guarda al vencer al jefe de cada nivel.';
  $('accountPanel').classList.add('open')}
 function closeAccount(){$('accountPanel').classList.remove('open');if(accountWasPlaying&&!won&&!gameOver){paused=false}accountWasPlaying=false}
-async function logout(){closeAccount();paused=true;started=false;won=false;document.body.classList.remove('playing');account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
+async function logout(){closeAccount();hideStartMenu();paused=true;started=false;won=false;document.body.classList.remove('playing');account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
  if(db){const {error}=await db.auth.signOut();setAuthMessage(error?friendlyError(error):'Sesión cerrada. Entra con tu cuenta para continuar.')} }
 
 function togglePause(){if(won)return;if(!started){showWelcome();return}paused=!paused;if(paused){setOverlayRoster(false);showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
@@ -1007,7 +1108,7 @@ function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if
  for(const fx of hitEffects)fx.life-=dt;hitEffects=hitEffects.filter(fx=>fx.life>0);
  checkStandingTrap();bossTrapHitCooldown=Math.max(0,bossTrapHitCooldown-dt);enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
 const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
-window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
+window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('overlay').classList.contains('menu-open')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
 // Joystick táctil: movimiento digital preciso en 4 direcciones, sin diagonales.
 const joy=$('joystick'),knob=$('joystickKnob');let joyPointer=null;
 function setJoyDirection(dx,dy){for(const dir of ['up','down','left','right'])input[dir]=false;
@@ -1041,6 +1142,11 @@ canvas.addEventListener('touchmove',e=>{if(!showMap)return;e.preventDefault();
  else if(e.touches.length===1&&mapTouchPan){mapPanX+=e.touches[0].clientX-mapTouchPan.x;mapPanY+=e.touches[0].clientY-mapTouchPan.y;mapTouchPan={x:e.touches[0].clientX,y:e.touches[0].clientY}}
 },{passive:false});
 canvas.addEventListener('touchend',e=>{if(!showMap)return;if(e.touches.length<2)pinchStart=null;if(e.touches.length===1)mapTouchPan={x:e.touches[0].clientX,y:e.touches[0].clientY};else if(!e.touches.length)mapTouchPan=null;},{passive:false});
+$('continueGame').onclick=startFromMenu;
+$('newGameMenu').onclick=resetFromMenu;
+$('rankingMenu').onclick=openRanking;
+$('rankingBack').onclick=()=>{$('startMenu').classList.remove('show-ranking')};
+$('rankSave').onclick=saveRankingProfile;
 $('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('dodgeTouch').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('shieldTouch').addEventListener('pointerdown',e=>{e.preventDefault();activateShield()});$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn)beep(620,.08)};$('modalStart').onclick=()=>{
  if(!account||saveBusy)return;
  if(won){if(!$('modalSub').textContent.includes('GUARDADO')){persistVictory();return}level=Number(accountProgress.current_level)||level+1;generate()}

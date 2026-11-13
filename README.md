@@ -1,24 +1,26 @@
-# Arden: El Laberinto Arcano — v4
+# Arden: El Laberinto Arcano — v7 · Menú y ranking
 
-Publica todos los archivos de esta carpeta en la raíz de GitHub Pages y abre `arden_el_caballero_pwa.html`. Para entrada directa a la raíz del sitio, renombra este HTML como `index.html` **y cambia `start_url`, rutas y rutas del service worker de ser necesario**.
+## Publicación en GitHub Pages
 
-**Incluye:** icono de Arden y portada, botón DASH renovado, estela de esquiva, escudo único gestionable (Q/🛡), flor vital que cura una vida o entrega un escudo cuando tienes 3 vidas, acertijos de cuatro runas con orden variable, vista previa de memoria y 23 segundos para resolver, y combos de espada de hasta tres golpes (el tercero da +1 daño). Los enemigos alcanzados quedan aturdidos brevemente.
+1. Descarga el ZIP y coloca **el contenido de la carpeta**, no la carpeta en sí, en la raíz del repositorio configurado para Pages.
+2. Mantén `assets/`, `icons/`, `manifest.webmanifest` y `sw.js` con sus rutas.
+3. Ejecuta `MENU_Y_RANKING_SUPABASE.sql` **en el SQL Editor de tu proyecto de Supabase**. Requiere los scripts de base y estadísticas de versiones previas.
+4. Reemplaza `arden_el_caballero_pwa.html` y los demás archivos del ZIP. Después recarga GitHub Pages o cierra y reabre la PWA para actualizar la caché.
 
-**Puzles:** al entrar se muestra la secuencia 5.5 s; luego tienes 23 s para pisar en orden las cuatro placas numeradas. Si fallas, la secuencia vuelve a aparecer; el error no provoca un bloqueo permanente.
+## Menú principal
 
-**Combate:** impactar consecutivamente antes de 2.4 s mejora el combo; la última estocada añade daño. Los golpes generan destellos y una onda visual.
+- **Continuar:** comienza el último nivel desbloqueado guardado en Supabase; no restaura una partida abandonada a mitad del laberinto.
+- **Nueva partida:** muestra una confirmación y, si aceptas, elimina los niveles desbloqueados, su historial y las estadísticas de esa cuenta. La cuenta de acceso y el alias de ranking permanecen.
+- **Ranking de jugadores:** muestra hasta 100 aventureros, ordenados por niveles completados, jefes derrotados y reliquias. En empate se utiliza el mejor tiempo. No se muestran correos electrónicos.
 
-**Supabase:** conserva la URL y la clave pública incluidas. No se añade ninguna contraseña. Necesitas haber ejecutado `ACTUALIZACION_SUPABASE_ARDEN.sql` una sola vez en tu proyecto si aún no lo hiciste. Las partidas siguen guardándose cuando completas un nivel, no a mitad de él. No necesitas migrar las tablas para estos cambios visuales y jugables.
+## Privacidad del ranking
 
-**PWA:** `manifest.webmanifest`, `sw.js`, iconos y banner se sirven en HTTPS a través de GitHub Pages. Recarga tras publicar; si una instalación antigua sigue en caché, cierra la PWA y vuelve a abrirla. La instalación y orientación horizontal dependen del navegador.
+En la pantalla de ranking, cada jugador define un alias (3–18 caracteres) y activa voluntariamente **«Quiero aparecer públicamente en el ranking»**. La opción viene desactivada. Hasta que alguien se inscriba, la tabla puede aparecer vacía.
 
-Controles PC: WASD/flechas, Enter espada, Shift DASH, Q escudo, M mapa, Esc pausa. En móviles usa joystick, DASH, 🛡, espada y mapa.
+**Importante:** las estadísticas actuales proceden del navegador. Esta clasificación es recreativa/de desarrollo, no un ranking competitivo antifraude: una persona con conocimientos técnicos podría manipular sus resultados desde el cliente. Para una competición real hacen falta validaciones en un servidor confiable.
 
+## Base de datos
 
-## Versión 6: reintento de jefe y salto
+Esta versión **sí requiere ejecutar un SQL nuevo**. No elimina ni cambia niveles al aplicar el SQL. La función de *Nueva partida* sí borra los datos de la aventura individual, previa confirmación en la interfaz.
 
-Si Arden pierde todas las vidas en la cámara del jefe, el botón «REINTENTAR JEFE» reinicia únicamente ese combate. Se conservan el nivel, llaves, reliquias y estadísticas reunidas durante el laberinto. Las vidas, los escudos guardados y las cargas de espada se restauran al estado con que entraste a la arena. El contador de tiempo continúa para no dar ventajas artificiales en las estadísticas.
-
-La esquiva (Shift o botón SALTO en móvil) ahora incluye elevación en arco, partículas y estela.
-
-No es necesario cambiar el esquema ni las funciones de Supabase.
+Si los jugadores aún no ejecutaron la actualización de estadísticas `ACTUALIZACION_SUPABASE_ARDEN.sql`, aplícala antes de `MENU_Y_RANKING_SUPABASE.sql`.
