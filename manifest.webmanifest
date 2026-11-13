@@ -1,0 +1,25 @@
+{
+  "name": "Arden el Caballero — El Laberinto Encantado",
+  "short_name": "Arden",
+  "description": "Aventura pixel art de laberintos, jefes, cofres y salas de combate.",
+  "start_url": "./arden_el_caballero_pwa.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071e21",
+  "theme_color": "#092824",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "./icons/arden-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/arden-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

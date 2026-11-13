@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-<title>ARDEN · El laberinto cambiante</title>
+<title>ARDEN · El laberinto encantado</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<meta name="theme-color" content="#092824" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon" href="./icons/arden-192.png" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 :root{--bg:#080a18;--surface:#10152b;--line:#2a3761;--yellow:#ffe76a;--mint:#73f7cf;--pink:#ff6899;--blue:#7f9dff;--muted:#9eaccd}
@@ -167,8 +172,22 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 #game-wrap.map-open .joystick,#game-wrap.map-open #combatTools,#game-wrap.map-open #combatHud,#game-wrap.map-open #mobileHud{display:none!important}
 @media(max-width:690px){#mapZoomTools{right:max(9px,env(safe-area-inset-right))}#mapZoomTools button{min-width:45px;min-height:45px;font-size:19px}}
 @media(max-height:390px){#mapZoomTools{gap:4px}#mapZoomTools button{min-height:36px;min-width:42px}#mapZoomLabel{padding:4px}}
-@media(hover:none) and (pointer:coarse){#mapZoomIn,#mapZoomOut,#mapZoomReset{display:none!important}body.playing header{display:none!important}body.playing .main,body.playing #game-wrap{height:100dvh}}
+@media(hover:none) and (pointer:coarse){
+#mapZoomIn,#mapZoomOut,#mapZoomReset{display:none!important}
+body.playing header{display:none!important}
+body.playing .main,body.playing #game-wrap{height:100dvh}
+.joystick{bottom:max(37px,calc(env(safe-area-inset-bottom) + 29px))!important}
+#mapZoomTools{top:15px;right:max(11px,env(safe-area-inset-right));transform:none;gap:5px}
+#mapZoomTools #mapZoomLabel{font-size:11px}
+#game-wrap.map-open canvas{touch-action:none}
+}
 
+/* Historial de aventuras */
+.account-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;text-align:left;margin:14px 0}
+.stat-chip{border:2px solid #3a7869;background:#0a2430;padding:9px;color:#d7f7e7;font:12px/1.5 monospace}
+.stat-chip strong{display:block;color:#ffe19a;font-size:17px}
+.account-achievements{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.achievement{border:1px solid #9ccf94;color:#e8ffd1;background:#1f4b3c;padding:7px;font:10px/1.4 monospace}
 /* CUENTAS Y AVANCE: interfaz separada del juego */
 #accountBtn{max-width:175px;overflow:hidden;text-overflow:ellipsis}
 #authGate{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 25%,#1a6048,#061b20 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
@@ -192,14 +211,34 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 .account-actions button{font-size:9px;line-height:1.5}
 @media(hover:none) and (pointer:coarse){#accountBtn{font-size:8px;max-width:110px}.auth-card{padding:16px}.auth-card .pixel-btn{padding:12px;font-size:9px}.auth-actions{margin-top:10px}}
 @media(max-height:430px){.auth-card{padding:12px}.auth-subtitle{margin:5px 0}.auth-field{margin:6px 0 3px}.auth-input{min-height:37px}.auth-footnote{margin-top:7px}}
+
+/* Edición mapa v2: indicadores claros y zoom centrado sin saltos. */
+#mapLegend{display:none;position:absolute;z-index:7;left:50%;bottom:max(9px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:8px 12px;gap:8px 15px;flex-wrap:wrap;align-items:center;justify-content:center;max-width:calc(100% - 110px);background:#071c22ed;border:2px solid #4e917b;border-radius:8px;box-shadow:3px 4px 0 #031016;color:#e9ffe8;font:700 10px/1.3 monospace;pointer-events:none}
+#game-wrap.map-open #mapLegend{display:flex}
+#mapLegend span{white-space:nowrap}#mapLegend b{font-size:16px;margin-right:4px;vertical-align:-1px;text-shadow:1px 2px #00151c}
+.legend-me{color:#ffffff}.legend-key{color:#ffe176}.legend-chest{color:#ffad5e}.legend-room{color:#79daff}.legend-exit{color:#fa7882}.legend-path{color:#c5e8ad}.legend-wall{color:#244940}
+@media(max-width:800px){#mapLegend{font-size:8px;gap:4px 8px;padding:5px 6px;bottom:max(4px,env(safe-area-inset-bottom));max-width:calc(100% - 35px)}#mapLegend b{font-size:12px}}
+
+/* Combate táctico: dos habilidades visibles sin tapar el área central. */
+#combatTools{align-items:center;gap:8px}
+#combatTools .ability-button{position:relative;width:53px;height:53px;min-width:53px;min-height:53px;padding:0;border:3px solid #b2e6c2;border-radius:12px;color:#fff5c5;background:linear-gradient(#31675d,#153d43);font:26px system-ui,sans-serif;box-shadow:0 4px #061c1a;touch-action:manipulation}
+#combatTools .ability-button:disabled{filter:brightness(.48);opacity:.65}
+#shieldTouch b{position:absolute;right:-5px;top:-9px;border:2px solid #a2e3af;border-radius:6px;background:#0a2926;color:#fffbd1;font:700 12px system-ui;padding:1px 4px}
+#shieldTouch.active{border-color:#ffe899;box-shadow:0 0 15px #ffec8e,0 4px #061c1a}
+#dodgeTouch.ready{border-color:#eaffaa}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:430px){#combatTools{gap:7px;bottom:max(12px,env(safe-area-inset-bottom))}#combatTools .ability-button{width:45px;height:45px;min-width:45px;min-height:45px;font-size:23px}#attackTouch{width:72px;height:72px}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (min-height:431px){#combatTools .ability-button{width:58px;height:58px}}
 </style>
 </head>
 <body>
 <header><div class="logo">ARDEN EL CABALLERO <small>EL LABERINTO ENCANTADO</small></div><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></header>
-<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span><span id="combatHint">⚔ Mira al enemigo y pulsa ATACAR</span></div><div id="mobileHud">⚔️ ARDEN · <span id="mobileLevel">N1</span><br><span id="mobileKeys">🔑 0/3</span> · <span id="mobileLives">♥♥♥</span><br><span id="mobileEquip">⚔ ESPADA</span></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label"></span></div><div id="combatTools"><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span><span id="combatHint">⚔ Mira al enemigo y pulsa ATACAR</span></div><div id="mobileHud">⚔️ ARDEN · <span id="mobileLevel">N1</span><br><span id="mobileKeys">🔑 0/3</span> · <span id="mobileLives">♥♥♥</span><br><span id="mobileEquip">⚔ ESPADA</span> · <span id="mobileShield">🛡0</span></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label"></span></div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Esquivar">↗</button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+<div id="mapLegend" aria-label="Leyenda del mapa">
+  <span><b class="legend-me">◆</b> ARDEN</span><span><b class="legend-key">⚿</b> LLAVE</span><span><b class="legend-chest">▣</b> COFRE</span><span><b class="legend-room">✦</b> SALA</span><span><b class="legend-exit">⬟</b> SALIDA</span><span><b class="legend-path">▰</b> CAMINO</span><span><b class="legend-wall">▰</b> MURO</span>
+</div>
 <div id="mapZoomTools" aria-label="Zoom del mapa"><button id="mapZoomIn" aria-label="Acercar mapa">+</button><div id="mapZoomLabel">100%</div><button id="mapZoomOut" aria-label="Alejar mapa">−</button><button id="mapZoomReset" aria-label="Restablecer zoom" title="Ver todo">⌗</button><button id="mapZoomClose" aria-label="Cerrar mapa" title="Cerrar mapa">×</button></div>
 <div id="overlay"><div class="modal"><div class="modal-header">✦ LA LEYENDA DEL CABALLERO · AVENTURA RETRO ✦</div><div class="menu-body"><div class="menu-art"><span class="star a">✦</span><span class="star b">✧</span><span class="star c">✦</span><canvas id="heroSprite" width="96" height="96" aria-label="Arden, el caballero aventurero"></canvas></div><div class="menu-copy"><div class="menu-badge">⚔️ LA LEYENDA DE ARDEN</div><h1 id="modalTitle">ARDEN<br>EL CABALLERO</h1><div class="sub" id="modalSub">EL LABERINTO ENCANTADO</div><p id="modalText">Explora un pantano lleno de ruinas, plantas y senderos ocultos. Encuentra llaves, descubre tesoros y esquiva a los monstruos que protegen el laberinto.</p><div class="menu-rule"></div><button class="pixel-btn primary" id="modalStart">▶ COMENZAR AVENTURA</button><div class="small">PC: WASD / FLECHAS · ENTER: ATAQUE · M: MAPA<br>MÓVIL: JOYSTICK + BOTÓN ESPADA</div></div></div><div class="enemy-roster"><div class="enemy-profile"><canvas id="portraitHunter" width="24" height="24"></canvas><span style="color:#ff8592">DEMONIO</span><small>Rastreadora</small></div><div class="enemy-profile"><canvas id="portraitPatrol" width="24" height="24"></canvas><span style="color:#90c2ff">GÓLEM</span><small>Patrullero</small></div><div class="enemy-profile"><canvas id="portraitStalker" width="24" height="24"></canvas><span style="color:#d8a0ff">ESPECTRO</span><small>Acechador</small></div><div class="enemy-profile"><canvas id="portraitChaos" width="24" height="24"></canvas><span style="color:#ffc57f">CÍCLOPE</span><small>Caótica</small></div></div></div></div></div>
-<aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ENCANTADO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
+<aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ENCANTADO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA<br><span class="keycap">SHIFT</span> ESQUIVAR<br><span class="keycap">Q</span> ACTIVAR ESCUDO</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
 <div id="orientationGate"><div class="rotateGlyph">▣</div><strong>GIRA TU CELULAR</strong><p>ARDEN EL CABALLERO se juega en horizontal. Gira el teléfono y pulsa pantalla completa para aprovechar toda la pantalla.</p><button class="pixel-btn primary" id="rotateFull">⛶ PANTALLA COMPLETA</button></div>
 
 <div id="authGate" role="dialog" aria-modal="true" aria-label="Iniciar sesión">
@@ -219,7 +258,7 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
   </div>
 </div>
 <div id="accountPanel" role="dialog" aria-modal="true" aria-label="Mi partida">
-  <div class="account-card"><h2>⚔ MI PARTIDA</h2><p id="accountDetails">—</p><div class="account-actions"><button class="pixel-btn primary" id="accountClose">▶ CONTINUAR</button><button class="pixel-btn" id="logoutBtn">CERRAR SESIÓN</button></div></div>
+  <div class="account-card"><h2>⚔ MI PARTIDA</h2><p id="accountDetails">—</p><div id="accountStats" class="account-stats">Cargando estadísticas…</div><div id="accountAchievements" class="account-achievements"></div><div class="account-actions"><button class="pixel-btn primary" id="accountClose">▶ CONTINUAR</button><button class="pixel-btn" id="logoutBtn">CERRAR SESIÓN</button></div></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
@@ -231,10 +270,13 @@ ctx.imageSmoothingEnabled=false;mctx.imageSmoothingEnabled=false;
 const $=id=>document.getElementById(id);const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
 let enemies=[],lives=3,shield=0,invulnerable=0,enemyTimer=0,gameOver=false;
 let level=1,maze=[],seen=[],items=new Map(),width=81,height=81,player={x:1,y:1,drawX:1,drawY:1},start={x:1,y:1},exit={x:1,y:1},totalKeys=3,keys=0,relics=0,totalRelics=5,seed=0,elapsed=0,started=false,paused=true,won=false,showMap=false,last=0,moveClock=0,frame=0,toastClock=0,audioOn=true,audioContext=null,walkable=0,explored=0;
-let chestsOpened=0,weaponCharges=0,armor=0,attackCooldown=0,slashTime=0,slashCells=[],slashFace=1,trapCells=new Set(),hazardCooldown=0;
+let chestsOpened=0,weaponCharges=0,armor=0,guardTime=0,dodgeCooldown=0,dodgeFlash=0,attackCooldown=0,slashTime=0,slashCells=[],slashFace=1,trapCells=new Set(),hazardCooldown=0;
 let mapZoom=1;const mapZoomOptions=[1,1.5,2,3,4,6,8];
 let chambers=[],activeChamber=null,boss=null,bossDefeated=false,bossStarted=false,clearedChambers=0,projectiles=[];
-let pinchStart=null;
+let monstersSlain=0,deathsThisRun=0,bossName='',bossPatternTimer=0,bossWarning=null,roomToastTick=0;
+const BOSS_TYPES=['golem','specter','mage'];
+const BOSS_LABELS={golem:'GÓLEM DE LA TIERRA',specter:'ESPECTRO DE LA NIEBLA',mage:'HECHICERO DEL ABISMO'};
+let pinchStart=null,mapPanX=0,mapPanY=0,mapTouchPan=null;
 const tile=24;let vw=0,vh=0, DPR=1;const input={up:false,down:false,left:false,right:false};
 function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}};
 const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
@@ -251,50 +293,127 @@ for(let i=0;i<totalRelics;i++){let p=pick(10);if(p)items.set(id(...p),'relic')}
 for(let i=0;i<Math.min(3+level,11);i++){let p=pick(18);if(p)items.set(id(...p),'flower')}
 enemies=[];const types=['hunter','patrol','stalker','chaos'];for(let i=0;i<Math.min(3+level,12);i++){const pool=info.reachable.filter(([x,y])=>info.d[id(x,y)]>24&&!items.has(id(x,y))&&!enemies.some(e=>e.x===x&&e.y===y));if(!pool.length)break;const pos=pool[Math.floor(rnd()*pool.length)];enemies.push({x:pos[0],y:pos[1],drawX:pos[0],drawY:pos[1],type:types[i%4],dir:Math.floor(rnd()*4),wait:0,hp:1+Math.floor(level/3),maxHp:1+Math.floor(level/3)})}
 // Las trampas, cámaras y recompensas se vuelven a generar en cada nivel.
-trapCells=new Set();chambers=[];activeChamber=null;boss=null;bossDefeated=false;bossStarted=false;clearedChambers=0;chestsOpened=0;projectiles=[];
+trapCells=new Set();chambers=[];activeChamber=null;boss=null;bossDefeated=false;bossStarted=false;clearedChambers=0;chestsOpened=0;projectiles=[];bossWarning=null;bossPatternTimer=0;bossName="";monstersSlain=0;deathsThisRun=0;mapPanX=0;mapPanY=0;
 const floorCandidates=info.reachable.filter(([x,y])=>info.d[id(x,y)]>18&&!items.has(id(x,y))&&Math.abs(x-exit.x)+Math.abs(y-exit.y)>5);
 for(let i=0;i<Math.min(18,7+level*2);i++){
  const p=floorCandidates[Math.floor(rnd()*floorCandidates.length)];if(p&&!items.has(id(...p)))trapCells.add(id(...p));
 }
 const deadEnds=info.reachable.filter(([x,y])=> info.d[id(x,y)]>30 && Math.abs(x-exit.x)+Math.abs(y-exit.y)>12 && DIRS.filter(([dx,dy])=>isFloor(x+dx,y+dy)).length===1);
-for(let i=0;i<Math.min(5,2+Math.floor(level/2));i++){
- const valid=deadEnds.filter(([x,y])=> x>5&&y>5&&x<width-6&&y<height-6&&chambers.every(c=>Math.abs(c.x-x)+Math.abs(c.y-y)>13));
+for(let i=0;i<Math.min(5,5+Math.floor((level-1)/3));i++){
+ const valid=deadEnds.filter(([x,y])=> x>5&&y>5&&x<width-6&&y<height-6&&chambers.every(c=>Math.abs(c.x-x)+Math.abs(c.y-y)>13)&&!Array.from({length:25},(_,k)=>[x+(k%5)-2,y+Math.floor(k/5)-2]).some(([ax,ay])=>items.get(id(ax,ay))==='key'));
  if(!valid.length)break;
  const [x,y]=valid[Math.floor(rnd()*valid.length)];
  // Salón rectangular conectado a un callejón. Jamás cerramos las rutas originales.
  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)maze[y+dy][x+dx]=0;
  const area=new Set();for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)area.add(id(x+dx,y+dy));
- const roomKind=((i+level)%3===0)?'dart':'guard';
-  chambers.push({x,y,area,active:false,done:false,guards:0,kind:roomKind,shotTimer:0,pattern:((i+seed)%2===0)?'h':'v'});
+ const roomKinds=['guard','dart','puzzle','treasure','secret'];
+ const roomKind=roomKinds[(i+level-1)%roomKinds.length];
+  chambers.push({x,y,area,active:false,done:false,guards:0,kind:roomKind,shotTimer:0,pattern:((i+seed)%2===0)?'h':'v',switchOrder:[],switches:[],puzzleIndex:0,challengeTimer:0});
  trapCells.delete(id(x,y));items.delete(id(x,y));items.set(id(x,y),'sigil');
 }
 for(const c of chambers)for(const k of c.area){trapCells.delete(k);if(k!==id(c.x,c.y)&&items.get(k)!=='key')items.delete(k)}
-player={x:1,y:1,drawX:1,drawY:1,face:1};lives=3;shield=0;invulnerable=1.8;enemyTimer=0;attackCooldown=0;slashTime=0;slashCells=[];hazardCooldown=0;weaponCharges=0;armor=0;gameOver=false;elapsed=0;moveClock=0;explored=0;walkable=maze.reduce((sum,row)=>sum+row.filter(v=>!v).length,0);reveal();won=false;showMap=false;updateUI();drawMinimap();}
+player={x:1,y:1,drawX:1,drawY:1,face:1};lives=3;shield=0;invulnerable=1.8;enemyTimer=0;attackCooldown=0;slashTime=0;slashCells=[];hazardCooldown=0;weaponCharges=0;armor=0;guardTime=0;dodgeCooldown=0;dodgeFlash=0;gameOver=false;elapsed=0;moveClock=0;explored=0;walkable=maze.reduce((sum,row)=>sum+row.filter(v=>!v).length,0);reveal();won=false;showMap=false;updateUI();drawMinimap();}
 function reveal(){let x=player.x,y=player.y;for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++){let nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=width||ny>=height||dx*dx+dy*dy>37)continue;if(!seen[ny][nx]){seen[ny][nx]=1;if(isFloor(nx,ny))explored++}}}
 function note(msg){$('toast').textContent=msg;$('toast').classList.add('on');toastClock=2.6}
 function beep(freq=500,duration=.08,type='square'){if(!audioOn)return;try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')audioContext.resume();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,audioContext.currentTime);gain.gain.setValueAtTime(.045,audioContext.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);osc.connect(gain).connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+duration)}catch(e){}}
+function activateShield(){
+ if(!started||paused||showMap||gameOver)return;
+ if(guardTime>0){note('🛡 ESCUDO YA ACTIVADO');return}
+ if(armor<=0){note('🛡 NO TIENES ESCUDOS GUARDADOS');return}
+ armor--;guardTime=9;beep(700,.14);note('🛡 ESCUDO ACTIVO · 9 SEGUNDOS O 1 IMPACTO');updateUI();
+}
+function dodge(){
+ if(!started||paused||showMap||gameOver||dodgeCooldown>0)return;
+ const [dx,dy]=DIRS[player.face??1];
+ if(!dx&&!dy)return;
+ let count=0;
+ invulnerable=Math.max(invulnerable,.8);
+ for(let i=0;i<2;i++){
+  const x=player.x+dx,y=player.y+dy;
+  if(!isFloor(x,y)||(activeChamber&&!activeChamber.area.has(id(x,y)))||(boss&&boss.x===x&&boss.y===y))break;
+  step(dx,dy);count++;
+  if(paused||won||gameOver)break;
+ }
+ if(!count){invulnerable=Math.min(invulnerable,.1);note('↗ SIN ESPACIO PARA ESQUIVAR');return}
+ dodgeCooldown=3.2;dodgeFlash=.32;beep(570,.10);note('↗ ¡ESQUIVA! · RECARGA 3 SEGUNDOS');updateUI();
+}
+function trapState(x,y){
+ // 3.6 s por ciclo; todas las trampas tienen una ventana segura suficiente.
+ const phase=(elapsed+((x*7+y*13)%4)*.4)%3.6;
+ return phase<1.85?'safe':phase<2.55?'warn':'active';
+}
+function checkStandingTrap(){
+ if(!trapCells.has(id(player.x,player.y))||hazardCooldown>0)return;
+ if(trapState(player.x,player.y)!=='active')return;
+ hazardCooldown=.85;takeDamage('⚠ ¡LOS PINCHOS SE ACTIVARON!');
+}
 function takeDamage(message){
  if(invulnerable>0||paused||gameOver||shield>0)return;
- if(armor>0){armor--;invulnerable=.8;note('🛡 TU ARMADURA ABSORBIÓ UN GOLPE');beep(250,.12);updateUI();return}
+ if(guardTime>0){guardTime=0;invulnerable=1;note('🛡 ¡ESCUDO BLOQUEÓ EL IMPACTO!');beep(310,.15);updateUI();return}
  lives--;invulnerable=2;beep(145,.25);note(message||'¡ARDEN RECIBIÓ DAÑO!');
- if(lives<=0){gameOver=true;paused=true;showMap=false;updateMapControls();$('modalTitle').textContent='FIN DE LA AVENTURA';$('modalSub').textContent='EL LABERINTO VENCIÓ A ARDEN';$('modalText').textContent=`Reuniste ${keys}/${totalKeys} llaves, abriste ${chestsOpened} cofres y exploraste ${Math.floor(explored/Math.max(1,walkable)*100)}%. Inténtalo con otro laberinto.`;$('modalStart').textContent='↻ REINTENTAR';$('overlay').classList.remove('hidden')}
+ if(lives<=0){deathsThisRun++;recordDeath();gameOver=true;paused=true;showMap=false;updateMapControls();$('modalTitle').textContent='FIN DE LA AVENTURA';$('modalSub').textContent='EL LABERINTO VENCIÓ A ARDEN';$('modalText').textContent=`Reuniste ${keys}/${totalKeys} llaves, abriste ${chestsOpened} cofres y exploraste ${Math.floor(explored/Math.max(1,walkable)*100)}%. Inténtalo con otro laberinto.`;$('modalStart').textContent='↻ REINTENTAR';$('overlay').classList.remove('hidden')}
  updateUI();
 }
 function getRoomFor(x,y){return chambers.find(c=>c.area.has(id(x,y)))}
 function activateChamber(c){
- if(c.done||c.active||activeChamber)return;
+ if(!c||c.done||c.active||activeChamber)return;
  c.active=true;activeChamber=c;items.delete(id(c.x,c.y));
- const spots=[[c.x-1,c.y-1],[c.x+1,c.y-1],[c.x+1,c.y+1],[c.x-1,c.y+1]].filter(([x,y])=>!(x===player.x&&y===player.y));
+ const spots=[[c.x-1,c.y-1],[c.x+1,c.y-1],[c.x+1,c.y+1],[c.x-1,c.y+1]]
+   .filter(([x,y])=>isFloor(x,y)&&!(x===player.x&&y===player.y));
+ if(c.kind==='treasure'){
+   c.active=false;activeChamber=null;c.done=true;clearedChambers++;
+   items.set(id(c.x,c.y),'chest');note('✦ CÁMARA DEL TESORO: ENCONTRASTE UN COFRE');beep(970,.16);return;
+ }
+ if(c.kind==='secret'){
+   // La recompensa no es obligatoria para avanzar, pero premia explorar.
+   c.active=false;activeChamber=null;c.done=true;clearedChambers++;
+   relics+=2;items.set(id(c.x,c.y),'chest');
+   note('✦ PASADIZO SECRETO: +2 RELIQUIAS Y UN COFRE');beep(1050,.14);updateUI();return;
+ }
+ if(c.kind==='puzzle'){
+   const switchCells=[[c.x-1,c.y-1],[c.x+1,c.y-1],[c.x,c.y+1]];
+   c.switches=switchCells.filter(([x,y])=>isFloor(x,y));
+   c.switchOrder=[1,0,2].slice(0,c.switches.length);c.puzzleIndex=0;
+   note('🧩 ENCIENDE LOS 3 INTERRUPTORES EN ORDEN: 2 → 1 → 3');beep(500,.15);return;
+ }
+ if(c.kind==='dart'){
+   c.challengeTimer=7.5;c.shotTimer=.9;
+   note('🏹 CÁMARA DE FLECHAS: ¡RESISTE 8 SEGUNDOS ESQUIVANDO!');beep(300,.15);return;
+ }
  c.guards=Math.min(3,2+Math.floor(level/3));
- for(let i=0;i<c.guards;i++){const [x,y]=spots[i];enemies.push({x,y,drawX:x,drawY:y,type:['hunter','patrol','chaos'][i%3],dir:0,hp:2,maxHp:2,chamber:c})}
- note('¡SALA SELLADA! VENCE A LOS GUARDIANES PARA ABRIR EL COFRE');beep(150,.2);
+ for(let i=0;i<c.guards&&i<spots.length;i++){
+  const [x,y]=spots[i];enemies.push({x,y,drawX:x,drawY:y,type:['hunter','patrol','chaos'][i%3],dir:0,hp:2,maxHp:2,chamber:c});
+ }
+ note('⚔ SALA DE COMBATE: DERROTA A LOS GUARDIANES');beep(170,.18);
+ checkChamberClear();
+}
+function completeChamber(c){
+ if(!c||c.done)return;
+ c.done=true;c.active=false;activeChamber=null;clearedChambers++;
+ projectiles=projectiles.filter(p=>p.chamber!==c);
+ items.set(id(c.x,c.y),'chest');note('✓ DESAFÍO SUPERADO · COFRE DESBLOQUEADO');beep(880,.2);updateUI();
 }
 function checkChamberClear(){
- if(!activeChamber)return;
  const c=activeChamber;
- if(enemies.some(e=>e.chamber===c))return;
- c.done=true;c.active=false;activeChamber=null;clearedChambers++;projectiles=projectiles.filter(p=>p.chamber!==c);
- items.set(id(c.x,c.y),'chest');note('¡SALA LIBERADA! COFRE DESBLOQUEADO');beep(880,.2);
+ if(c&&c.kind==='guard'&&!enemies.some(e=>e.chamber===c))completeChamber(c);
+}
+function visitRoomSwitch(x,y){
+ const c=activeChamber;
+ if(!c||c.kind!=='puzzle')return;
+ const index=c.switches.findIndex(([sx,sy])=>sx===x&&sy===y);
+ if(index<0)return;
+ if(index===c.switchOrder[c.puzzleIndex]){
+  c.puzzleIndex++;beep(620+c.puzzleIndex*100,.09);
+  if(c.puzzleIndex===c.switchOrder.length)completeChamber(c);
+  else note('🧩 CORRECTO '+c.puzzleIndex+'/3 · SIGUIENTE: '+(c.switchOrder[c.puzzleIndex]+1));
+ }else{c.puzzleIndex=0;note('🧩 ORDEN INCORRECTO · REINICIA: 2 → 1 → 3');beep(170,.14)}
+}
+function updateRoomChallenge(dt){
+ const c=activeChamber;
+ if(c&&c.kind==='dart'){
+  c.challengeTimer-=dt;
+  if(c.challengeTimer<=0)completeChamber(c);
+ }
 }
 function spawnRoomProjectiles(c){
  if(!c||!c.active||c.done)return;
@@ -314,7 +433,7 @@ function updateProjectiles(dt){
   p.life-=dt;
   p.drawX+=(p.x-p.drawX)*Math.min(1,dt*16);
   p.drawY+=(p.y-p.drawY)*Math.min(1,dt*16);
-  if(p.life<=0||!p.chamber?.active){projectiles.splice(i,1);continue}
+  if(p.life<=0||(p.chamber&&!p.chamber.active)||(!p.chamber&&!boss)){projectiles.splice(i,1);continue}
   if((p.stepTimer=(p.stepTimer||0)-dt)<=0){
    p.stepTimer=.12;
    const nx=p.x+p.dx,ny=p.y+p.dy;
@@ -335,24 +454,53 @@ function drawProjectile(p,camX,camY,t){
 function collectChest(){
  chestsOpened++;const loot=(seed+chestsOpened*13+level*7)%3;
  if(loot===0){weaponCharges=Math.min(22,weaponCharges+12);note('⚔ ESPADA RÚNICA: 12 GOLPES POTENCIADOS')}
- else if(loot===1){armor=Math.min(2,armor+1);note('🛡 ESCUDO: RESISTE UN GOLPE')}
+ else if(loot===1){armor=Math.min(3,armor+1);note('🛡 ESCUDO GUARDADO. PULSA Q O 🛡 CUANDO LO NECESITES')}
  else {if(lives<3){lives++;note('♥ POCIÓN: RECUPERAS UNA VIDA')}else{weaponCharges=Math.min(22,weaponCharges+6);note('⚔ 6 GOLPES RÚNICOS EXTRA')}}
  beep(1050,.16);updateUI();
 }
 function beginBoss(){
  if(bossStarted)return;bossStarted=true;
- // El jefe aparece dentro del laberinto, a pocos pasos de la salida.
- const spots=[[exit.x,exit.y],...DIRS.map(([dx,dy])=>[exit.x+dx,exit.y+dy])].filter(([x,y])=>isFloor(x,y)&&!(player.x===x&&player.y===y));
+ const spots=[[exit.x,exit.y],...DIRS.map(([dx,dy])=>[exit.x+dx,exit.y+dy])]
+   .filter(([x,y])=>isFloor(x,y)&&!(player.x===x&&player.y===y));
  const p=spots[0]||[exit.x,exit.y];
- boss={x:p[0],y:p[1],drawX:p[0],drawY:p[1],type:'boss',dir:0,hp:6+level*2,maxHp:6+level*2};
- enemies.push(boss);note('⚠ ¡GUARDIÁN DEL LABERINTO! DERRÓTALO PARA SALIR');beep(130,.45);
+ bossName=BOSS_TYPES[(level-1)%3];bossPatternTimer=1.7;bossWarning=null;
+ boss={x:p[0],y:p[1],drawX:p[0],drawY:p[1],type:'boss',bossKind:bossName,dir:0,hp:7+level*2,maxHp:7+level*2};
+ enemies.push(boss);note('⚠ ¡'+BOSS_LABELS[bossName]+'! OBSERVA SUS ATAQUES');beep(130,.45);
+}
+function updateBossPattern(dt){
+ if(!boss||paused||showMap)return;
+ if(bossWarning){
+  bossWarning.time-=dt;
+  if(bossWarning.time<=0){
+   if(bossWarning.kind==='slam'){
+    if(Math.abs(player.x-bossWarning.x)+Math.abs(player.y-bossWarning.y)<=2)
+      takeDamage('⚠ ¡ONDA SÍSMICA DEL GÓLEM!');
+   }else if(bossWarning.kind==='teleport'){
+    const candidates=DIRS.map(([dx,dy])=>[player.x+dx*2,player.y+dy*2])
+      .filter(([x,y])=>isFloor(x,y)&&!(x===player.x&&y===player.y));
+    if(candidates.length){const [x,y]=candidates[Math.floor(Math.random()*candidates.length)];boss.x=x;boss.y=y;boss.drawX=x;boss.drawY=y}
+   }else if(bossWarning.kind==='bolt'){
+    const dx=Math.sign(player.x-boss.x),dy=Math.sign(player.y-boss.y);
+    const dir=Math.abs(player.x-boss.x)>=Math.abs(player.y-boss.y)?[dx||1,0]:[0,dy||1];
+    projectiles.push({x:boss.x,y:boss.y,drawX:boss.x,drawY:boss.y,dx:dir[0],dy:dir[1],life:3,stepTimer:.12,bossBolt:true});
+   }
+   bossWarning=null;bossPatternTimer=bossName==='mage'?2.3:bossName==='specter'?3.4:3.1;
+  }
+  return;
+ }
+ bossPatternTimer-=dt;
+ if(bossPatternTimer<=0){
+  const kind=bossName==='golem'?'slam':bossName==='specter'?'teleport':'bolt';
+  bossWarning={kind,time:kind==='slam'?1.2:kind==='teleport'?1.1:.8,x:boss.x,y:boss.y};
+  note(kind==='slam'?'⚠ GÓLEM: ¡ALÉJATE DE LA ONDA SÍSMICA!':kind==='teleport'?'⚠ ESPECTRO: ¡VA A REAPARECER CERCA!':'⚠ HECHICERO: ¡PREPARA UN PROYECTIL!');
+ }
 }
 function attack(){
  if(!started||paused||showMap||gameOver||attackCooldown>0)return;
  attackCooldown=.68;slashTime=.36;slashFace=player.face??1;
  const [dx,dy]=DIRS[player.face||0];slashCells=[[player.x+dx,player.y+dy],[player.x+dx+(dy||0),player.y+dy+(dx||0)],[player.x+dx-(dy||0),player.y+dy-(dx||0)]];
  const targets=enemies.filter(e=>e.hp>0&&slashCells.some(([x,y])=>e.x===x&&e.y===y));
- for(const e of targets){e.hitFlash=.28;e.hp-=weaponCharges>0?2:1;if(e.hp<=0){const ix=enemies.indexOf(e);if(ix>=0)enemies.splice(ix,1);if(e===boss){bossDefeated=true;boss=null;note('¡GUARDIÁN DERROTADO! REGRESA A LA SALIDA');beep(1000,.2)}}}
+ for(const e of targets){e.hitFlash=.28;e.hp-=weaponCharges>0?2:1;if(e.hp<=0){monstersSlain++;const ix=enemies.indexOf(e);if(ix>=0)enemies.splice(ix,1);if(e===boss){bossDefeated=true;boss=null;note('¡GUARDIÁN DERROTADO! REGRESA A LA SALIDA');beep(1000,.2)}}}
  if(weaponCharges>0)weaponCharges--;
  beep(targets.length?630:230,.10);if(targets.length){note('⚔ ¡GOLPE CERTERO! '+targets.length+' MONSTRUO(S) ALCANZADO(S)')}else{ $('combatHint').textContent='ESPADA SIN IMPACTO · ACÉRCATE Y MIRA AL MONSTRUO'; }checkChamberClear();updateUI();
 }
@@ -373,7 +521,8 @@ function step(dx,dy){
    else {relics++;beep(920,.07);note(`✦ RELIQUIA ${relics}/${totalRelics}`)}
   }
  }
- if(trapCells.has(k)&&hazardCooldown<=0){hazardCooldown=2;takeDamage('⚠ ¡PISASTE UNA TRAMPA!')}
+ visitRoomSwitch(nx,ny);
+ if(trapCells.has(k))checkStandingTrap();
  if(nx===exit.x&&ny===exit.y){
   if(keys<totalKeys){note(`LA PUERTA NECESITA ${totalKeys-keys} LLAVES`);beep(150,.2)}
   else if(!bossStarted)beginBoss();
@@ -382,7 +531,7 @@ function step(dx,dy){
  }
  checkCollision();updateUI();drawMinimap();
 }
-function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=shield>0?Math.ceil(shield)+'s':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('combatHint').textContent='⚔ ESPADA '+(attackCooldown>0?'RECARGANDO':'LISTA')+' · FRENTE: '+['↑','→','↓','←'][player.face??1];$('equipmentText').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ARMADURA '+armor:'';$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=activeChamber?('SALA SELLADA · '+enemies.filter(e=>e.chamber===activeChamber).length+' MONSTRUOS'+(activeChamber.kind==='dart'?' · DISPAROS':'')):'';$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA';$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
+function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=guardTime>0?'🛡 '+Math.ceil(guardTime)+'s':armor>0?'🛡 '+armor+' guardados':shield>0?Math.ceil(shield)+'s':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('combatHint').textContent='⚔ ESPADA '+(attackCooldown>0?'RECARGANDO':'LISTA')+' · FRENTE: '+['↑','→','↓','←'][player.face??1];$('equipmentText').textContent=(weaponCharges>0?'⚔ RUNA '+weaponCharges+' · ':'')+'🛡 '+armor+(guardTime>0?' ACTIVO':'')+' · ↗ '+(dodgeCooldown>0?Math.ceil(dodgeCooldown)+'s':'LISTO');$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=activeChamber?({'guard':'⚔ GUARDIANES: '+enemies.filter(e=>e.chamber===activeChamber).length,'dart':'🏹 ESQUIVA FLECHAS · '+Math.ceil(activeChamber.challengeTimer)+'s','puzzle':'🧩 INTERRUPTORES '+activeChamber.puzzleIndex+'/3'}[activeChamber.kind]||'SALA ESPECIAL'):'';$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA';$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
 function drawMinimap(){
  const c=mctx, size=210, pad=7, inner=size-pad*2;
  c.clearRect(0,0,size,size);
@@ -393,7 +542,7 @@ function drawMinimap(){
  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
   let px=pad+x*scale, py=pad+y*scale;
   if(!seen[y][x]){c.fillStyle='#102a28';c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));continue}
-  c.fillStyle=maze[y][x] ? (((x+y)&1)?'#173833':'#214942') : (((x+y)&1)?'#b9d7a4':'#90b886');
+  c.fillStyle=maze[y][x] ? (((x+y)&1)?'#173833':'#214942') : (((x+y)&1)?'#cee8b3':'#a9d396');
   c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));
  }
  for(let [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x])continue;c.fillStyle=v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd';c.fillRect(pad+x*scale,pad+y*scale,Math.max(2,scale),Math.max(2,scale))}
@@ -461,6 +610,8 @@ function drawPlayer(sx,sy,t){
  pixel(x+5,Math.round(sy)+21,14,2,'#050e1d');
  paintCharacter(ctx,'kero',x,y,1,player.face,moving);
  if(shield>0){ctx.strokeStyle='#a3ffc9';ctx.lineWidth=2;ctx.strokeRect(x+1,y+1,22,22);if(Math.sin(t*11)>0)pixel(x+21,y+2,3,3,'#fff0a0')}
+ if(guardTime>0){ctx.strokeStyle='#ffea8b';ctx.lineWidth=2;ctx.strokeRect(x-2,y-2,28,28);pixel(x+19,y+5,5,8,'#e1b95c');pixel(x+20,y+6,3,5,'#fff6bb')}
+ if(dodgeFlash>0){ctx.strokeStyle='#a1ecff';ctx.lineWidth=2;ctx.strokeRect(x-3,y-3,30,30)}
 }
 function drawEnemy(e,sx,sy,t){
  const x=Math.round(sx),y=Math.round(sy+Math.sin(t*4+e.x)*1.25);
@@ -489,12 +640,54 @@ function enemyStep(e){
  const choices=DIRS.map(([dx,dy],i)=>({x:e.x+dx,y:e.y+dy,i})).filter(v=>isFloor(v.x,v.y)&&(!e.chamber||e.chamber.area.has(id(v.x,v.y))));if(!choices.length)return;const dist=Math.abs(e.x-player.x)+Math.abs(e.y-player.y);let target=null;
  if(e.type==='boss'||e.chamber||e.type==='hunter'&&dist<15||e.type==='stalker'&&dist<8){const queue=[[player.x,player.y]], seenDist=new Int16Array(width*height).fill(-1);seenDist[id(player.x,player.y)]=0;let head=0;while(head<queue.length&&head<1100){const [x,y]=queue[head++];for(const [dx,dy] of DIRS){const nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&seenDist[id(nx,ny)]<0){seenDist[id(nx,ny)]=seenDist[id(x,y)]+1;queue.push([nx,ny])}}}const ordered=choices.filter(v=>seenDist[id(v.x,v.y)]>=0).sort((a,b)=>seenDist[id(a.x,a.y)]-seenDist[id(b.x,b.y)]);target=ordered[0]}
  if(!target){if(e.type==='patrol'){target=choices.find(v=>v.i===e.dir)||choices[Math.floor(Math.random()*choices.length)]}else if(e.type==='stalker'&&dist>8&&Math.random()<.75)return;else target=choices[Math.floor(Math.random()*choices.length)]}
- if(e.type==='boss'&&Math.random()<.3)return; e.dir=target.i;e.x=target.x;e.y=target.y}
+ if(e.type==='boss'&&(bossName==='mage'||bossWarning||Math.random()<(bossName==='golem'?.65:.3)))return; e.dir=target.i;e.x=target.x;e.y=target.y}
 
 function drawChest(sx,sy,t){pixel(sx+4,sy+9,16,12,'#462b20');pixel(sx+4,sy+7,16,6,'#ae7139');pixel(sx+6,sy+8,12,3,'#f2b45e');pixel(sx+5,sy+15,14,5,'#6c3e27');pixel(sx+11,sy+11,3,7,'#ffe47c');pixel(sx+12,sy+14,1,3,'#46301d')}
 function drawSigil(sx,sy,t){pixel(sx+2,sy+2,20,20,'#153a4a');pixel(sx+4,sy+4,16,16,'#184a5d');pixel(sx+7,sy+7,10,10,Math.sin(t*5)>0?'#65dfff':'#388fa9');pixel(sx+10,sy+4,4,16,'#153a4a');pixel(sx+4,sy+10,16,4,'#153a4a')}
-function drawTrap(sx,sy,t){pixel(sx+4,sy+17,16,4,'#464b4d');for(let i=0;i<3;i++){pixel(sx+5+i*5,sy+13,4,6,'#839995');pixel(sx+6+i*5,sy+9,2,4,'#d0ddc7')}}
-function drawBoss(e,sx,sy,t){const x=Math.round(sx),y=Math.round(sy);pixel(x+1,y+1,22,22,'#45203e');pixel(x+3,y+4,18,17,'#823d70');pixel(x+5,y+2,5,7,'#d86f53');pixel(x+14,y+2,5,7,'#d86f53');pixel(x+7,y+10,4,4,'#ffed83');pixel(x+14,y+10,4,4,'#ffed83');pixel(x+8,y+11,2,2,'#1a1424');pixel(x+15,y+11,2,2,'#1a1424');pixel(x+10,y+17,5,2,'#1a1424');pixel(x+4,y-4,16,3,'#200c1b');pixel(x+4,y-4,Math.max(1,Math.floor(16*e.hp/e.maxHp)),3,'#ff6581');if(Math.sin(t*7)>0)pixel(x+1,y+10,2,4,'#ffb4aa')}
+function drawTrap(sx,sy,t,x,y){
+ const phase=trapState(x,y);
+ pixel(sx+2,sy+17,20,5,phase==='active'?'#833a39':phase==='warn'?'#a7813b':'#2d5c51');
+ for(let i=0;i<3;i++){
+  const bx=sx+4+i*6;
+  if(phase==='active'){
+   pixel(bx,sy+12,5,8,'#b5bfc3');pixel(bx+1,sy+7,3,5,'#f5f9f1');pixel(bx+2,sy+5,1,3,'#ffffff');
+  }else if(phase==='warn'){
+   pixel(bx,sy+16,5,4,'#d0a75a');pixel(bx+2,sy+13,1,3,'#f8d582');
+  }else{pixel(bx,sy+19,5,2,'#719b8f')}
+ }
+ if(phase==='warn'&&Math.sin(t*13)>0)pixel(sx+11,sy+3,3,4,'#ffe281');
+}
+function drawBoss(e,sx,sy,t){
+ const x=Math.round(sx),y=Math.round(sy),kind=e.bossKind||'golem';
+ const colors={golem:['#3c403d','#899687','#b9c7a6'],specter:['#402259','#885bba','#e2bdff'],mage:['#242d63','#566de3','#f4c77e']};
+ const [dark,mid,light]=colors[kind];
+ pixel(x+3,y+4,18,18,dark);pixel(x+5,y+5,14,16,mid);pixel(x+7,y+7,10,5,light);
+ if(kind==='golem'){pixel(x+1,y+12,5,8,mid);pixel(x+18,y+12,5,8,mid);pixel(x+4,y+1,16,4,dark)}
+ if(kind==='specter'){pixel(x+2,y+19,6,4,mid);pixel(x+15,y+19,7,4,mid);pixel(x+5,y+1,14,4,mid)}
+ if(kind==='mage'){pixel(x+3,y+2,18,4,light);pixel(x+8,y-1,9,4,mid);pixel(x+19,y+11,3,13,light)}
+ pixel(x+8,y+11,3,3,'#fff4ca');pixel(x+15,y+11,3,3,'#fff4ca');
+ pixel(x+4,y-5,16,3,'#200c1b');pixel(x+4,y-5,Math.max(1,Math.floor(16*e.hp/e.maxHp)),3,'#ff6581');
+}
+function drawRoomDetails(sx,sy,x,y,t){
+ const c=getRoomFor(x,y);if(!c||c.done)return;
+ if(c.kind==='puzzle'&&c.active){const i=c.switches.findIndex(([px,py])=>px===x&&py===y);
+  if(i>=0){pixel(sx+4,sy+4,16,16,i===c.switchOrder[c.puzzleIndex]?'#e9be58':'#397f8b');
+   pixel(sx+7,sy+7,10,10,'#152d39');ctx.fillStyle='#fff8bb';ctx.font='bold 12px monospace';ctx.fillText(String(i+1),sx+9,sy+17)}
+ }
+ if(c.kind==='dart'&&c.active&&((x===c.x-2||x===c.x+2)&&y===c.y)){pixel(sx+7,sy+7,10,10,'#e7a259')}
+}
+function drawBossTelegraph(camX,camY,t){
+ if(!bossWarning||!boss)return;
+ if(bossWarning.kind==='slam'){
+  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+   if(Math.abs(dx)+Math.abs(dy)>2)continue;
+   const x=bossWarning.x+dx,y=bossWarning.y+dy;if(!isFloor(x,y))continue;
+   pixel(x*tile-camX+2,y*tile-camY+2,20,20,Math.sin(t*17)>0?'#ff805d88':'#e7aa4988');
+  }
+ }else if(bossWarning.kind==='teleport'){
+  for(const [dx,dy] of DIRS){const x=player.x+dx*2,y=player.y+dy*2;if(isFloor(x,y))pixel(x*tile-camX+4,y*tile-camY+4,16,16,'#b578e877')}
+ }else if(bossWarning.kind==='bolt'){pixel(boss.x*tile-camX+4,boss.y*tile-camY+4,16,16,'#ffce6688')}
+}
 function drawScene(t){pixel(0,0,vw,vh,'#071d20');if(!maze.length)return;
 if(showMap){
  // Muestra el laberinto completo al 100%; al acercar, centra la cámara del mapa en Arden.
@@ -503,11 +696,13 @@ if(showMap){
  const baseScale=Math.min(availW/width,availH/height);
  const scale=baseScale*mapZoom;
  const mw=width*scale,mh=height*scale;
- const offsetX=Math.round(vw/2-(player.x+.5)*scale);
- const offsetY=Math.round(header+(vh-header-footer)/2-(player.y+.5)*scale);
- const fitX=(vw-mw)/2,fitY=header+(vh-header-footer-mh)/2;
- const ox=mapZoom===1?fitX:Math.min(28,Math.max(vw-28-mw,offsetX));
- const oy=mapZoom===1?fitY:Math.min(header+6,Math.max(vh-footer-6-mh,offsetY));
+ const visibleLeft=13,visibleTop=header,visibleW=vw-26,visibleH=vh-header-footer;
+ // Al hacer zoom, centrar inicialmente a Arden; permitir explorar arrastrando.
+ const centerX=visibleLeft+visibleW/2,centerY=visibleTop+visibleH/2;
+ const wantedX=mapZoom===1?(vw-mw)/2:centerX-(player.x+.5)*scale+mapPanX;
+ const wantedY=mapZoom===1?header+(visibleH-mh)/2:centerY-(player.y+.5)*scale+mapPanY;
+ const ox=mapZoom===1?Math.round((vw-mw)/2):Math.round(wantedX);
+ const oy=mapZoom===1?Math.round(header+(visibleH-mh)/2):Math.round(wantedY);
  pixel(0,0,vw,vh,'#08191f');
  pixel(9,8,vw-18,32,'#17393b');pixel(12,11,vw-24,26,'#102b31');
  ctx.font='bold 12px monospace';ctx.fillStyle='#f7e89d';ctx.fillText('MAPA DEL LABERINTO',21,29);
@@ -521,17 +716,37 @@ if(showMap){
   if(!seen[y][x]){pixel(px,py,scale+.25,scale+.25,'#0d2524');continue}
   pixel(px,py,scale+.25,scale+.25,maze[y][x]?(((x+y)&1)?'#143832':'#1b4840'):(((x+y)&1)?'#c2e2ad':'#97c089'));
  }
+ // Señales con contorno, forma distinta y brillo. Solo objetivos ya descubiertos.
+ const markerSize=Math.max(6,Math.min(17,scale*1.3));
+ function mapMarker(mx,my,color,kind){
+  const midX=mx+scale/2,midY=my+scale/2,r=markerSize/2;
+  ctx.save();ctx.lineWidth=2;ctx.strokeStyle='#021b21';ctx.fillStyle=color;
+  if(kind==='key'){
+   ctx.beginPath();ctx.arc(midX-r*.3,midY-r*.3,r*.44,0,Math.PI*2);ctx.fill();ctx.stroke();
+   ctx.fillRect(midX-r*.1,midY-r*.35,r*.35,r*1.1);ctx.strokeRect(midX-r*.1,midY-r*.35,r*.35,r*1.1);
+  }else if(kind==='chest'){
+   ctx.fillRect(midX-r,midY-r*.65,r*2,r*1.3);ctx.strokeRect(midX-r,midY-r*.65,r*2,r*1.3);
+   ctx.fillStyle='#fff0ab';ctx.fillRect(midX-1,midY-r*.2,3,r*.65);
+  }else if(kind==='sigil'){
+   ctx.beginPath();ctx.moveTo(midX,midY-r);ctx.lineTo(midX+r,midY);ctx.lineTo(midX,midY+r);ctx.lineTo(midX-r,midY);ctx.closePath();ctx.fill();ctx.stroke();
+  }else{
+   ctx.beginPath();ctx.arc(midX,midY,r*.7,0,Math.PI*2);ctx.fill();ctx.stroke();
+  }
+  ctx.restore();
+ }
  for(const [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x]||x<x0||x>x1||y<y0||y>y1)continue;
-  pixel(ox+x*scale,oy+y*scale,Math.max(3,scale),Math.max(3,scale),v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd')}
- if(seen[exit.y][exit.x])pixel(ox+exit.x*scale-1,oy+exit.y*scale-1,Math.max(4,scale+2),Math.max(4,scale+2),keys===totalKeys?'#78ffc7':'#ff7777');
+  mapMarker(ox+x*scale,oy+y*scale,v==='key'?'#ffdf56':v==='flower'?'#77ffaa':v==='chest'?'#ffa750':v==='sigil'?'#7fdcff':'#ed87fa',v);
+ }
+ if(seen[exit.y][exit.x])mapMarker(ox+exit.x*scale,oy+exit.y*scale,keys===totalKeys?'#57ffb3':'#ff6e89','sigil');
  const px=ox+(player.x+.5)*scale,py=oy+(player.y+.5)*scale;
- ctx.strokeStyle='#08171e';ctx.lineWidth=3;ctx.strokeRect(Math.round(px-Math.max(3,scale*.45)),Math.round(py-Math.max(3,scale*.45)),Math.max(6,scale*.9),Math.max(6,scale*.9));
- pixel(px-Math.max(3,scale*.4),py-Math.max(3,scale*.4),Math.max(6,scale*.8),Math.max(6,scale*.8),Math.sin(t*8)>0?'#ffffff':'#8bffe0');
+ ctx.strokeStyle='#102b2b';ctx.lineWidth=3;ctx.fillStyle=Math.sin(t*8)>0?'#ffffff':'#8bffe0';
+ ctx.beginPath();ctx.arc(px,py,Math.max(5,Math.min(10,scale*.6)),0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.beginPath();ctx.strokeStyle='#fff9ae';ctx.lineWidth=1.5;ctx.arc(px,py,Math.max(8,Math.min(14,scale*.95)),0,Math.PI*2);ctx.stroke();
  ctx.restore();
  return}
 
 const camX=player.drawX*tile+tile/2-vw/2,camY=player.drawY*tile+tile/2-vh/2,x0=Math.max(0,Math.floor(camX/tile)-1),y0=Math.max(0,Math.floor(camY/tile)-1),x1=Math.min(width-1,Math.ceil((camX+vw)/tile)+1),y1=Math.min(height-1,Math.ceil((camY+vh)/tile)+1);
-for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){let sx=Math.floor(x*tile-camX),sy=Math.floor(y*tile-camY);if(!seen[y][x]){pixel(sx,sy,tile,tile,'#0c292a');continue}if(maze[y][x])drawWall(x,y,sx,sy);else drawFloor(x,y,sx,sy);if(!maze[y][x]&&items.has(id(x,y))){if(items.get(id(x,y))==='key')drawKey(sx,sy,t);else if(items.get(id(x,y))==='flower')drawFlower(sx,sy,t);else if(items.get(id(x,y))==='chest')drawChest(sx,sy,t);else if(items.get(id(x,y))==='sigil')drawSigil(sx,sy,t);else drawRelic(sx,sy,t)}if(trapCells.has(id(x,y)))drawTrap(sx,sy,t);if(getRoomFor(x,y)){const c=getRoomFor(x,y);if(c.active){pixel(sx,sy,24,2,'#e38e61');pixel(sx,sy+22,24,2,'#e38e61')}}if(x===exit.x&&y===exit.y)drawExit(sx,sy,t);
+for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){let sx=Math.floor(x*tile-camX),sy=Math.floor(y*tile-camY);if(!seen[y][x]){pixel(sx,sy,tile,tile,'#0c292a');continue}if(maze[y][x])drawWall(x,y,sx,sy);else drawFloor(x,y,sx,sy);if(!maze[y][x]&&items.has(id(x,y))){if(items.get(id(x,y))==='key')drawKey(sx,sy,t);else if(items.get(id(x,y))==='flower')drawFlower(sx,sy,t);else if(items.get(id(x,y))==='chest')drawChest(sx,sy,t);else if(items.get(id(x,y))==='sigil')drawSigil(sx,sy,t);else drawRelic(sx,sy,t)}if(trapCells.has(id(x,y)))drawTrap(sx,sy,t);drawRoomDetails(sx,sy,x,y,t);if(getRoomFor(x,y)){const c=getRoomFor(x,y);if(c.active){pixel(sx,sy,24,2,'#e38e61');pixel(sx,sy+22,24,2,'#e38e61')}}if(x===exit.x&&y===exit.y)drawExit(sx,sy,t);
 // Distant discovered tiles are dimmed, but remain visible as navigation landmarks.
 let dist=Math.hypot(x-player.drawX,y-player.drawY);if(dist>5.5){ctx.fillStyle=`rgba(4,25,24,${Math.min(.65,(dist-5.5)*.10)})`;ctx.fillRect(sx,sy,tile,tile)}}
 for(const e of enemies){if(!seen[e.y][e.x]||Math.abs(e.x-player.x)>vw/tile/2+2||Math.abs(e.y-player.y)>vh/tile/2+2)continue;
@@ -541,6 +756,7 @@ for(const e of enemies){if(!seen[e.y][e.x]||Math.abs(e.x-player.x)>vw/tile/2+2||
  if(e.hp>0){pixel(ex+3,ey-5,18,4,'#190f20');pixel(ex+4,ey-4,Math.max(1,Math.round(16*e.hp/(e.maxHp||2))),2,e.type==='boss'?'#ff6579':'#fbc76a')}
 }
 for(const p of projectiles){if(!seen[p.y]?.[p.x]||Math.abs(p.x-player.x)>vw/tile/2+3||Math.abs(p.y-player.y)>vh/tile/2+3)continue;drawProjectile(p,camX,camY,t)}
+drawBossTelegraph(camX,camY,t);
 drawPlayer(player.drawX*tile-camX,player.drawY*tile-camY,t);
 if(slashTime>0){
  // Tajo de espada orientado según Arden, con arco progresivo en lugar de rectángulos.
@@ -568,7 +784,7 @@ if(slashTime>0){
 if(vw>340&&!isTouchDevice()){pixel(14,14,160,40,'#0a1027db');ctx.font='9px monospace';ctx.fillStyle='#97b0e6';ctx.fillText(`X:${String(player.x).padStart(3,'0')}  Y:${String(player.y).padStart(3,'0')}`,23,30);ctx.fillStyle='#ffe76a';ctx.fillText(`LLAVES ${keys}/${totalKeys}`,23,45)}
 }
 function victory(){won=true;paused=true;showMap=false;updateMapControls();beep(740,.2);setTimeout(()=>beep(930,.25),180);setTimeout(()=>beep(1200,.28),350);$('modalTitle').textContent='¡ESCAPASTE!';$('modalSub').textContent=`NIVEL ${level} SUPERADO`;$('modalText').textContent=`Venciste al guardián, reuniste ${totalKeys} llaves y escapaste en ${Math.floor(elapsed/60)}m ${Math.floor(elapsed%60)}s. Recuperaste ${relics} de ${totalRelics} reliquias. El siguiente laberinto será aún más grande y completamente diferente.`;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';$('modalStart').disabled=true;$('overlay').classList.remove('hidden');persistVictory()}
-function showWelcome(){paused=true;started=false;document.body.classList.remove('playing');$('modalTitle').innerHTML='ARDEN<br>EL CABALLERO';$('modalSub').textContent='EL LABERINTO ENCANTADO';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Algunas salas disparan proyectiles y tendrás que esquivarlos. Evita trampas y vence al jefe de la salida. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
+function showWelcome(){paused=true;started=false;document.body.classList.remove('playing');$('modalTitle').innerHTML='ARDEN<br>EL CABALLERO';$('modalSub').textContent='EL LABERINTO ENCANTADO';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Los pinchos alternan entre seguros, alerta y activos. Algunas salas disparan proyectiles y tendrás que esquivarlos. Evita trampas y vence al jefe de la salida. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Esquiva con Shift, activa escudo guardado con Q. En móvil usa los botones junto a la espada. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
 // Configuración pública de Supabase: no pegues aquí una secret key/service_role.
 const SUPABASE_URL='https://eiellhnpykzikfmjrvvr.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_b8XKRBZMu3p_Xk9n3gzIFQ_uzIEgXGT';
@@ -578,12 +794,12 @@ function setAuthMessage(msg){$('authMessage').textContent=msg}
 function friendlyError(e){const msg=String(e?.message||e||'Error desconocido');if(/Invalid login credentials/i.test(msg))return 'Correo o contraseña incorrectos.';if(/Email not confirmed/i.test(msg))return 'Confirma tu correo desde el mensaje que te enviaron.';if(/Failed to fetch|NetworkError/i.test(msg))return 'No hay conexión con el servidor. Revisa internet y la configuración.';return msg}
 function syncAccountButton(){$('accountBtn').textContent=account?'👤 '+(account.email||'JUGADOR').split('@')[0].slice(0,12):'👤 CUENTA'}
 async function loadProgress(){
- const {data,error}=await db.from('player_progress').select('current_level,completed_levels').eq('user_id',account.id).maybeSingle();
+ const {data,error}=await db.from('player_progress').select('current_level,completed_levels,total_relics,bosses_defeated,total_deaths,best_time_seconds,monsters_defeated,rooms_cleared').eq('user_id',account.id).maybeSingle();
  if(error)throw error;
  if(!data){
   const {error:insertError}=await db.from('player_progress').insert({user_id:account.id});
   if(insertError && insertError.code!=='23505')throw insertError;
-  const {data:created,error:readError}=await db.from('player_progress').select('current_level,completed_levels').eq('user_id',account.id).single();
+  const {data:created,error:readError}=await db.from('player_progress').select('current_level,completed_levels,total_relics,bosses_defeated,total_deaths,best_time_seconds,monsters_defeated,rooms_cleared').eq('user_id',account.id).single();
   if(readError)throw readError;
   accountProgress=created;
  }else accountProgress=data;
@@ -630,16 +846,40 @@ async function persistVictory(){
  if(saveBusy||!won||!account||!db)return;
  saveBusy=true;$('modalStart').disabled=true;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';
  try{
-  const {data,error}=await db.rpc('complete_arden_level',{p_level:level,p_seconds:Math.max(0,Math.floor(elapsed)),p_relics:relics,p_chests:chestsOpened});
+  const {data,error}=await db.rpc('complete_arden_level_stats',{p_level:level,p_seconds:Math.max(0,Math.floor(elapsed)),p_relics:relics,p_chests:chestsOpened,p_boss:bossName,p_monsters:monstersSlain,p_rooms:clearedChambers});
   if(error)throw error;
-  accountProgress={current_level:Number(data),completed_levels:Number(data)-1};
+  accountProgress={...accountProgress,current_level:Number(data),completed_levels:Number(data)-1};
+  await refreshStats();
   $('modalSub').textContent=`NIVEL ${level} SUPERADO · GUARDADO ✓`;
   $('modalStart').textContent='▶ SIGUIENTE NIVEL';
   $('modalStart').disabled=false;
  }catch(e){console.error('Save error',e);$('modalSub').textContent='NO SE PUDO GUARDAR EL NIVEL';$('modalStart').textContent='↻ REINTENTAR GUARDADO';$('modalStart').disabled=false;$('modalText').textContent='No fue posible guardar el progreso: '+friendlyError(e)+' · Comprueba la conexión y pulsa REINTENTAR GUARDADO. No cierres esta pantalla.'}
  finally{saveBusy=false}
 }
-function openAccount(){if(!account)return;accountWasPlaying=!paused;paused=true;showMap=false;updateMapControls();
+async function recordDeath(){
+ if(!db||!account)return;
+ try{const {error}=await db.rpc('record_arden_death',{p_level:level});if(error)throw error}
+ catch(e){console.warn('No se guardó la muerte',e)}
+}
+async function refreshStats(){
+ if(!db||!account)return;
+ try{
+  const {data,error}=await db.from('player_progress')
+    .select('current_level,completed_levels,total_relics,bosses_defeated,total_deaths,best_time_seconds,monsters_defeated,rooms_cleared')
+    .eq('user_id',account.id).single();
+  if(error)throw error;accountProgress=data;
+  const stats=[['Niveles',data.completed_levels],['Reliquias',data.total_relics],['Jefes',data.bosses_defeated],['Muertes',data.total_deaths],['Monstruos',data.monsters_defeated],['Salas',data.rooms_cleared],['Mejor tiempo',data.best_time_seconds==null?'—':Math.floor(data.best_time_seconds/60)+'m '+(data.best_time_seconds%60)+'s']];
+  $('accountStats').innerHTML=stats.map(([label,value])=>'<div class="stat-chip">'+label+'<strong>'+value+'</strong></div>').join('');
+  const medals=[];
+  if(data.completed_levels>=1)medals.push('🏅 Primer laberinto');
+  if(data.bosses_defeated>=3)medals.push('⚔ Cazajefes');
+  if(data.total_relics>=15)medals.push('💎 Coleccionista');
+  if(data.rooms_cleared>=10)medals.push('🗝 Explorador');
+  if(data.completed_levels>=5)medals.push('👑 Veterano');
+  $('accountAchievements').innerHTML=medals.map(v=>'<span class="achievement">'+v+'</span>').join('')||'<span class="achievement">Completa niveles para conseguir logros</span>';
+ }catch(e){$('accountStats').textContent='Estadísticas pendientes: ejecuta ACTUALIZACION_SUPABASE.sql en el SQL Editor.';console.warn(e)}
+}
+function openAccount(){if(!account)return;refreshStats();accountWasPlaying=!paused;paused=true;showMap=false;updateMapControls();
  $('accountDetails').textContent=(account.email||'Jugador')+' · Nivel desbloqueado: '+(accountProgress?.current_level||level)+' · Niveles completados: '+(accountProgress?.completed_levels||0)+' · Se guarda al vencer al jefe de cada nivel.';
  $('accountPanel').classList.add('open')}
 function closeAccount(){$('accountPanel').classList.remove('open');if(accountWasPlaying&&!won&&!gameOver){paused=false}accountWasPlaying=false}
@@ -652,17 +892,17 @@ function updateMapControls(){
  $('mapZoomLabel').textContent=Math.round(mapZoom*100)+'%';
  $('mapZoomIn').disabled=mapZoom>=8;$('mapZoomOut').disabled=mapZoom<=1;$('mapZoomReset').disabled=Math.abs(mapZoom-1)<.01;
 }
-function setMapZoomValue(v){mapZoom=Math.max(1,Math.min(8,Math.round(v*100)/100));updateMapControls()}
+function setMapZoomValue(v){mapZoom=Math.max(1,Math.min(8,Math.round(v*100)/100));if(mapZoom===1){mapPanX=0;mapPanY=0;}updateMapControls()}
 function changeMapZoom(dir){if(!showMap)return;
  const nearest=mapZoomOptions.reduce((best,val,idx)=>Math.abs(val-mapZoom)<Math.abs(mapZoomOptions[best]-mapZoom)?idx:best,0);
  mapZoom=mapZoomOptions[Math.max(0,Math.min(mapZoomOptions.length-1,nearest+dir))];
  updateMapControls();beep(370,.035);
 }
 function touchDistance(touches){const dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;return Math.hypot(dx,dy)}
-function toggleMap(){if(!started||paused)return;showMap=!showMap;updateMapControls();beep(340,.035)}
-function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);enemyTimer+=dt;updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
+function toggleMap(){if(!started||paused)return;showMap=!showMap;if(showMap){mapPanX=0;mapPanY=0;pinchStart=null;mapTouchPan=null;}updateMapControls();beep(340,.035)}
+function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);guardTime=Math.max(0,guardTime-dt);dodgeCooldown=Math.max(0,dodgeCooldown-dt);dodgeFlash=Math.max(0,dodgeFlash-dt);checkStandingTrap();enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
 const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
-window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
+window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
 // Joystick táctil: movimiento digital preciso en 4 direcciones, sin diagonales.
 const joy=$('joystick'),knob=$('joystickKnob');let joyPointer=null;
 function setJoyDirection(dx,dy){for(const dir of ['up','down','left','right'])input[dir]=false;
@@ -686,10 +926,17 @@ $('mapZoomOut').onclick=()=>changeMapZoom(-1);
 $('mapZoomReset').onclick=()=>{mapZoom=1;updateMapControls()};
 $('mapZoomClose').onclick=()=>toggleMap();
 canvas.addEventListener('wheel',e=>{if(showMap){e.preventDefault();changeMapZoom(e.deltaY<0?1:-1)}},{passive:false});
-canvas.addEventListener('touchstart',e=>{if(showMap&&e.touches.length===2){e.preventDefault();pinchStart={dist:touchDistance(e.touches),zoom:mapZoom}}},{passive:false});
-canvas.addEventListener('touchmove',e=>{if(showMap&&e.touches.length===2&&pinchStart){e.preventDefault();const raw=pinchStart.zoom*(touchDistance(e.touches)/Math.max(1,pinchStart.dist));setMapZoomValue(raw)}},{passive:false});
-canvas.addEventListener('touchend',e=>{if(e.touches.length<2)pinchStart=null;},{passive:false});
-$('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn)beep(620,.08)};$('modalStart').onclick=()=>{
+canvas.addEventListener('touchstart',e=>{if(!showMap)return;
+ e.preventDefault();
+ if(e.touches.length===2){pinchStart={dist:touchDistance(e.touches),zoom:mapZoom};mapTouchPan=null}
+ else if(e.touches.length===1){mapTouchPan={x:e.touches[0].clientX,y:e.touches[0].clientY}}
+},{passive:false});
+canvas.addEventListener('touchmove',e=>{if(!showMap)return;e.preventDefault();
+ if(e.touches.length===2){if(!pinchStart)pinchStart={dist:touchDistance(e.touches),zoom:mapZoom};setMapZoomValue(pinchStart.zoom*(touchDistance(e.touches)/Math.max(1,pinchStart.dist)));mapTouchPan=null}
+ else if(e.touches.length===1&&mapTouchPan){mapPanX+=e.touches[0].clientX-mapTouchPan.x;mapPanY+=e.touches[0].clientY-mapTouchPan.y;mapTouchPan={x:e.touches[0].clientX,y:e.touches[0].clientY}}
+},{passive:false});
+canvas.addEventListener('touchend',e=>{if(!showMap)return;if(e.touches.length<2)pinchStart=null;if(e.touches.length===1)mapTouchPan={x:e.touches[0].clientX,y:e.touches[0].clientY};else if(!e.touches.length)mapTouchPan=null;},{passive:false});
+$('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('dodgeTouch').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('shieldTouch').addEventListener('pointerdown',e=>{e.preventDefault();activateShield()});$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn)beep(620,.08)};$('modalStart').onclick=()=>{
  if(!account||saveBusy)return;
  if(won){if(!$('modalSub').textContent.includes('GUARDADO')){persistVictory();return}level=Number(accountProgress.current_level)||level+1;generate()}
  else if(gameOver){level=Number(accountProgress?.current_level)||level;generate()}
@@ -708,7 +955,7 @@ document.addEventListener('fullscreenchange',()=>{resize()});
 function refreshMobileHud(){
  $('mobileLevel').textContent='N'+level;
  $('mobileKeys').textContent='🔑 '+keys+'/'+totalKeys;
- $('mobileLives').textContent='♥'.repeat(Math.max(0,lives));$('mobileEquip').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ESCUDO '+armor:'⚔ ESPADA';
+ $('mobileLives').textContent='♥'.repeat(Math.max(0,lives));$('mobileEquip').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:'⚔ ESPADA';$('mobileShield').textContent='🛡'+armor+(guardTime>0?' ACTIVO':'');
 }
 // Tie HUD updates to the existing updateUI function.
 const originalUpdateUI=updateUI;
@@ -717,5 +964,9 @@ window.addEventListener('resize',resize);
 window.addEventListener('orientationchange',()=>setTimeout(resize,150));
 if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
 resize();generate();updateMapControls();showWelcome();refreshMobileHud();requestAnimationFrame(loop);initializeAuth();
+
+// PWA: el navegador permite instalación solo por HTTPS (GitHub Pages).
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('PWA no disponible:',err.message)))}
+
 </script>
 </body></html>
