@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<title>ARDEN · El laberinto cambiante</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+:root{--bg:#080a18;--surface:#10152b;--line:#2a3761;--yellow:#ffe76a;--mint:#73f7cf;--pink:#ff6899;--blue:#7f9dff;--muted:#9eaccd}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:#e6edff;font-family:'Press Start 2P',monospace}body{display:flex;flex-direction:column}button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--yellow);outline-offset:4px}
+header{height:72px;min-height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(12px,3vw,35px);border-bottom:3px solid #2c3d68;background:linear-gradient(180deg,#101735 0%,#0a1127 100%);box-shadow:0 4px 0 rgba(0,0,0,.35);gap:16px;z-index:2}.logo{font-size:clamp(11px,1.4vw,19px);color:var(--yellow);white-space:nowrap;text-shadow:3px 3px #92365e;line-height:1.55}.logo small{font-size:8px;color:var(--mint);display:block;text-shadow:none;letter-spacing:2px;margin-top:5px}.top-actions{display:flex;gap:10px;align-items:center}.pixel-btn{border:2px solid #5d75b1;background:linear-gradient(180deg,#25396e 0%,#18284f 100%);color:#fff;padding:13px 15px;white-space:nowrap;font-size:9px;box-shadow:3px 3px 0 #000,inset 0 0 0 2px rgba(255,255,255,.05);transition:background .15s,transform .05s,box-shadow .05s}.pixel-btn:hover{background:linear-gradient(180deg,#33508e 0%,#223563 100%)}.pixel-btn:active,.touch button:active,.map-touch:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #000}.pixel-btn.primary{color:#14152d;background:linear-gradient(180deg,#fff29b 0%,#ffe76a 100%);border-color:#fff2a3}.pixel-btn.primary:hover{background:linear-gradient(180deg,#fff6b5 0%,#ffed84 100%)}
+.main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 310px}#game-wrap{position:relative;min-width:0;overflow:hidden;background:#080a17}#game{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}.scanlines{pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,.11) 4px);opacity:.4}#toast{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:max-content;max-width:92%;text-align:center;padding:13px 18px;background:#10172ff0;border:2px solid #788dd1;box-shadow:5px 5px 0 #060910;color:#fff;font-size:10px;line-height:1.8;pointer-events:none;opacity:0;transition:opacity .2s;z-index:4}#toast.on{opacity:1}
+aside{border-left:3px solid #28345c;background:#11172d;overflow:auto;padding:23px 20px;scrollbar-width:thin;scrollbar-color:#4e5d89 #11172d}.eyebrow{font-size:8px;color:var(--mint);letter-spacing:1px;margin:0 0 14px}.side-title{font-size:13px;line-height:1.8;color:var(--yellow);margin:0 0 20px}.divider{height:2px;background:#2a365d;margin:21px 0}.stat-row{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:9px;line-height:1.8;margin:15px 0;color:var(--muted)}.stat-row strong{font-size:11px;color:#fff}.stat-row .gold{color:var(--yellow)}.stat-row .pink{color:var(--pink)}.stat-row .green{color:var(--mint)}.objective{font-size:9px;line-height:2.15;color:#ced9fa}.objective strong{color:var(--yellow)}.objectives-list{display:grid;gap:10px}.objective-line{font-size:9px;line-height:1.7;color:var(--muted)}.objective-line.complete{color:var(--mint)}.mini-shell{background:#070b1c;padding:8px;border:2px solid #28375f}#minimap{display:block;width:100%;aspect-ratio:1;image-rendering:pixelated}.help{font-size:8px;line-height:2.2;color:#98a9d0}.keycap{display:inline-block;padding:4px;border:1px solid #6173a8;color:#eff3ff;margin-right:5px}.progressbar{height:12px;border:2px solid #33416b;background:#070b1e;margin-top:8px}.progressbar>div{height:100%;background:var(--mint);width:0%;transition:width .25s}.footer-text{font-size:7px;color:#62739e;line-height:2}
+#overlay{position:absolute;inset:0;background:rgba(5,8,19,.87);z-index:8;display:flex;align-items:center;justify-content:center;padding:20px}#overlay.hidden{display:none}.modal{max-width:550px;width:100%;border:4px solid #6a85ce;background:#101834;box-shadow:9px 9px 0 #000;padding:clamp(19px,4vw,42px);text-align:center}.modal h1{font-size:clamp(17px,3vw,28px);color:var(--yellow);line-height:1.7;text-shadow:3px 3px #963858;margin:0 0 19px}.modal .sub{font-size:10px;line-height:2.2;color:var(--mint)}.modal p{font-size:9px;line-height:2.35;color:#c6d3f6}.modal .pixel-btn{margin-top:16px;padding:17px 23px}.modal .small{font-size:8px;color:#8798c5;margin-top:20px}.touch{display:none;position:absolute;bottom:18px;left:18px;z-index:6;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,58px);gap:8px}.touch button{background:linear-gradient(180deg,#294684 0%,#1b2f61 100%);border:3px solid #88a2ea;color:#fff;font-size:22px;touch-action:none;user-select:none;border-radius:10px;box-shadow:4px 4px 0 rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}.touch .up{grid-column:2}.touch .left{grid-column:1;grid-row:2}.touch .down{grid-column:2;grid-row:2}.touch .right{grid-column:3;grid-row:2}.map-touch{display:none;position:absolute;bottom:20px;right:18px;z-index:6;padding:16px 18px;background:linear-gradient(180deg,#294684 0%,#1b2f61 100%);border:3px solid #88a2ea;color:#fff;font-size:10px;border-radius:10px;box-shadow:4px 4px 0 rgba(0,0,0,.45);touch-action:none}
+@media(max-width:920px){.main{grid-template-columns:minmax(0,1fr) 240px}aside{padding:16px 13px}.logo{font-size:11px}.top-actions .pixel-btn{font-size:8px;padding:11px 9px}}@media(max-width:690px){header{height:58px;min-height:58px;padding:0 10px}.logo{font-size:10px}.logo small{font-size:6px;letter-spacing:0}.top-actions{gap:5px}.top-actions .pixel-btn{font-size:7px;padding:10px 6px}.main{display:block;position:relative}aside{display:none}#game-wrap{width:100%;height:100%}.touch{display:grid}.map-touch{display:block}}
+
+/* Arden el Caballero: full viewport, responsive arcade layout */
+html,body{height:100%;height:100dvh;overscroll-behavior:none}body{height:100dvh;touch-action:manipulation}
+header{height:56px;min-height:56px;padding-inline:clamp(12px,2vw,28px);border-bottom:2px solid #314672}
+.main{display:block;position:relative;flex:1;min-height:0}
+#game-wrap{width:100%;height:100%;position:relative}
+aside{display:none!important}
+.logo{font-size:clamp(11px,1.4vw,17px)}
+.top-actions{align-items:center}
+.top-actions .pixel-btn{padding:10px 12px;font-size:8px;min-height:38px}
+.touch,.map-touch{display:none!important}
+#mobileHud{display:none;position:absolute;top:12px;left:12px;z-index:7;pointer-events:none;background:linear-gradient(180deg,rgba(18,31,67,.95) 0%,rgba(9,19,42,.95) 100%);border:3px solid #6c89cb;padding:8px 11px;font-size:8px;color:#ffea83;line-height:1.85;box-shadow:4px 4px 0 rgba(0,0,0,.4);min-width:132px}#mobileHud span{color:#fefefe}
+#fullscreenBtn{display:none}
+#orientationGate{display:none;position:fixed;inset:0;z-index:30;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:25px;text-align:center;background:#080d20;color:#ffe76a;font-size:clamp(12px,3.8vw,18px);line-height:2}
+#orientationGate .rotateGlyph{font-family:monospace;font-size:64px;line-height:1;animation:tilt 2s ease-in-out infinite alternate}
+#orientationGate p{color:#bacbf5;font-size:10px;line-height:2;max-width:360px}
+@keyframes tilt{from{transform:rotate(-18deg)}to{transform:rotate(72deg)}}
+@media(hover:none) and (pointer:coarse){
+ header{height:48px;min-height:48px;padding:0 max(10px,env(safe-area-inset-left)) 0 max(8px,env(safe-area-inset-right));gap:6px}
+ .logo{font-size:10px;line-height:1.05;text-shadow:2px 2px #92365e}.logo small{display:none}
+ .top-actions{gap:6px;margin-left:auto}.top-actions .pixel-btn{padding:10px 10px;font-size:8px;box-shadow:2px 2px 0 #000;min-height:34px}
+ #soundBtn,#mapBtn{display:none}
+ #fullscreenBtn{display:inline-flex;align-items:center;justify-content:center}
+ #newBtn{padding-inline:12px}
+ .touch{display:grid!important;left:max(12px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));grid-template-columns:repeat(3,clamp(56px,10vh,74px));grid-template-rows:repeat(2,clamp(56px,10vh,74px));gap:8px}
+ .touch button{border-radius:12px;min-width:0;min-height:0;font-size:26px}
+ .map-touch{display:block!important;right:max(12px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));font-size:10px;padding:18px 18px;min-width:92px;text-align:center}
+ #mobileHud{display:block;left:max(10px,env(safe-area-inset-left));top:10px;font-size:8px;padding:6px 8px;min-width:140px}
+ #toast{top:56px;left:50%;max-width:72%;padding:9px 12px;font-size:8px}
+ #overlay{padding:10px;overflow-y:auto;align-items:center}
+ .modal{max-width:560px;padding:16px 18px;border-width:3px;box-shadow:6px 6px #000;background:linear-gradient(180deg,#141f44 0%,#0e1734 100%)}
+ .modal h1{font-size:clamp(14px,4vh,22px);margin:0 0 6px}.modal .sub{font-size:8px;line-height:1.7}
+ .modal p{font-size:8px;line-height:1.8;margin:9px 0;color:#d7e3ff}.modal .pixel-btn{margin-top:8px;padding:12px 14px;font-size:8px}
+ .modal .small{font-size:7px;margin-top:10px;line-height:1.6;color:#98addf}
+}
+@media(hover:none) and (pointer:coarse) and (orientation:portrait){#orientationGate{display:flex}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:420px){
+ header{height:42px;min-height:42px}.touch{grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,52px)}
+ .map-touch{min-width:84px;padding:15px 14px}
+ .modal .small{display:none}.modal p{font-size:7px}
+}
+
+/* ARDEN EL CABALLERO // ARCADE REMASTER */
+:root{--bg:#070b1b;--yellow:#ffdc69;--mint:#78ffb2;--pink:#ff668b}
+header{background:linear-gradient(180deg,#182447,#0b132b);border-bottom:3px solid #4a6aa1;box-shadow:0 4px 0 #040715;padding-inline:clamp(10px,2vw,28px)}
+.logo{color:#ffed8a;letter-spacing:1px;text-shadow:3px 3px #99416e}.logo small{color:#8cffa9;letter-spacing:1px}
+.pixel-btn{border:3px solid #7291c7;background:#263965;box-shadow:inset 0 3px #415c92,3px 4px #05091b;border-radius:3px;transition:filter .14s,transform .1s;min-height:40px}.pixel-btn:hover{filter:brightness(1.2)}.pixel-btn.primary{border-color:#fff2ad;background:#ffe175;box-shadow:inset 0 3px #fff4bd,3px 4px #070d1c}
+#game-wrap{background:radial-gradient(ellipse at 50% 50%,#142a4d,#050716 73%)}
+#toast{border:3px solid #93ffd0;background:#101d38f5;box-shadow:0 5px #050b17;color:#f7ffcf}
+#overlay{background:radial-gradient(ellipse at 50% 30%,rgba(10,35,61,.93),rgba(3,6,18,.98)),repeating-linear-gradient(0deg,transparent 0 7px,#101b37 8px);overflow:auto;padding:14px}
+#overlay::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#80fcb7 1px,transparent 1px);background-size:27px 27px;animation:starDrift 24s linear infinite}
+@keyframes starDrift{to{background-position:108px 54px}}
+.modal{position:relative;isolation:isolate;overflow:hidden;max-width:850px;width:min(96%,850px);padding:0;border:4px solid #79a5cc;background:#111d38;box-shadow:0 0 0 5px #071025,0 0 0 9px #3c5785,12px 14px 0 #03050d;text-align:center}
+.modal::before{content:'';position:absolute;inset:7px;border:2px solid #314c7b;pointer-events:none;z-index:1}
+.modal-header{background:linear-gradient(90deg,#203d56,#17674f 45%,#203d56);color:#beffb7;font-size:9px;line-height:1.4;padding:11px 12px;border-bottom:3px solid #72d9a1;letter-spacing:2px}
+.menu-body{display:grid;grid-template-columns:minmax(190px,.9fr) minmax(260px,1.1fr);align-items:center;gap:20px;padding:27px 35px 21px;background:radial-gradient(ellipse at 20% 30%,#213963 0%,#111b38 60%)}
+.menu-art{position:relative;height:256px;min-width:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(#142543,#10172c);border:4px solid #3b5886;box-shadow:inset 0 0 0 3px #0b1732,6px 7px #080d1c;overflow:hidden}
+.menu-art::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 31px,#1b3458 32px),repeating-linear-gradient(0deg,transparent 0 31px,#1b3458 32px);opacity:.5}
+.menu-art::after{content:'';position:absolute;bottom:0;left:0;right:0;height:25%;background:repeating-linear-gradient(90deg,#224c52 0 33px,#193d47 33px 66px);border-top:5px solid #65b88b}
+#heroSprite{position:relative;z-index:2;width:184px;height:184px;image-rendering:pixelated;filter:drop-shadow(9px 13px 0 #071329);animation:heroBob 1.4s steps(4,end) infinite}
+@keyframes heroBob{50%{transform:translateY(-10px)}}
+.star{position:absolute;z-index:2;color:#ffe17c;font-size:22px;animation:blinkStar 1.4s steps(2,end) infinite}.star.a{left:12%;top:14%}.star.b{right:12%;top:28%;animation-delay:.6s}.star.c{left:23%;bottom:25%;font-size:13px;animation-delay:.3s}
+@keyframes blinkStar{50%{opacity:.25;transform:scale(.7)}}
+.menu-copy{min-width:0;text-align:left}.menu-badge{color:#7df6ac;font-size:9px;letter-spacing:1px;margin-bottom:13px;line-height:1.8}
+.modal h1{font-size:clamp(22px,3.6vw,43px);line-height:1.3;letter-spacing:1px;margin:0 0 13px;color:#fff0a4;text-shadow:4px 4px #b04d76,7px 7px #101c39}
+.modal .sub{font-size:clamp(8px,1vw,11px);line-height:1.8;color:#9affbb;letter-spacing:1px}
+.modal p{font:500 clamp(11px,1.1vw,14px)/1.75 system-ui,sans-serif;color:#d0def6;margin:16px 0}
+.menu-rule{height:3px;background:repeating-linear-gradient(90deg,#ffe083 0 14px,transparent 14px 24px);margin:18px 0}
+.modal .pixel-btn{width:100%;margin-top:7px;font-size:clamp(9px,1vw,12px);padding:16px 15px;min-height:52px;animation:buttonGlow 2s infinite}
+@keyframes buttonGlow{50%{filter:brightness(1.11)}}
+.modal .small{font-size:8px;line-height:1.9;margin:13px 0 0;color:#b8ceef}
+.enemy-roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#334d78;border-top:3px solid #4f719c}
+.enemy-profile{background:#101c36;padding:12px 4px 11px;text-align:center;min-width:0}.enemy-profile canvas{width:52px;height:52px;image-rendering:pixelated;display:block;margin:auto auto 8px;filter:drop-shadow(3px 4px #070d1c)}
+.enemy-profile span{display:block;font-size:8px;line-height:1.7;color:#d2e4ff}.enemy-profile small{display:block;margin-top:5px;font:600 9px/1.2 system-ui,sans-serif;color:#829dc6}
+#mobileHud{background:#0c1d38ee;border-color:#4d98ad;box-shadow:4px 4px #060c18}
+.touch button,.map-touch{background:linear-gradient(180deg,#31527d,#19355d);border:3px solid #9bd5c8;color:#effff4;box-shadow:inset 0 3px rgba(255,255,255,.12),3px 4px #060d1b}
+.touch button:active,.map-touch:active{background:#3a927c}
+.map-touch{border-color:#ffdf89;color:#fff3a8}
+@media(max-width:680px){.menu-body{grid-template-columns:38% minmax(0,1fr);padding:15px 18px;gap:15px}.menu-art{height:200px}#heroSprite{width:145px;height:145px}.modal h1{font-size:clamp(17px,4vw,26px)}.modal p{font-size:10px;line-height:1.5;margin:8px 0}.menu-badge{font-size:7px;margin-bottom:6px}.menu-rule{margin:10px 0}.modal .pixel-btn{padding:11px 7px;min-height:43px}.enemy-profile{padding:5px 2px}.enemy-profile canvas{width:35px;height:35px;margin-bottom:3px}.enemy-profile span{font-size:6px}.enemy-profile small{display:none}.modal .small{font-size:6px;margin-top:7px}.modal-header{padding:6px;font-size:7px}}
+@media(hover:none) and (pointer:coarse){#overlay{padding:8px}.modal{width:min(96%,800px);max-width:800px}.menu-body{grid-template-columns:36% 1fr;gap:clamp(9px,2vw,20px);padding:clamp(8px,2vh,18px)}.menu-art{height:clamp(128px,40vh,225px)}#heroSprite{width:clamp(100px,24vh,175px);height:clamp(100px,24vh,175px)}.modal h1{font-size:clamp(15px,4vh,28px);margin:0 0 6px}.modal .sub{font-size:8px}.modal p{font-size:clamp(9px,2vh,12px);line-height:1.48;margin:8px 0}.menu-rule{margin:9px 0}.modal .pixel-btn{min-height:40px;padding:9px;font-size:9px}.modal .small{font-size:6px;margin:6px 0 0}.enemy-roster{grid-template-columns:repeat(4,1fr)}.enemy-profile{padding:4px 2px}.enemy-profile canvas{height:34px;width:34px;margin-bottom:3px}.enemy-profile span{font-size:6px}.enemy-profile small{display:none}.modal-header{padding:6px;font-size:7px}.touch{grid-template-columns:repeat(3,clamp(55px,12vh,80px));grid-template-rows:repeat(2,clamp(55px,12vh,80px))}.touch button{font-size:29px}.map-touch{min-width:100px;padding:18px 16px;font-size:10px}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:420px){.menu-art{height:135px}#heroSprite{width:115px;height:115px}.menu-body{padding:7px 16px}.modal p{font-size:9px;margin:5px 0}.modal h1{font-size:19px}.modal .pixel-btn{min-height:36px;padding:7px}.enemy-profile canvas{width:30px;height:30px}.enemy-profile{padding:3px}.modal .small{display:none}.modal-header{font-size:6px;padding:5px}.touch{grid-template-columns:repeat(3,clamp(50px,13vh,65px));grid-template-rows:repeat(2,clamp(50px,13vh,65px))}}
+
+
+/* Pantano Esmeralda: identidad visual compartida con Arden Runner */
+:root{--bg:#061b1b;--surface:#0c302e;--line:#286a55;--yellow:#ffe881;--mint:#92f5a9;--pink:#ff8ca1;--blue:#9fddd1;--muted:#b4d9c4}
+html,body,#game-wrap{background:#071e21}
+header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px solid #55a572;box-shadow:0 4px 0 #061b17}
+.logo{color:#d4ff9d;text-shadow:3px 3px #1b6a44}
+.logo small{color:#a8ead3}
+.pixel-btn{background:linear-gradient(#205b4c,#103c36);border-color:#83bc82;box-shadow:3px 3px 0 #071f1b;color:#f7ffea}
+.pixel-btn:hover{background:linear-gradient(#307c59,#174f3c)}
+.pixel-btn.primary{background:linear-gradient(#ecffad,#a1e86b);border-color:#eaffc3;color:#143628}
+#mobileHud{background:#082c25e8;border:2px solid #89ce91;color:#efffc2;box-shadow:3px 3px #041712}
+.touch button,.map-touch{background:linear-gradient(165deg,#2d775eec,#124d43ef);border:3px solid #b4e89d;color:#fffde5;box-shadow:inset 0 3px #ffffff22,3px 4px #031a16}
+.map-touch{border-color:#ffdd8a;color:#ffec9e}
+#toast{background:#0a3326ed;border-color:#8ad5a4;box-shadow:5px 5px #061710}
+#overlay{background:radial-gradient(ellipse at 50% 5%,#1a5b44f2,#05191cee 85%)}
+#overlay::before{opacity:.22;background-image:radial-gradient(#b4f29f 2px,transparent 2px);background-size:44px 44px}
+.modal{border-color:#8bdd8c;background:#0b2b28;box-shadow:0 0 0 5px #07211d,0 0 0 9px #478f59,12px 14px 0 #03110f}
+.modal::before{border-color:#326949}
+.modal-header{background:linear-gradient(90deg,#18583e,#3a8a53,#18583e);border-bottom-color:#a4e488;color:#fffbd9}
+.menu-body{background:radial-gradient(ellipse at 20% 35%,#2d724f,#103c36 62%,#092825);gap:26px}
+.menu-art{background:linear-gradient(#85cfc1 0%,#bde9c9 59%,#67ac7d 59%,#34804b 100%);border-color:#9ce5a0;box-shadow:inset 0 0 0 3px #266347,6px 7px #052b20}
+.menu-art::before{background:linear-gradient(90deg,transparent 0 12%,#ffffff2d 12% 13%,transparent 13% 80%,#ffffff24 80% 81%,transparent 81%),linear-gradient(to top,#184f43 0 12%,transparent 12%);opacity:1}
+.menu-art::after{height:20%;background:repeating-linear-gradient(90deg,#2b7747 0 18px,#3b8b51 18px 35px,#23663f 35px 54px);border-top:5px solid #b7de83}
+#heroSprite{filter:drop-shadow(7px 10px 0 #195e4188)}
+.menu-badge,.modal .sub{color:#b6ffba}
+.modal h1{color:#f3ffb0;text-shadow:4px 4px #27713d,7px 7px #092825}
+.modal p{color:#d7f7dc}
+.menu-rule{background:repeating-linear-gradient(90deg,#dcff83 0 14px,transparent 14px 24px)}
+.modal .small{color:#b3dbbf}
+.enemy-roster{background:#276849;border-top-color:#8ad68a}
+.enemy-profile{background:#10392f}
+.enemy-profile small{color:#a3cdb7}
+.enemy-profile canvas{filter:drop-shadow(2px 3px #061c18)}
+#orientationGate{background:radial-gradient(#155b42,#061d23);color:#dfff9c}
+
+
+/* Combate y salas: misma estética del juego existente, HUD compacto */
+#combatHud{position:absolute;top:13px;right:14px;z-index:4;display:flex;flex-direction:column;gap:7px;align-items:flex-end;pointer-events:none;font:8px/1.7 'Press Start 2P',monospace}
+#combatHud span{display:none;padding:8px 10px;border:2px solid #b8c680;background:#091f20e8;color:#fff5af;text-shadow:1px 1px #132326;box-shadow:3px 3px #041310}
+#combatHud span:not(:empty){display:block}
+#bossStatus{border-color:#ef738a!important;color:#ffd2d6!important}
+#roomStatus{border-color:#b4dfff!important;color:#b4dfff!important}
+#combatTools{display:none;position:absolute;right:max(12px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:6;align-items:end;gap:8px}
+#combatTools button{font-family:inherit;touch-action:none;user-select:none;border-radius:10px;box-shadow:3px 4px #031a16;color:#fff;display:flex;justify-content:center;align-items:center}
+#attackTouch{width:82px;height:82px;background:linear-gradient(#a85648,#6f293c);border:3px solid #ffd1a0;font-size:34px}
+#combatTools .map-touch{display:flex!important;position:static!important;width:54px;height:54px;min-width:54px;min-height:54px;padding:0;font-size:21px;background:linear-gradient(#2d775e,#124d43);border:3px solid #b4e89d}
+#attackTouch:active{transform:translate(2px,2px);background:#de755a}
+@media(hover:none) and (pointer:coarse){#combatTools{display:flex}#combatHud{right:12px;top:10px;font-size:7px;gap:4px}#combatHud span{padding:4px 6px}#equipmentText{display:none!important}.touch{z-index:6}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:420px){#attackTouch{width:65px;height:65px;font-size:28px}#combatTools .map-touch{width:46px;height:46px;min-width:46px;min-height:46px;font-size:18px}#combatHud{top:7px}}
+
+/* Controles táctiles accesibles: joystick 360º, interpretado en cuatro direcciones de pasillo. */
+.joystick{display:none;position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:7;width:154px;height:165px;flex-direction:column;justify-content:center;align-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.joystick-ring{width:136px;height:136px;border:4px solid #a2d3a6;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#225a51de,#103c39da);box-shadow:inset 0 5px 12px #041d29b8,0 6px 0 #041b20,0 0 0 5px #0b2d35a6}
+.joystick-arrows{font-size:25px;color:#a2d3a673;pointer-events:none}.joystick-knob{position:absolute;left:50%;top:50%;width:66px;height:66px;border-radius:50%;border:4px solid #e4f7bd;background:radial-gradient(circle at 35% 30%,#7fd4a8,#24776b 72%);box-shadow:inset 0 4px #ffffff45,0 5px 9px #0007;transform:translate(-50%,-50%);pointer-events:none;will-change:transform}
+.joystick-label{font:8px 'Press Start 2P',monospace;color:#def7d9;margin-top:9px;text-shadow:2px 2px #082424}
+#attackTouch{position:relative;flex-direction:column;gap:2px;overflow:hidden;background:linear-gradient(#ba6547,#7c2b3c);border:4px solid #ffe2ad;border-radius:50%!important;width:98px;height:98px;box-shadow:inset 0 4px #ffffff33,0 5px 0 #3a1c27!important;transition:filter .1s}
+#attackTouch span{font-size:35px;line-height:1}#attackTouch small{font:7px 'Press Start 2P',monospace;line-height:1.4}#attackTouch i{position:absolute;bottom:0;left:0;height:6px;width:100%;background:#b4ff97;transform-origin:left center;pointer-events:none}#attackTouch.cooldown{filter:brightness(.68)}
+#combatTools{gap:14px;bottom:max(19px,env(safe-area-inset-bottom))}#combatTools .map-touch{border-radius:12px!important}
+#combatHint{display:block!important;border-color:#427a80!important;color:#d0f4df!important;max-width:300px;font-size:7px;line-height:1.9}
+@media(hover:none) and (pointer:coarse){.touch{display:none!important}.joystick{display:flex}#combatHud{top:8px}#combatHint{display:none!important}#combatTools{display:flex!important}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:430px){.joystick{width:132px;height:138px;left:max(14px,env(safe-area-inset-left));bottom:max(7px,env(safe-area-inset-bottom))}.joystick-ring{width:108px;height:108px}.joystick-knob{width:57px;height:57px}.joystick-label{margin-top:7px;font-size:7px}#attackTouch{width:78px;height:78px}#attackTouch span{font-size:28px}#attackTouch small{font-size:6px}#combatTools{gap:9px;bottom:max(11px,env(safe-area-inset-bottom))}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (min-height:431px){.joystick{width:180px;height:185px}.joystick-ring{width:152px;height:152px}#attackTouch{width:110px;height:110px}}
+
+/* Mapa con zoom: controles visibles solo cuando el mapa está abierto. */
+#mapZoomTools{display:none;position:absolute;right:max(14px,env(safe-area-inset-right));top:50%;transform:translateY(-50%);z-index:7;flex-direction:column;align-items:center;gap:9px;pointer-events:auto}
+#game-wrap.map-open #mapZoomTools{display:flex}
+#mapZoomTools button{min-width:52px;min-height:52px;padding:8px;border:3px solid #87b8a7;border-radius:9px;background:#153b40;color:#f6e7a2;box-shadow:4px 4px 0 #071b24;font:bold 22px monospace;touch-action:manipulation}
+#mapZoomTools button:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #071b24}
+#mapZoomLabel{font:700 12px monospace;color:#d4f6dc;background:#0b282edb;border:2px solid #4d8c75;padding:6px;min-width:52px;text-align:center}
+#game-wrap.map-open .joystick,#game-wrap.map-open #combatTools,#game-wrap.map-open #combatHud,#game-wrap.map-open #mobileHud{display:none!important}
+@media(max-width:690px){#mapZoomTools{right:max(9px,env(safe-area-inset-right))}#mapZoomTools button{min-width:45px;min-height:45px;font-size:19px}}
+@media(max-height:390px){#mapZoomTools{gap:4px}#mapZoomTools button{min-height:36px;min-width:42px}#mapZoomLabel{padding:4px}}
+
+/* CUENTAS Y AVANCE: interfaz separada del juego */
+#accountBtn{max-width:175px;overflow:hidden;text-overflow:ellipsis}
+#authGate{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 25%,#1a6048,#061b20 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+#authGate.hidden{display:none}
+.auth-card{width:min(460px,95vw);max-height:95dvh;overflow:auto;background:#0e2030;border:4px solid #83d1a6;box-shadow:10px 10px 0 #061017;padding:clamp(15px,3vw,28px);text-align:center}
+.auth-title{font-size:clamp(15px,3vw,24px);line-height:1.6;color:#ffe68b;text-shadow:3px 3px #754360;margin:0}
+.auth-subtitle{color:#8ff3bd;font-size:9px;line-height:1.9;margin:12px 0 18px}
+.auth-field{display:block;font-size:9px;text-align:left;color:#b7dcd6;margin:11px 0 5px}
+.auth-input{display:block;width:100%;min-height:44px;border:2px solid #567f89;background:#061421;color:white;padding:10px 12px;font:14px monospace;outline:none;border-radius:2px}
+.auth-input:focus{border-color:#ffe68b}
+.auth-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.auth-actions button{flex:1;min-width:125px;white-space:normal;line-height:1.6}
+#authMessage{color:#ffe1a6;font:12px/1.6 monospace;min-height:18px;margin:14px 0 0;overflow-wrap:anywhere}
+.auth-footnote{color:#93b8ba;font:11px/1.65 monospace;margin-top:14px}
+#accountPanel{position:fixed;inset:0;z-index:85;background:#03111de8;display:none;align-items:center;justify-content:center;padding:15px}
+#accountPanel.open{display:flex}
+.account-card{width:min(490px,95vw);background:#122239;border:3px solid #83d1a6;box-shadow:8px 8px #020a12;padding:22px;text-align:center}
+.account-card h2{color:#ffe68b;font-size:clamp(12px,3vw,18px)}
+.account-card p{font:13px/1.8 monospace;color:#d7eafa;overflow-wrap:anywhere}
+.account-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.account-actions button{font-size:9px;line-height:1.5}
+@media(hover:none) and (pointer:coarse){#accountBtn{font-size:8px;max-width:110px}.auth-card{padding:16px}.auth-card .pixel-btn{padding:12px;font-size:9px}.auth-actions{margin-top:10px}}
+@media(max-height:430px){.auth-card{padding:12px}.auth-subtitle{margin:5px 0}.auth-field{margin:6px 0 3px}.auth-input{min-height:37px}.auth-footnote{margin-top:7px}}
+</style>
+</head>
+<body>
+<header><div class="logo">ARDEN EL CABALLERO <small>EL LABERINTO ENCANTADO</small></div><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></header>
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span><span id="combatHint">⚔ Mira al enemigo y pulsa ATACAR</span></div><div id="mobileHud">⚔️ ARDEN · <span id="mobileLevel">N1</span><br><span id="mobileKeys">🔑 0/3</span> · <span id="mobileLives">♥♥♥</span><br><span id="mobileEquip">⚔ ESPADA</span></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label">MOVER</span></div><div id="combatTools"><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small>ATACAR</small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+<div id="mapZoomTools" aria-label="Zoom del mapa"><button id="mapZoomIn" aria-label="Acercar mapa">+</button><div id="mapZoomLabel">100%</div><button id="mapZoomOut" aria-label="Alejar mapa">−</button><button id="mapZoomReset" aria-label="Restablecer zoom" title="Ver todo">⌗</button><button id="mapZoomClose" aria-label="Cerrar mapa" title="Cerrar mapa">×</button></div>
+<div id="overlay"><div class="modal"><div class="modal-header">✦ LA LEYENDA DEL CABALLERO · AVENTURA RETRO ✦</div><div class="menu-body"><div class="menu-art"><span class="star a">✦</span><span class="star b">✧</span><span class="star c">✦</span><canvas id="heroSprite" width="96" height="96" aria-label="Arden, el caballero aventurero"></canvas></div><div class="menu-copy"><div class="menu-badge">⚔️ LA LEYENDA DE ARDEN</div><h1 id="modalTitle">ARDEN<br>EL CABALLERO</h1><div class="sub" id="modalSub">EL LABERINTO ENCANTADO</div><p id="modalText">Explora un pantano lleno de ruinas, plantas y senderos ocultos. Encuentra llaves, descubre tesoros y esquiva a los monstruos que protegen el laberinto.</p><div class="menu-rule"></div><button class="pixel-btn primary" id="modalStart">▶ COMENZAR AVENTURA</button><div class="small">PC: WASD / FLECHAS · ENTER: ATAQUE · M: MAPA<br>MÓVIL: JOYSTICK + BOTÓN ESPADA</div></div></div><div class="enemy-roster"><div class="enemy-profile"><canvas id="portraitHunter" width="24" height="24"></canvas><span style="color:#ff8592">DEMONIO</span><small>Rastreadora</small></div><div class="enemy-profile"><canvas id="portraitPatrol" width="24" height="24"></canvas><span style="color:#90c2ff">GÓLEM</span><small>Patrullero</small></div><div class="enemy-profile"><canvas id="portraitStalker" width="24" height="24"></canvas><span style="color:#d8a0ff">ESPECTRO</span><small>Acechador</small></div><div class="enemy-profile"><canvas id="portraitChaos" width="24" height="24"></canvas><span style="color:#ffc57f">CÍCLOPE</span><small>Caótica</small></div></div></div></div></div>
+<aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ENCANTADO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA<br><span class="keycap">N</span> NUEVA PARTIDA</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
+<div id="orientationGate"><div class="rotateGlyph">▣</div><strong>GIRA TU CELULAR</strong><p>ARDEN EL CABALLERO se juega en horizontal. Gira el teléfono y pulsa pantalla completa para aprovechar toda la pantalla.</p><button class="pixel-btn primary" id="rotateFull">⛶ PANTALLA COMPLETA</button></div>
+
+<div id="authGate" role="dialog" aria-modal="true" aria-label="Iniciar sesión">
+  <div class="auth-card">
+    <div style="font-size:32px;margin-bottom:6px">⚔️</div>
+    <h1 class="auth-title">ARDEN EL CABALLERO</h1>
+    <p class="auth-subtitle">TU AVENTURA, TU CUENTA, TU PROGRESO</p>
+    <form id="authForm" autocomplete="on">
+      <label class="auth-field" for="authEmail">CORREO ELECTRÓNICO</label>
+      <input class="auth-input" id="authEmail" type="email" autocomplete="email" placeholder="jugador@correo.com" required />
+      <label class="auth-field" for="authPassword">CONTRASEÑA</label>
+      <input class="auth-input" id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo 6 caracteres" required />
+      <div class="auth-actions"><button class="pixel-btn primary" id="loginBtn" type="submit">▶ ENTRAR</button><button class="pixel-btn" id="registerBtn" type="button">✦ CREAR CUENTA</button></div>
+    </form>
+    <div id="authMessage" role="status">Conecta Supabase para habilitar el inicio de sesión.</div>
+    <p class="auth-footnote">Tus niveles completados se guardan en línea. Si sales a mitad de un nivel, lo repetirás desde el principio.</p>
+  </div>
+</div>
+<div id="accountPanel" role="dialog" aria-modal="true" aria-label="Mi partida">
+  <div class="account-card"><h2>⚔ MI PARTIDA</h2><p id="accountDetails">—</p><div class="account-actions"><button class="pixel-btn primary" id="accountClose">▶ CONTINUAR</button><button class="pixel-btn" id="logoutBtn">CERRAR SESIÓN</button></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d',{alpha:false});
+const mini=document.getElementById('minimap'),mctx=mini.getContext('2d');
+ctx.imageSmoothingEnabled=false;mctx.imageSmoothingEnabled=false;
+const $=id=>document.getElementById(id);const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
+let enemies=[],lives=3,shield=0,invulnerable=0,enemyTimer=0,gameOver=false;
+let level=1,maze=[],seen=[],items=new Map(),width=81,height=81,player={x:1,y:1,drawX:1,drawY:1},start={x:1,y:1},exit={x:1,y:1},totalKeys=3,keys=0,relics=0,totalRelics=5,seed=0,elapsed=0,started=false,paused=true,won=false,showMap=false,last=0,moveClock=0,frame=0,toastClock=0,audioOn=true,audioContext=null,walkable=0,explored=0;
+let chestsOpened=0,weaponCharges=0,armor=0,attackCooldown=0,slashTime=0,slashCells=[],slashFace=1,trapCells=new Set(),hazardCooldown=0;
+let mapZoom=1;const mapZoomOptions=[1,1.5,2,3,4,6,8];
+let chambers=[],activeChamber=null,boss=null,bossDefeated=false,bossStarted=false,clearedChambers=0;
+const tile=24;let vw=0,vh=0, DPR=1;const input={up:false,down:false,left:false,right:false};
+function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}};
+const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
+function farthest(px,py){let q=[[px,py]],d=new Int32Array(width*height).fill(-1);d[id(px,py)]=0;let best={x:px,y:py,d:0},k=0;while(k<q.length){let [x,y]=q[k++],dist=d[id(x,y)];if(dist>best.d)best={x,y,d:dist};for(let [dx,dy] of DIRS){let nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&d[id(nx,ny)]<0){d[id(nx,ny)]=dist+1;q.push([nx,ny])}}}return {best,d,reachable:q};}
+function generate(){width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
+while(stack.length){let [x,y]=stack[stack.length-1];let options=[];for(let [dx,dy] of DIRS){let nx=x+dx*2,ny=y+dy*2;if(nx>0&&ny>0&&nx<width-1&&ny<height-1&&maze[ny][nx])options.push([dx,dy,nx,ny])}if(!options.length){stack.pop();continue}let [dx,dy,nx,ny]=options[Math.floor(rnd()*options.length)];maze[y+dy][x+dx]=0;maze[ny][nx]=0;stack.push([nx,ny]);}
+// Extra shortcuts make exploration less linear while preserving full connectivity.
+for(let i=0;i<Math.floor(width*height*.027);i++){let x=2+Math.floor(rnd()*(width-4)),y=2+Math.floor(rnd()*(height-4));if(x%2===0&&y%2===1&&isFloor(x-1,y)&&isFloor(x+1,y))maze[y][x]=0;else if(y%2===0&&x%2===1&&isFloor(x,y-1)&&isFloor(x,y+1))maze[y][x]=0;}
+start={x:1,y:1};let info=farthest(start.x,start.y);exit={x:info.best.x,y:info.best.y};let available=info.reachable.filter(([x,y])=>Math.abs(x-start.x)+Math.abs(y-start.y)>18&&Math.abs(x-exit.x)+Math.abs(y-exit.y)>5);available.sort((a,b)=>info.d[id(b[0],b[1])]-info.d[id(a[0],a[1])]);
+const pick=(minDist)=>{let choices=available.filter(([x,y])=>info.d[id(x,y)]>=minDist&&!items.has(id(x,y)));if(!choices.length)choices=available.filter(([x,y])=>!items.has(id(x,y)));const pos=choices[Math.floor(rnd()*choices.length)];if(!pos)return null;return pos};
+totalKeys=Math.min(6,3+Math.floor((level-1)/2));totalRelics=5+Math.min(8,level-1);keys=0;relics=0;
+for(let i=0;i<totalKeys;i++){let p=pick(25+i*15);if(p)items.set(id(...p),'key')}
+for(let i=0;i<totalRelics;i++){let p=pick(10);if(p)items.set(id(...p),'relic')}
+for(let i=0;i<Math.min(3+level,11);i++){let p=pick(18);if(p)items.set(id(...p),'flower')}
+enemies=[];const types=['hunter','patrol','stalker','chaos'];for(let i=0;i<Math.min(3+level,12);i++){const pool=info.reachable.filter(([x,y])=>info.d[id(x,y)]>24&&!items.has(id(x,y))&&!enemies.some(e=>e.x===x&&e.y===y));if(!pool.length)break;const pos=pool[Math.floor(rnd()*pool.length)];enemies.push({x:pos[0],y:pos[1],drawX:pos[0],drawY:pos[1],type:types[i%4],dir:Math.floor(rnd()*4),wait:0,hp:1+Math.floor(level/3),maxHp:1+Math.floor(level/3)})}
+// Las trampas, cámaras y recompensas se vuelven a generar en cada nivel.
+trapCells=new Set();chambers=[];activeChamber=null;boss=null;bossDefeated=false;bossStarted=false;clearedChambers=0;chestsOpened=0;
+const floorCandidates=info.reachable.filter(([x,y])=>info.d[id(x,y)]>18&&!items.has(id(x,y))&&Math.abs(x-exit.x)+Math.abs(y-exit.y)>5);
+for(let i=0;i<Math.min(18,7+level*2);i++){
+ const p=floorCandidates[Math.floor(rnd()*floorCandidates.length)];if(p&&!items.has(id(...p)))trapCells.add(id(...p));
+}
+const deadEnds=info.reachable.filter(([x,y])=> info.d[id(x,y)]>30 && Math.abs(x-exit.x)+Math.abs(y-exit.y)>12 && DIRS.filter(([dx,dy])=>isFloor(x+dx,y+dy)).length===1);
+for(let i=0;i<Math.min(3,1+Math.floor(level/2));i++){
+ const valid=deadEnds.filter(([x,y])=> x>5&&y>5&&x<width-6&&y<height-6&&chambers.every(c=>Math.abs(c.x-x)+Math.abs(c.y-y)>13));
+ if(!valid.length)break;
+ const [x,y]=valid[Math.floor(rnd()*valid.length)];
+ // Salón rectangular conectado a un callejón. Jamás cerramos las rutas originales.
+ for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)maze[y+dy][x+dx]=0;
+ const area=new Set();for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)area.add(id(x+dx,y+dy));
+ chambers.push({x,y,area,active:false,done:false,guards:0});
+ trapCells.delete(id(x,y));items.delete(id(x,y));items.set(id(x,y),'sigil');
+}
+for(const c of chambers)for(const k of c.area){trapCells.delete(k);if(k!==id(c.x,c.y)&&items.get(k)!=='key')items.delete(k)}
+player={x:1,y:1,drawX:1,drawY:1,face:1};lives=3;shield=0;invulnerable=1.8;enemyTimer=0;attackCooldown=0;slashTime=0;slashCells=[];hazardCooldown=0;weaponCharges=0;armor=0;gameOver=false;elapsed=0;moveClock=0;explored=0;walkable=maze.reduce((sum,row)=>sum+row.filter(v=>!v).length,0);reveal();won=false;showMap=false;updateUI();drawMinimap();}
+function reveal(){let x=player.x,y=player.y;for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++){let nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=width||ny>=height||dx*dx+dy*dy>37)continue;if(!seen[ny][nx]){seen[ny][nx]=1;if(isFloor(nx,ny))explored++}}}
+function note(msg){$('toast').textContent=msg;$('toast').classList.add('on');toastClock=2.6}
+function beep(freq=500,duration=.08,type='square'){if(!audioOn)return;try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')audioContext.resume();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,audioContext.currentTime);gain.gain.setValueAtTime(.045,audioContext.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);osc.connect(gain).connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+duration)}catch(e){}}
+function takeDamage(message){
+ if(invulnerable>0||paused||gameOver||shield>0)return;
+ if(armor>0){armor--;invulnerable=.8;note('🛡 TU ARMADURA ABSORBIÓ UN GOLPE');beep(250,.12);updateUI();return}
+ lives--;invulnerable=2;beep(145,.25);note(message||'¡ARDEN RECIBIÓ DAÑO!');
+ if(lives<=0){gameOver=true;paused=true;showMap=false;updateMapControls();$('modalTitle').textContent='FIN DE LA AVENTURA';$('modalSub').textContent='EL LABERINTO VENCIÓ A ARDEN';$('modalText').textContent=`Reuniste ${keys}/${totalKeys} llaves, abriste ${chestsOpened} cofres y exploraste ${Math.floor(explored/Math.max(1,walkable)*100)}%. Inténtalo con otro laberinto.`;$('modalStart').textContent='↻ REINTENTAR';$('overlay').classList.remove('hidden')}
+ updateUI();
+}
+function getRoomFor(x,y){return chambers.find(c=>c.area.has(id(x,y)))}
+function activateChamber(c){
+ if(c.done||c.active||activeChamber)return;
+ c.active=true;activeChamber=c;items.delete(id(c.x,c.y));
+ const spots=[[c.x-1,c.y-1],[c.x+1,c.y-1],[c.x+1,c.y+1],[c.x-1,c.y+1]].filter(([x,y])=>!(x===player.x&&y===player.y));
+ c.guards=Math.min(3,2+Math.floor(level/3));
+ for(let i=0;i<c.guards;i++){const [x,y]=spots[i];enemies.push({x,y,drawX:x,drawY:y,type:['hunter','patrol','chaos'][i%3],dir:0,hp:2,maxHp:2,chamber:c})}
+ note('¡SALA SELLADA! VENCE A LOS GUARDIANES PARA ABRIR EL COFRE');beep(150,.2);
+}
+function checkChamberClear(){
+ if(!activeChamber)return;
+ const c=activeChamber;
+ if(enemies.some(e=>e.chamber===c))return;
+ c.done=true;c.active=false;activeChamber=null;clearedChambers++;
+ items.set(id(c.x,c.y),'chest');note('¡SALA LIBERADA! COFRE DESBLOQUEADO');beep(880,.2);
+}
+function collectChest(){
+ chestsOpened++;const loot=(seed+chestsOpened*13+level*7)%3;
+ if(loot===0){weaponCharges=Math.min(22,weaponCharges+12);note('⚔ ESPADA RÚNICA: 12 GOLPES POTENCIADOS')}
+ else if(loot===1){armor=Math.min(2,armor+1);note('🛡 ESCUDO: RESISTE UN GOLPE')}
+ else {if(lives<3){lives++;note('♥ POCIÓN: RECUPERAS UNA VIDA')}else{weaponCharges=Math.min(22,weaponCharges+6);note('⚔ 6 GOLPES RÚNICOS EXTRA')}}
+ beep(1050,.16);updateUI();
+}
+function beginBoss(){
+ if(bossStarted)return;bossStarted=true;
+ // El jefe aparece dentro del laberinto, a pocos pasos de la salida.
+ const spots=[[exit.x,exit.y],...DIRS.map(([dx,dy])=>[exit.x+dx,exit.y+dy])].filter(([x,y])=>isFloor(x,y)&&!(player.x===x&&player.y===y));
+ const p=spots[0]||[exit.x,exit.y];
+ boss={x:p[0],y:p[1],drawX:p[0],drawY:p[1],type:'boss',dir:0,hp:6+level*2,maxHp:6+level*2};
+ enemies.push(boss);note('⚠ ¡GUARDIÁN DEL LABERINTO! DERRÓTALO PARA SALIR');beep(130,.45);
+}
+function attack(){
+ if(!started||paused||showMap||gameOver||attackCooldown>0)return;
+ attackCooldown=.68;slashTime=.36;slashFace=player.face??1;
+ const [dx,dy]=DIRS[player.face||0];slashCells=[[player.x+dx,player.y+dy],[player.x+dx+(dy||0),player.y+dy+(dx||0)],[player.x+dx-(dy||0),player.y+dy-(dx||0)]];
+ const targets=enemies.filter(e=>e.hp>0&&slashCells.some(([x,y])=>e.x===x&&e.y===y));
+ for(const e of targets){e.hitFlash=.28;e.hp-=weaponCharges>0?2:1;if(e.hp<=0){const ix=enemies.indexOf(e);if(ix>=0)enemies.splice(ix,1);if(e===boss){bossDefeated=true;boss=null;note('¡GUARDIÁN DERROTADO! REGRESA A LA SALIDA');beep(1000,.2)}}}
+ if(weaponCharges>0)weaponCharges--;
+ beep(targets.length?630:230,.10);if(targets.length){note('⚔ ¡GOLPE CERTERO! '+targets.length+' MONSTRUO(S) ALCANZADO(S)')}else{ $('combatHint').textContent='ESPADA SIN IMPACTO · ACÉRCATE Y MIRA AL MONSTRUO'; }checkChamberClear();updateUI();
+}
+function step(dx,dy){
+ player.face=dx===0?(dy>0?2:0):(dx>0?1:3);
+ let nx=player.x+dx,ny=player.y+dy;
+ if(!isFloor(nx,ny)){beep(115,.025);return}
+ if(activeChamber&&!activeChamber.area.has(id(nx,ny))){note('⚔ LA SALA SIGUE SELLADA: VENCE A LOS GUARDIANES');beep(130,.04);return}
+ if(boss&&nx===boss.x&&ny===boss.y){takeDamage('¡EL GUARDIÁN BLOQUEA EL PASO!');return}
+ player.x=nx;player.y=ny;reveal();const k=id(nx,ny);
+ if(items.has(k)){
+  let item=items.get(k);
+  if(item==='sigil'){activateChamber(getRoomFor(nx,ny))}
+  else {items.delete(k);
+   if(item==='key'){keys++;beep(780,.12);note(`¡LLAVE ENCONTRADA! ${keys}/${totalKeys}`)}
+   else if(item==='flower'){shield=5;note('✿ FLOR MÁGICA · 5 SEGUNDOS DE PROTECCIÓN');beep(900,.12)}
+   else if(item==='chest')collectChest();
+   else {relics++;beep(920,.07);note(`✦ RELIQUIA ${relics}/${totalRelics}`)}
+  }
+ }
+ if(trapCells.has(k)&&hazardCooldown<=0){hazardCooldown=2;takeDamage('⚠ ¡PISASTE UNA TRAMPA!')}
+ if(nx===exit.x&&ny===exit.y){
+  if(keys<totalKeys){note(`LA PUERTA NECESITA ${totalKeys-keys} LLAVES`);beep(150,.2)}
+  else if(!bossStarted)beginBoss();
+  else if(bossDefeated){victory();return}
+  else note('⚔ ¡DERROTA AL GUARDIÁN PARA ESCAPAR!');
+ }
+ checkCollision();updateUI();drawMinimap();
+}
+function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=shield>0?Math.ceil(shield)+'s':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('combatHint').textContent='⚔ ESPADA '+(attackCooldown>0?'RECARGANDO':'LISTA')+' · FRENTE: '+['↑','→','↓','←'][player.face??1];$('equipmentText').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ARMADURA '+armor:'';$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=activeChamber?'SALA SELLADA · '+enemies.filter(e=>e.chamber===activeChamber).length+' MONSTRUOS':'';$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA';$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
+function drawMinimap(){
+ const c=mctx, size=210, pad=7, inner=size-pad*2;
+ c.clearRect(0,0,size,size);
+ c.fillStyle='#081223'; c.fillRect(0,0,size,size);
+ c.fillStyle='#22386d'; c.fillRect(2,2,size-4,size-4);
+ c.fillStyle='#0a1328'; c.fillRect(pad,pad,inner,inner);
+ let scale=inner/width;
+ for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+  let px=pad+x*scale, py=pad+y*scale;
+  if(!seen[y][x]){c.fillStyle='#102a28';c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));continue}
+  c.fillStyle=maze[y][x] ? (((x+y)&1)?'#6b9470':'#4e7b5c') : (((x+y)&1)?'#315c4d':'#22453b');
+  c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));
+ }
+ for(let [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x])continue;c.fillStyle=v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd';c.fillRect(pad+x*scale,pad+y*scale,Math.max(2,scale),Math.max(2,scale))}
+ if(seen[exit.y][exit.x]){c.fillStyle=keys===totalKeys?'#74ffab':'#ff6666';c.fillRect(pad+exit.x*scale-1,pad+exit.y*scale-1,Math.max(3,scale+2),Math.max(3,scale+2))}
+ c.fillStyle=(Math.floor(frame*4)%2===0)?'#ffffff':'#72ffcf';
+ c.fillRect(pad+player.x*scale-2,pad+player.y*scale-2,Math.max(5,scale+3),Math.max(5,scale+3));
+ c.fillStyle='#93abdd'; c.font='7px monospace'; c.fillText('MAPA',10,204); c.fillStyle='#f4e788'; c.fillText(keys+'/'+totalKeys+' LLAVES',58,204);
+}
+function resize(){const rect=canvas.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.max(1,Math.round(rect.width*DPR));canvas.height=Math.max(1,Math.round(rect.height*DPR));vw=rect.width;vh=rect.height;ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnabled=false}
+function pixel(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h))}
+function drawFloor(x,y,sx,sy){
+ const h=(x*73+y*127+x*y*11)>>>0;
+ pixel(sx,sy,tile,tile,(h&1)?'#326e53':'#367456');
+ pixel(sx,sy+20,24,4,'#285f4b');
+ pixel(sx+1,sy+1,22,2,'#4b9063');
+ if(h%13===0){ // small water puddle
+  pixel(sx+3,sy+8,18,8,'#235f6b');pixel(sx+6,sy+9,12,3,'#418f93');pixel(sx+10,sy+8,5,2,'#85cfbd');
+ }else if(h%11===0){ // clover
+  pixel(sx+10,sy+12,3,7,'#245e3b');pixel(sx+6,sy+9,6,5,'#75c46d');pixel(sx+12,sy+9,6,5,'#9ddc79');pixel(sx+10,sy+5,5,7,'#6cba62');
+ }else if(h%7===0){ // pebbles
+  pixel(sx+6,sy+11,6,4,'#899d78');pixel(sx+7,sy+11,3,1,'#b2c6a0');pixel(sx+14,sy+14,5,3,'#617d62');
+ }else if(h%5===0){ // tufts
+  pixel(sx+8,sy+10,2,8,'#1f6340');pixel(sx+11,sy+7,2,9,'#96d575');pixel(sx+14,sy+11,2,6,'#245a3d');
+ }else{pixel(sx+3+(h%13),sy+6+(h%7),3,2,'#438861');}
+}
+function drawWall(x,y,sx,sy){
+ const h=(x*37+y*41+x*y*7)>>>0;
+ pixel(sx,sy,24,24,'#153d38');
+ pixel(sx+1,sy+1,22,22,'#2c6950');
+ pixel(sx+2,sy+3,20,17,'#557e5c');
+ pixel(sx+3,sy+5,18,13,'#6c9470');
+ pixel(sx+2,sy+1,20,4,'#9bba7a');
+ pixel(sx+3,sy+18,18,3,'#254c41');
+ pixel(sx+4,sy+8,7,2,'#466d54');pixel(sx+13,sy+13,8,2,'#466d54');
+ if((h%5)===0){pixel(sx+6,sy,4,6,'#286b42');pixel(sx+7,sy+4,2,9,'#3f9950');pixel(sx+4,sy+8,8,3,'#84c16b');}
+ if((h%9)===0){pixel(sx+15,sy+5,4,3,'#9bd88d');pixel(sx+16,sy+3,2,7,'#2e8d4b');}
+}
+function drawKey(sx,sy,t){let bob=Math.round(Math.sin(t*4)*2);pixel(sx+9,sy+3+bob,7,7,'#fff0a4');pixel(sx+11,sy+5+bob,3,3,'#aa6a20');pixel(sx+11,sy+10+bob,3,10,'#ffd24a');pixel(sx+14,sy+15+bob,4,3,'#ffd24a');pixel(sx+14,sy+19+bob,4,2,'#e6a332')}
+function drawRelic(sx,sy,t){let b=Math.round(Math.sin(t*5)*2);pixel(sx+11,sy+3+b,3,4,'#ffb7dc');pixel(sx+7,sy+7+b,11,9,'#ff73b8');pixel(sx+10,sy+16+b,5,4,'#aa45a7');pixel(sx+12,sy+9+b,2,3,'#fff0ff');pixel(sx+4,sy+12+b,2,2,'#ffe1ff');pixel(sx+19,sy+7+b,2,2,'#ffe1ff')}
+function drawFlower(sx,sy,t){const b=Math.round(Math.sin(t*5)*2);pixel(sx+10,sy+12+b,4,10,'#277d3b');for(const [dx,dy] of [[0,-5],[5,0],[-5,0],[0,5]])pixel(sx+10+dx,sy+8+dy+b,5,5,'#90ff91');pixel(sx+10,sy+8+b,5,5,'#ffe88f')}
+function drawExit(sx,sy,t){pixel(sx+3,sy+3,18,21,'#533052');pixel(sx+5,sy+5,14,19,keys===totalKeys?'#146448':'#45233b');pixel(sx+8,sy+8,8,13,keys===totalKeys?'#37bf81':'#a54869');pixel(sx+15,sy+14,2,3,'#ffdf72');if(keys===totalKeys&&Math.sin(t*4)>0)pixel(sx+4,sy+2,16,2,'#b3ffba')}
+// Sprites de personajes: matriz de píxeles 24x24 sin imágenes externas.
+const CHARACTERS={"kero":["................................","..............RRRRR.............","..............RRRRR.............","............rrrrrrrrr...........","............rrrrrrrrr...........",".........ooooooooooooooo........",".........ooooooooooooooo...ww...",".........ossssssssssssso...ww...","........oossSSSSSSSSSssoo..SS...","........oossSSSSSSSSSssoo..SS...","........oossSSSSSSSSSssoo..SS...","........ooookkkkkkkkkoooo..SS...","........ooookGGkkkkGGoooo..SS...","........ooooooooooooooooo..SS...","........oosssssssssssssoo..SS...","........oosssssssssssssoo..SS...","........ooooooooooooooooo..oo...","........oooogggggggggoooo..oo...",".....ooosssooooooooooosssgggggg.",".....oSSSssBBBBGGGBBBBsssgggggg.",".....oSSSssBbbbGGGbbbBsssoSgg...",".....oSSSssBbbbGGGbbbBsssoSgg...",".....oSSSssBbbbGGGbbbBsssoogg...",".....ooosssBBBBGGGBBBBsss..gg...","........ooBBBBgggggBBBBoo.oooo..","........ooBBBBgggggBBBBoo.......","........ooonnnnooonnnnooo.......","........ooonnnnooonnnnooo.......","..........onnnn...nnnno.........",".........ooooooo.ooooooo........",".........ooooooo.ooooooo........","................................"],"hunter":["................................","................................","................................","....o.......................o...","....oo.....................oo...",".....oRo.................oRo....",".....oRRo...............oRRo....",".....ooRRoo...........ooRRoo....",".....ooRRooo.........oooRRoo....","......ooooooooooooooooooooo.....","......ooorrRRRRRRRRRRRrrooo.....",".......oorrRRRRRRRRRRRrroo......",".......oorrRRRRRRRRRRRrroo......",".......oorrRRRRRRRRRRRrroo......",".......oorooooorrroooooroo......",".......ooroGGGorrroGGGoroo......",".......ooroGGGorrroGGGoroo......",".......oorooooorrroooooroo......","...oooooorrrrrrrrrrrrrrroooooo..","...oooooorrrrooooooorrrroooooo..","...RRRooorrrrowwowworrrroooRRR..","...RRR.oorrrrrwwrwwrrrrroo.RRR..","...RRR.oorrrrrwwrwwrrrrroo.RRR..","...RRR.ooooooooooooooooooo.RRR..",".......ooorrrooooooorrrooo......",".........orrro.....orrro........",".........orrro.....orrro........",".........orrro.....orrro........",".........ooooo.....ooooo........","................................","................................","................................"],"patrol":["................................","................................","................................","................................",".........oooooooooooooo.........",".........oooooooooooooo.........",".........oSSSNNNNNNNNoo.........",".........oSSSNNNNNNNNoo.........",".........oSSSNNNNNNNNoo.........",".........ooNNNNNNNNNNoo.........","......oooooooooooooooooooo......","......oooooooooooooooooooo......","......oonnnnnnnnnnnnnnnnoo......","..oooooonnssssssssssssnnooooooo.","..oooooonnssssssssssssnnooooooo.","..oNNNNonnsoyyosssoyyonnooNNNNo.","..oNNNNonnsoyyosssoyyonnooNNNNo.","..oNNNNonnsoooosssoooonnooNNNNo.","..oNNNNonnssssssssssssnnooNNNNo.","..oNNNNonnssssssssssssnnooNNNNo.","..oNNNNonnnnooooooooonnnooNNNNo.","..oooooonnnnooSSSSSoonnnooooooo.","..oooooonnnnnnSSSSSnnnnnooooooo.","..ooooooooooooooooooooooooooooo.","......ooossssooooooossssoo......",".......oosssso.....ossssoo......",".......oosssso.....ossssoo......",".......oosssso.....ossssoo......",".......oosssso.....ossssoo......",".......ooooooo.....ooooooo......","................................","................................"],"stalker":["................................","................................","................................","................o...............","..............ooooo.............","............oooopoooo...........","...........oooopppoooo..........",".........oooopppppppoooo........",".......oooPPPppppppppooooo......",".......oooPPPppppppppppooo......",".......ooppPPPPPPPPPPPppoo......",".......ooppPPPPPPPPPPPppoo......",".......ooppPPPPPPPPPPPppoo......",".......ooppPPPPPPPPPPPppoo......",".......oopooooopppooooopoo......",".......oopoRRRopppoRRRopoo......","......ooopoRRRopppoRRRopooo.....","......ooppoRRRopppoRRRoppoo.....","......ooppooooopppoooooppoo.....","......oopppppppppppppppppoo.....","......oopppppooooooopppppoo.....","......oopppppookkkoopppppoo.....","......oopppppppkkkpppppppoo.....",".......ooopppppkkkppppooooo.....",".......ooooopppoopppo.oooo......","........oo..opoo.opoo.ooo.......","........o...ooo..ooo...o........",".............oo...oo............",".............o....o.............","................................","................................","................................"],"chaos":["................................","................................","................................","................................","......o...................o.....","......oo.................oo.....","......oogo.............ogoo.....",".......oggo...........oggo......",".......ogggo.........ogggo......",".......oggggoo.....ooggggo......","......ooooooooooooooooooooo.....","......oogggggggggggggggggoo.....","......oogGGGGGGGGGGGGGGGgoo.....","......oogGGGoooooooooGGGgoo.....","......oogGGGowwwwwwwoGGGgoo.....","......oogGGGowwRRRwwoGGGgoo.....","......oogGGGowwRRRwwoGGGgoo.....","....oooogGGGowwRRRwwoGGGgoooo...","....oooogGGGowwRRRwwoGGGgoooo...","....ooooggggoooooooooggggoooo...","....oooogggggggggggggggggoooo...","....oooogggooooooooooogggoooo...","......oogggoorrrrrrroogggoo.....","......ooooooorrrrrrrooooooo.....","......ooooooooooooooooooooo.....",".......oggggo.......oggggo......",".......oggggo.......oggggo......",".......oggggo.......oggggo......",".......oooooo.......oooooo......","................................","................................","................................"]};
+const SPRITE_COLORS={"o":"#20263a","s":"#899ab0","S":"#d6e2ea","w":"#ffffff","g":"#d5b86c","G":"#fff0b0","b":"#29476e","B":"#5885b8","r":"#a53e4c","R":"#f06b73","p":"#5d3781","P":"#b07ae4","e":"#e4b8a5","E":"#f5d8ba","t":"#4f7656","T":"#8bb68a","n":"#465367","N":"#79879c","y":"#e5cd64","k":"#101421"};
+const characterCache={};
+function paintCharacter(c,type,x,y,scale=1,face=1,anim=0){
+ const rows=CHARACTERS[type];if(!rows)return;
+ let sprite=characterCache[type];
+ if(!sprite){sprite=document.createElement('canvas');sprite.width=32;sprite.height=32;
+  const sc=sprite.getContext('2d');sc.imageSmoothingEnabled=false;
+  for(let j=0;j<32;j++)for(let i=0;i<32;i++){let ch=rows[j][i];if(ch!=='.'){sc.fillStyle=SPRITE_COLORS[ch];sc.fillRect(i,j,1,1)}}
+  characterCache[type]=sprite;
+ }
+ c.save();c.imageSmoothingEnabled=false;
+ // All characters have one consistent 24x24 footprint.
+ if(type==='kero'&&face===3){c.translate(Math.round(x+24*scale),Math.round(y));c.scale(-1,1);c.drawImage(sprite,0,0,32,32,0,0,Math.round(24*scale),Math.round(24*scale));}
+ else c.drawImage(sprite,0,0,32,32,Math.round(x),Math.round(y),Math.round(24*scale),Math.round(24*scale));
+ c.restore();
+}
+function drawPlayer(sx,sy,t){
+ if(invulnerable>0&&Math.floor(t*12)%2===0)return;
+ const moving=Math.abs(player.drawX-player.x)+Math.abs(player.drawY-player.y)>.1;
+ const jump=moving?Math.round(Math.abs(Math.sin(t*12))*2):Math.round(Math.sin(t*3)*.5);
+ const x=Math.round(sx),y=Math.round(sy-jump);
+ pixel(x+5,Math.round(sy)+21,14,2,'#050e1d');
+ paintCharacter(ctx,'kero',x,y,1,player.face,moving);
+ if(shield>0){ctx.strokeStyle='#a3ffc9';ctx.lineWidth=2;ctx.strokeRect(x+1,y+1,22,22);if(Math.sin(t*11)>0)pixel(x+21,y+2,3,3,'#fff0a0')}
+}
+function drawEnemy(e,sx,sy,t){
+ const x=Math.round(sx),y=Math.round(sy+Math.sin(t*4+e.x)*1.25);
+ pixel(x+5,Math.round(sy)+22,14,2,'#060c19');
+ paintCharacter(ctx,e.type==='hunter'?'hunter':e.type==='patrol'?'patrol':e.type==='stalker'?'stalker':'chaos',x,y,1,e.dir,Math.floor(t*4)%2);
+ if(e.type==='stalker'&&Math.sin(t*7)>0){pixel(x+4,y+6,2,2,'#e7c5ff');pixel(x+20,y+15,2,2,'#e7c5ff')}
+}
+function drawMenuSprites(t=0){
+ const hc=$('heroSprite');if(!hc)return;const h=hc.getContext('2d');h.imageSmoothingEnabled=false;h.clearRect(0,0,96,96);
+ h.fillStyle='#0b2333';h.fillRect(17,78,62,7);h.fillStyle='#53bd7a';h.fillRect(20,78,56,4);
+ const jump=Math.round(Math.sin(t*3)*2);
+ paintCharacter(h,'kero',12,9-jump,3,1,Math.sin(t*6)>0);
+ for(const [canvasId,kind] of [['portraitHunter','hunter'],['portraitPatrol','patrol'],['portraitStalker','stalker'],['portraitChaos','chaos']]){
+ const c=$(canvasId);if(!c||c.dataset.ready)return;const cc=c.getContext('2d');cc.imageSmoothingEnabled=false;paintCharacter(cc,kind,0,0,1,1,0);c.dataset.ready='1';}
+}
+function checkCollision(){
+ if(paused||gameOver||invulnerable>0)return;
+ for(const e of enemies){
+  if(e.x!==player.x||e.y!==player.y)continue;
+  if(shield>0){e.x=Math.max(1,e.x-1);e.drawX=e.x;note('✿ ¡LA FLOR REPELIÓ AL MONSTRUO!');return}
+  takeDamage(e.type==='boss'?'¡EL GUARDIÁN GOLPEÓ A ARDEN!':'¡UN MONSTRUO GOLPEÓ A ARDEN!');return;
+ }
+}
+function enemyStep(e){
+ if(e.chamber&&(!e.chamber.active||!e.chamber.area.has(id(player.x,player.y))))return;
+ const choices=DIRS.map(([dx,dy],i)=>({x:e.x+dx,y:e.y+dy,i})).filter(v=>isFloor(v.x,v.y)&&(!e.chamber||e.chamber.area.has(id(v.x,v.y))));if(!choices.length)return;const dist=Math.abs(e.x-player.x)+Math.abs(e.y-player.y);let target=null;
+ if(e.type==='boss'||e.chamber||e.type==='hunter'&&dist<15||e.type==='stalker'&&dist<8){const queue=[[player.x,player.y]], seenDist=new Int16Array(width*height).fill(-1);seenDist[id(player.x,player.y)]=0;let head=0;while(head<queue.length&&head<1100){const [x,y]=queue[head++];for(const [dx,dy] of DIRS){const nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&seenDist[id(nx,ny)]<0){seenDist[id(nx,ny)]=seenDist[id(x,y)]+1;queue.push([nx,ny])}}}const ordered=choices.filter(v=>seenDist[id(v.x,v.y)]>=0).sort((a,b)=>seenDist[id(a.x,a.y)]-seenDist[id(b.x,b.y)]);target=ordered[0]}
+ if(!target){if(e.type==='patrol'){target=choices.find(v=>v.i===e.dir)||choices[Math.floor(Math.random()*choices.length)]}else if(e.type==='stalker'&&dist>8&&Math.random()<.75)return;else target=choices[Math.floor(Math.random()*choices.length)]}
+ if(e.type==='boss'&&Math.random()<.3)return; e.dir=target.i;e.x=target.x;e.y=target.y}
+
+function drawChest(sx,sy,t){pixel(sx+4,sy+9,16,12,'#462b20');pixel(sx+4,sy+7,16,6,'#ae7139');pixel(sx+6,sy+8,12,3,'#f2b45e');pixel(sx+5,sy+15,14,5,'#6c3e27');pixel(sx+11,sy+11,3,7,'#ffe47c');pixel(sx+12,sy+14,1,3,'#46301d')}
+function drawSigil(sx,sy,t){pixel(sx+2,sy+2,20,20,'#153a4a');pixel(sx+4,sy+4,16,16,'#184a5d');pixel(sx+7,sy+7,10,10,Math.sin(t*5)>0?'#65dfff':'#388fa9');pixel(sx+10,sy+4,4,16,'#153a4a');pixel(sx+4,sy+10,16,4,'#153a4a')}
+function drawTrap(sx,sy,t){pixel(sx+4,sy+17,16,4,'#464b4d');for(let i=0;i<3;i++){pixel(sx+5+i*5,sy+13,4,6,'#839995');pixel(sx+6+i*5,sy+9,2,4,'#d0ddc7')}}
+function drawBoss(e,sx,sy,t){const x=Math.round(sx),y=Math.round(sy);pixel(x+1,y+1,22,22,'#45203e');pixel(x+3,y+4,18,17,'#823d70');pixel(x+5,y+2,5,7,'#d86f53');pixel(x+14,y+2,5,7,'#d86f53');pixel(x+7,y+10,4,4,'#ffed83');pixel(x+14,y+10,4,4,'#ffed83');pixel(x+8,y+11,2,2,'#1a1424');pixel(x+15,y+11,2,2,'#1a1424');pixel(x+10,y+17,5,2,'#1a1424');pixel(x+4,y-4,16,3,'#200c1b');pixel(x+4,y-4,Math.max(1,Math.floor(16*e.hp/e.maxHp)),3,'#ff6581');if(Math.sin(t*7)>0)pixel(x+1,y+10,2,4,'#ffb4aa')}
+function drawScene(t){pixel(0,0,vw,vh,'#071d20');if(!maze.length)return;
+if(showMap){
+ // Muestra el laberinto completo al 100%; al acercar, centra la cámara del mapa en Arden.
+ const header=49,footer=37,sidePadding=48;
+ const availW=Math.max(80,vw-sidePadding-68),availH=Math.max(80,vh-header-footer-26);
+ const baseScale=Math.min(availW/width,availH/height);
+ const scale=baseScale*mapZoom;
+ const mw=width*scale,mh=height*scale;
+ const offsetX=Math.round(vw/2-(player.x+.5)*scale);
+ const offsetY=Math.round(header+(vh-header-footer)/2-(player.y+.5)*scale);
+ const fitX=(vw-mw)/2,fitY=header+(vh-header-footer-mh)/2;
+ const ox=mapZoom===1?fitX:Math.min(28,Math.max(vw-28-mw,offsetX));
+ const oy=mapZoom===1?fitY:Math.min(header+6,Math.max(vh-footer-6-mh,offsetY));
+ pixel(0,0,vw,vh,'#08191f');
+ pixel(9,8,vw-18,32,'#17393b');pixel(12,11,vw-24,26,'#102b31');
+ ctx.font='bold 12px monospace';ctx.fillStyle='#f7e89d';ctx.fillText('MAPA DEL LABERINTO',21,29);
+ ctx.fillStyle='#c1dfce';ctx.font='10px monospace';ctx.fillText('ARDEN  •  '+keys+'/'+totalKeys+' LLAVES',14,vh-13);
+ ctx.save();ctx.beginPath();ctx.rect(13,header,vw-26,vh-header-footer);ctx.clip();
+ // Solo dibuja las casillas dentro del área visible para mantener el rendimiento con mucho zoom.
+ const x0=Math.max(0,Math.floor((13-ox)/scale)-1),x1=Math.min(width-1,Math.ceil((vw-13-ox)/scale)+1);
+ const y0=Math.max(0,Math.floor((header-oy)/scale)-1),y1=Math.min(height-1,Math.ceil((vh-footer-oy)/scale)+1);
+ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+  let px=ox+x*scale,py=oy+y*scale;
+  if(!seen[y][x]){pixel(px,py,scale+.25,scale+.25,'#0d2524');continue}
+  pixel(px,py,scale+.25,scale+.25,maze[y][x]?(((x+y)&1)?'#7ca87e':'#4b7b65'):(((x+y)&1)?'#315d4e':'#204b40'));
+ }
+ for(const [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x]||x<x0||x>x1||y<y0||y>y1)continue;
+  pixel(ox+x*scale,oy+y*scale,Math.max(3,scale),Math.max(3,scale),v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd')}
+ if(seen[exit.y][exit.x])pixel(ox+exit.x*scale-1,oy+exit.y*scale-1,Math.max(4,scale+2),Math.max(4,scale+2),keys===totalKeys?'#78ffc7':'#ff7777');
+ const px=ox+(player.x+.5)*scale,py=oy+(player.y+.5)*scale;
+ ctx.strokeStyle='#08171e';ctx.lineWidth=3;ctx.strokeRect(Math.round(px-Math.max(3,scale*.45)),Math.round(py-Math.max(3,scale*.45)),Math.max(6,scale*.9),Math.max(6,scale*.9));
+ pixel(px-Math.max(3,scale*.4),py-Math.max(3,scale*.4),Math.max(6,scale*.8),Math.max(6,scale*.8),Math.sin(t*8)>0?'#ffffff':'#8bffe0');
+ ctx.restore();
+ return}
+
+const camX=player.drawX*tile+tile/2-vw/2,camY=player.drawY*tile+tile/2-vh/2,x0=Math.max(0,Math.floor(camX/tile)-1),y0=Math.max(0,Math.floor(camY/tile)-1),x1=Math.min(width-1,Math.ceil((camX+vw)/tile)+1),y1=Math.min(height-1,Math.ceil((camY+vh)/tile)+1);
+for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){let sx=Math.floor(x*tile-camX),sy=Math.floor(y*tile-camY);if(!seen[y][x]){pixel(sx,sy,tile,tile,'#0c292a');continue}if(maze[y][x])drawWall(x,y,sx,sy);else drawFloor(x,y,sx,sy);if(!maze[y][x]&&items.has(id(x,y))){if(items.get(id(x,y))==='key')drawKey(sx,sy,t);else if(items.get(id(x,y))==='flower')drawFlower(sx,sy,t);else if(items.get(id(x,y))==='chest')drawChest(sx,sy,t);else if(items.get(id(x,y))==='sigil')drawSigil(sx,sy,t);else drawRelic(sx,sy,t)}if(trapCells.has(id(x,y)))drawTrap(sx,sy,t);if(getRoomFor(x,y)){const c=getRoomFor(x,y);if(c.active){pixel(sx,sy,24,2,'#e38e61');pixel(sx,sy+22,24,2,'#e38e61')}}if(x===exit.x&&y===exit.y)drawExit(sx,sy,t);
+// Distant discovered tiles are dimmed, but remain visible as navigation landmarks.
+let dist=Math.hypot(x-player.drawX,y-player.drawY);if(dist>5.5){ctx.fillStyle=`rgba(4,25,24,${Math.min(.65,(dist-5.5)*.10)})`;ctx.fillRect(sx,sy,tile,tile)}}
+for(const e of enemies){if(!seen[e.y][e.x]||Math.abs(e.x-player.x)>vw/tile/2+2||Math.abs(e.y-player.y)>vh/tile/2+2)continue;
+ const ex=e.drawX*tile-camX,ey=e.drawY*tile-camY;
+ e.type==='boss'?drawBoss(e,ex,ey,t):drawEnemy(e,ex,ey,t);
+ if(e.hitFlash>0){pixel(ex+2,ey+2,20,20,'#ffffff55');e.hitFlash=Math.max(0,e.hitFlash-.025)}
+ if(e.hp>0){pixel(ex+3,ey-5,18,4,'#190f20');pixel(ex+4,ey-4,Math.max(1,Math.round(16*e.hp/(e.maxHp||2))),2,e.type==='boss'?'#ff6579':'#fbc76a')}
+}
+drawPlayer(player.drawX*tile-camX,player.drawY*tile-camY,t);
+if(slashTime>0){
+ // Tajo de espada orientado según Arden, con arco progresivo en lugar de rectángulos.
+ const progress=1-slashTime/.36;
+ const direction=[-Math.PI/2,0,Math.PI/2,Math.PI][slashFace];
+ const cx=player.drawX*tile-camX+tile/2,cy=player.drawY*tile-camY+tile/2;
+ const startAngle=direction-1.12,endAngle=direction-1.12+Math.min(1,progress*2.3)*2.24;
+ ctx.save();ctx.globalAlpha=Math.max(.08,1-progress*.85);
+ for(let layer=0;layer<3;layer++){
+  const radius=layer===0?27:layer===1?23:19;
+  const col=layer===0?'#a96a36':layer===1?'#ffe49a':'#fffbe3';
+  ctx.fillStyle=col;
+  for(let i=0;i<=18;i++){
+   const a=startAngle+(endAngle-startAngle)*i/18;
+   const px=cx+Math.cos(a)*radius,py=cy+Math.sin(a)*radius;
+   ctx.fillRect(Math.round(px)-2,Math.round(py)-2,layer===1?5:4,layer===1?5:4);
+  }
+ }
+ // Pequeño destello de acero en el extremo del corte.
+ const tipX=cx+Math.cos(endAngle)*29,tipY=cy+Math.sin(endAngle)*29;
+ pixel(tipX-3,tipY-3,6,6,'#fffbea');
+ ctx.restore();
+}
+// Screen corner compass helps find the distant exit only after discovering its location.
+if(vw>340&&!isTouchDevice()){pixel(14,14,160,40,'#0a1027db');ctx.font='9px monospace';ctx.fillStyle='#97b0e6';ctx.fillText(`X:${String(player.x).padStart(3,'0')}  Y:${String(player.y).padStart(3,'0')}`,23,30);ctx.fillStyle='#ffe76a';ctx.fillText(`LLAVES ${keys}/${totalKeys}`,23,45)}
+}
+function victory(){won=true;paused=true;showMap=false;updateMapControls();beep(740,.2);setTimeout(()=>beep(930,.25),180);setTimeout(()=>beep(1200,.28),350);$('modalTitle').textContent='¡ESCAPASTE!';$('modalSub').textContent=`NIVEL ${level} SUPERADO`;$('modalText').textContent=`Venciste al guardián, reuniste ${totalKeys} llaves y escapaste en ${Math.floor(elapsed/60)}m ${Math.floor(elapsed%60)}s. Recuperaste ${relics} de ${totalRelics} reliquias. El siguiente laberinto será aún más grande y completamente diferente.`;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';$('modalStart').disabled=true;$('overlay').classList.remove('hidden');persistVictory()}
+function showWelcome(){paused=true;started=false;$('modalTitle').innerHTML='ARDEN<br>EL CABALLERO';$('modalSub').textContent='EL LABERINTO ENCANTADO';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Evita trampas y vence al jefe de la salida. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
+// Configuración pública de Supabase: no pegues aquí una secret key/service_role.
+const SUPABASE_URL='https://eiellhnpykzikfmjrvvr.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_b8XKRBZMu3p_Xk9n3gzIFQ_uzIEgXGT';
+const authConfigured=/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL)&&!SUPABASE_PUBLISHABLE_KEY.startsWith('PEGA_AQUI_');
+let db=null,account=null,accountProgress=null,authBusy=false,saveBusy=false,accountWasPlaying=false;
+function setAuthMessage(msg){$('authMessage').textContent=msg}
+function friendlyError(e){const msg=String(e?.message||e||'Error desconocido');if(/Invalid login credentials/i.test(msg))return 'Correo o contraseña incorrectos.';if(/Email not confirmed/i.test(msg))return 'Confirma tu correo desde el mensaje que te enviaron.';if(/Failed to fetch|NetworkError/i.test(msg))return 'No hay conexión con el servidor. Revisa internet y la configuración.';return msg}
+function syncAccountButton(){$('accountBtn').textContent=account?'👤 '+(account.email||'JUGADOR').split('@')[0].slice(0,12):'👤 CUENTA'}
+async function loadProgress(){
+ const {data,error}=await db.from('player_progress').select('current_level,completed_levels').eq('user_id',account.id).maybeSingle();
+ if(error)throw error;
+ if(!data){
+  const {error:insertError}=await db.from('player_progress').insert({user_id:account.id});
+  if(insertError && insertError.code!=='23505')throw insertError;
+  const {data:created,error:readError}=await db.from('player_progress').select('current_level,completed_levels').eq('user_id',account.id).single();
+  if(readError)throw readError;
+  accountProgress=created;
+ }else accountProgress=data;
+ level=Math.max(1,Number(accountProgress.current_level)||1);
+ generate();updateMapControls();
+}
+async function enterAccount(user){
+ account=user;syncAccountButton();
+ try{await loadProgress();$('authGate').classList.add('hidden');started=false;paused=true;showWelcome();
+  $('modalSub').textContent='NIVEL '+level+' · '+(accountProgress.completed_levels||0)+' COMPLETADOS';
+  $('modalStart').textContent='▶ '+(level===1?'COMENZAR AVENTURA':'CONTINUAR NIVEL '+level);
+  setAuthMessage('');
+ }catch(e){console.error(e);setAuthMessage('No se pudo cargar tu progreso: '+friendlyError(e));$('authGate').classList.remove('hidden')}
+}
+async function loginOrRegister(mode){
+ if(authBusy||!authConfigured||!db)return;
+ const email=$('authEmail').value.trim(),password=$('authPassword').value;
+ if(!email||password.length<6){setAuthMessage('Escribe un correo válido y una contraseña de al menos 6 caracteres.');return}
+ authBusy=true;$('loginBtn').disabled=true;$('registerBtn').disabled=true;setAuthMessage('Conectando...');
+ try{
+  if(mode==='register'){
+   const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+   if(error)throw error;
+   if(data.session&&data.user)await enterAccount(data.user);
+   else setAuthMessage('Cuenta solicitada. Revisa tu correo y confirma el registro antes de entrar.');
+  }else{
+   const {data,error}=await db.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   await enterAccount(data.user);
+  }
+ }catch(e){setAuthMessage(friendlyError(e))}
+ finally{authBusy=false;$('loginBtn').disabled=false;$('registerBtn').disabled=false}
+}
+async function initializeAuth(){
+ if(!authConfigured){setAuthMessage('CONFIGURACIÓN PENDIENTE: abre el HTML y pega URL y publishable key de Supabase. Consulta INSTRUCCIONES_GITHUB.md.');return}
+ if(!window.supabase){setAuthMessage('No se pudo cargar la librería de Supabase. Comprueba la conexión a internet.');return}
+ db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ setAuthMessage('Comprobando sesión...');
+ try{const {data,error}=await db.auth.getUser();if(error&&error.name!=='AuthSessionMissingError')console.info(error.message);
+  if(data?.user)await enterAccount(data.user);else setAuthMessage('Inicia sesión o crea tu cuenta para comenzar.');
+ }catch(e){setAuthMessage(friendlyError(e))}
+}
+async function persistVictory(){
+ if(saveBusy||!won||!account||!db)return;
+ saveBusy=true;$('modalStart').disabled=true;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';
+ try{
+  const {data,error}=await db.rpc('complete_arden_level',{p_level:level,p_seconds:Math.max(0,Math.floor(elapsed)),p_relics:relics,p_chests:chestsOpened});
+  if(error)throw error;
+  accountProgress={current_level:Number(data),completed_levels:Number(data)-1};
+  $('modalSub').textContent=`NIVEL ${level} SUPERADO · GUARDADO ✓`;
+  $('modalStart').textContent='▶ SIGUIENTE NIVEL';
+  $('modalStart').disabled=false;
+ }catch(e){console.error('Save error',e);$('modalSub').textContent='NO SE PUDO GUARDAR EL NIVEL';$('modalStart').textContent='↻ REINTENTAR GUARDADO';$('modalStart').disabled=false;$('modalText').textContent='No fue posible guardar el progreso: '+friendlyError(e)+' · Comprueba la conexión y pulsa REINTENTAR GUARDADO. No cierres esta pantalla.'}
+ finally{saveBusy=false}
+}
+function openAccount(){if(!account)return;accountWasPlaying=!paused;paused=true;showMap=false;updateMapControls();
+ $('accountDetails').textContent=(account.email||'Jugador')+' · Nivel desbloqueado: '+(accountProgress?.current_level||level)+' · Niveles completados: '+(accountProgress?.completed_levels||0)+' · Se guarda al vencer al jefe de cada nivel.';
+ $('accountPanel').classList.add('open')}
+function closeAccount(){$('accountPanel').classList.remove('open');if(accountWasPlaying&&!won&&!gameOver){paused=false}accountWasPlaying=false}
+async function logout(){closeAccount();paused=true;started=false;won=false;account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
+ if(db){const {error}=await db.auth.signOut();setAuthMessage(error?friendlyError(error):'Sesión cerrada. Entra con tu cuenta para continuar.')} }
+
+function togglePause(){if(won)return;if(!started){showWelcome();return}paused=!paused;if(paused){showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
+function updateMapControls(){
+ $('game-wrap').classList.toggle('map-open',showMap);
+ $('mapZoomLabel').textContent=Math.round(mapZoom*100)+'%';
+ $('mapZoomIn').disabled=mapZoom>=8;$('mapZoomOut').disabled=mapZoom<=1;
+}
+function changeMapZoom(dir){if(!showMap)return;
+ const ix=mapZoomOptions.indexOf(mapZoom);
+ mapZoom=mapZoomOptions[Math.max(0,Math.min(mapZoomOptions.length-1,ix+dir))];
+ updateMapControls();beep(370,.035);
+}
+function toggleMap(){if(!started||paused)return;showMap=!showMap;updateMapControls();beep(340,.035)}
+function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);enemyTimer+=dt;if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('attackCharge').style.transform=`scaleX(${1-Math.min(1,attackCooldown/.68)})`;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
+const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
+window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
+// Joystick táctil: movimiento digital preciso en 4 direcciones, sin diagonales.
+const joy=$('joystick'),knob=$('joystickKnob');let joyPointer=null;
+function setJoyDirection(dx,dy){for(const dir of ['up','down','left','right'])input[dir]=false;
+ if(Math.abs(dx)<12&&Math.abs(dy)<12)return;
+ if(Math.abs(dx)>Math.abs(dy))input[dx>0?'right':'left']=true;
+ else input[dy>0?'down':'up']=true;
+}
+function moveJoystick(e){if(joyPointer!==e.pointerId)return;
+ const ring=joy.querySelector('.joystick-ring'),rect=ring.getBoundingClientRect();
+ let dx=e.clientX-(rect.left+rect.width/2),dy=e.clientY-(rect.top+rect.height/2);
+ const distance=Math.hypot(dx,dy),radius=rect.width*.29,scale=distance>radius?radius/distance:1;
+ knob.style.transform=`translate(-50%,-50%) translate(${dx*scale}px,${dy*scale}px)`;
+ setJoyDirection(dx,dy);
+}
+function stopJoystick(){joyPointer=null;knob.style.transform='translate(-50%,-50%)';setJoyDirection(0,0)}
+joy.addEventListener('pointerdown',e=>{if(joyPointer!==null)return;e.preventDefault();joyPointer=e.pointerId;joy.setPointerCapture(e.pointerId);moveJoystick(e)});
+joy.addEventListener('pointermove',e=>{if(joyPointer!==e.pointerId)return;e.preventDefault();moveJoystick(e)});
+for(const type of ['pointerup','pointercancel','lostpointercapture'])joy.addEventListener(type,e=>{if(joyPointer===e.pointerId)stopJoystick()});
+$('mapZoomIn').onclick=()=>changeMapZoom(1);
+$('mapZoomOut').onclick=()=>changeMapZoom(-1);
+$('mapZoomReset').onclick=()=>{mapZoom=1;updateMapControls()};
+$('mapZoomClose').onclick=()=>toggleMap();
+canvas.addEventListener('wheel',e=>{if(showMap){e.preventDefault();changeMapZoom(e.deltaY<0?1:-1)}},{passive:false});
+$('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn)beep(620,.08)};$('modalStart').onclick=()=>{
+ if(!account||saveBusy)return;
+ if(won){if(!$('modalSub').textContent.includes('GUARDADO')){persistVictory();return}level=Number(accountProgress.current_level)||level+1;generate()}
+ else if(gameOver){level=Number(accountProgress?.current_level)||level;generate()}
+ updateMapControls();started=true;paused=false;won=false;$('overlay').classList.add('hidden');note(level===1?'ACÉRCATE, MIRA AL ENEMIGO Y ATACA CON ⚔ / ENTER!':`NIVEL ${level} · NUEVO LABERINTO`)
+};
+const isTouchDevice=()=>matchMedia('(hover:none) and (pointer:coarse)').matches;
+async function enterFullscreen(){
+ const root=document.documentElement;
+ try{if(!document.fullscreenElement && root.requestFullscreen)await root.requestFullscreen({navigationUI:'hide'});}catch(err){console.info('Pantalla completa no disponible:',err.message)}
+ try{if(screen.orientation && screen.orientation.lock && document.fullscreenElement)await screen.orientation.lock('landscape');}catch(err){console.info('Giro automático no disponible:',err.message)}
+ resize();
+}
+$('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen():enterFullscreen());
+$('rotateFull').addEventListener('click',enterFullscreen);
+document.addEventListener('fullscreenchange',()=>{resize();$('fullscreenBtn').textContent=document.fullscreenElement?'⛶ SALIR':'⛶ FULL'});
+
+function refreshMobileHud(){
+ $('mobileLevel').textContent='N'+level;
+ $('mobileKeys').textContent='🔑 '+keys+'/'+totalKeys;
+ $('mobileLives').textContent='♥'.repeat(Math.max(0,lives));$('mobileEquip').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ESCUDO '+armor:'⚔ ESPADA';
+}
+// Tie HUD updates to the existing updateUI function.
+const originalUpdateUI=updateUI;
+updateUI=function(){originalUpdateUI();refreshMobileHud()};
+window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',()=>setTimeout(resize,150));
+if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
+resize();generate();updateMapControls();showWelcome();refreshMobileHud();requestAnimationFrame(loop);initializeAuth();
+</script>
+</body></html>
