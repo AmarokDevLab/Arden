@@ -1,7 +1,7 @@
 {
-  "name": "Arden el Caballero — El Laberinto Encantado",
-  "short_name": "Arden",
-  "description": "Aventura pixel art de laberintos, jefes, cofres y salas de combate.",
+  "name": "Arden: El Laberinto Arcano",
+  "short_name": "Arden Arcano",
+  "description": "Arden explora un laberinto cambiante de desafíos, cofres, monstruos y guardianes.",
   "start_url": "./arden_el_caballero_pwa.html",
   "scope": "./",
   "display": "standalone",
@@ -13,13 +13,19 @@
       "src": "./icons/arden-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "./icons/arden-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/arden-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
