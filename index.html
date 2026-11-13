@@ -25,7 +25,7 @@ aside{display:none!important}
 .top-actions .pixel-btn{padding:10px 12px;font-size:8px;min-height:38px}
 .touch,.map-touch{display:none!important}
 #mobileHud{display:none;position:absolute;top:12px;left:12px;z-index:7;pointer-events:none;background:linear-gradient(180deg,rgba(18,31,67,.95) 0%,rgba(9,19,42,.95) 100%);border:3px solid #6c89cb;padding:8px 11px;font-size:8px;color:#ffea83;line-height:1.85;box-shadow:4px 4px 0 rgba(0,0,0,.4);min-width:132px}#mobileHud span{color:#fefefe}
-#fullscreenBtn{display:none}
+#fullscreenBtn{display:none!important}
 #orientationGate{display:none;position:fixed;inset:0;z-index:30;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:25px;text-align:center;background:#080d20;color:#ffe76a;font-size:clamp(12px,3.8vw,18px);line-height:2}
 #orientationGate .rotateGlyph{font-family:monospace;font-size:64px;line-height:1;animation:tilt 2s ease-in-out infinite alternate}
 #orientationGate p{color:#bacbf5;font-size:10px;line-height:2;max-width:360px}
@@ -149,9 +149,9 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 .joystick{display:none;position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:7;width:154px;height:165px;flex-direction:column;justify-content:center;align-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
 .joystick-ring{width:136px;height:136px;border:4px solid #a2d3a6;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#225a51de,#103c39da);box-shadow:inset 0 5px 12px #041d29b8,0 6px 0 #041b20,0 0 0 5px #0b2d35a6}
 .joystick-arrows{font-size:25px;color:#a2d3a673;pointer-events:none}.joystick-knob{position:absolute;left:50%;top:50%;width:66px;height:66px;border-radius:50%;border:4px solid #e4f7bd;background:radial-gradient(circle at 35% 30%,#7fd4a8,#24776b 72%);box-shadow:inset 0 4px #ffffff45,0 5px 9px #0007;transform:translate(-50%,-50%);pointer-events:none;will-change:transform}
-.joystick-label{font:8px 'Press Start 2P',monospace;color:#def7d9;margin-top:9px;text-shadow:2px 2px #082424}
+.joystick-label{display:none}
 #attackTouch{position:relative;flex-direction:column;gap:2px;overflow:hidden;background:linear-gradient(#ba6547,#7c2b3c);border:4px solid #ffe2ad;border-radius:50%!important;width:98px;height:98px;box-shadow:inset 0 4px #ffffff33,0 5px 0 #3a1c27!important;transition:filter .1s}
-#attackTouch span{font-size:35px;line-height:1}#attackTouch small{font:7px 'Press Start 2P',monospace;line-height:1.4}#attackTouch i{position:absolute;bottom:0;left:0;height:6px;width:100%;background:#b4ff97;transform-origin:left center;pointer-events:none}#attackTouch.cooldown{filter:brightness(.68)}
+#attackTouch span{font-size:35px;line-height:1}#attackTouch small{display:none}#attackTouch i{display:none!important}#attackTouch.cooldown{filter:brightness(.78)}
 #combatTools{gap:14px;bottom:max(19px,env(safe-area-inset-bottom))}#combatTools .map-touch{border-radius:12px!important}
 #combatHint{display:block!important;border-color:#427a80!important;color:#d0f4df!important;max-width:300px;font-size:7px;line-height:1.9}
 @media(hover:none) and (pointer:coarse){.touch{display:none!important}.joystick{display:flex}#combatHud{top:8px}#combatHint{display:none!important}#combatTools{display:flex!important}}
@@ -167,6 +167,7 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 #game-wrap.map-open .joystick,#game-wrap.map-open #combatTools,#game-wrap.map-open #combatHud,#game-wrap.map-open #mobileHud{display:none!important}
 @media(max-width:690px){#mapZoomTools{right:max(9px,env(safe-area-inset-right))}#mapZoomTools button{min-width:45px;min-height:45px;font-size:19px}}
 @media(max-height:390px){#mapZoomTools{gap:4px}#mapZoomTools button{min-height:36px;min-width:42px}#mapZoomLabel{padding:4px}}
+@media(hover:none) and (pointer:coarse){#mapZoomIn,#mapZoomOut,#mapZoomReset{display:none!important}body.playing header{display:none!important}body.playing .main,body.playing #game-wrap{height:100dvh}}
 
 /* CUENTAS Y AVANCE: interfaz separada del juego */
 #accountBtn{max-width:175px;overflow:hidden;text-overflow:ellipsis}
@@ -195,10 +196,10 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 </head>
 <body>
 <header><div class="logo">ARDEN EL CABALLERO <small>EL LABERINTO ENCANTADO</small></div><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></header>
-<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span><span id="combatHint">⚔ Mira al enemigo y pulsa ATACAR</span></div><div id="mobileHud">⚔️ ARDEN · <span id="mobileLevel">N1</span><br><span id="mobileKeys">🔑 0/3</span> · <span id="mobileLives">♥♥♥</span><br><span id="mobileEquip">⚔ ESPADA</span></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label">MOVER</span></div><div id="combatTools"><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small>ATACAR</small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span><span id="combatHint">⚔ Mira al enemigo y pulsa ATACAR</span></div><div id="mobileHud">⚔️ ARDEN · <span id="mobileLevel">N1</span><br><span id="mobileKeys">🔑 0/3</span> · <span id="mobileLives">♥♥♥</span><br><span id="mobileEquip">⚔ ESPADA</span></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label"></span></div><div id="combatTools"><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
 <div id="mapZoomTools" aria-label="Zoom del mapa"><button id="mapZoomIn" aria-label="Acercar mapa">+</button><div id="mapZoomLabel">100%</div><button id="mapZoomOut" aria-label="Alejar mapa">−</button><button id="mapZoomReset" aria-label="Restablecer zoom" title="Ver todo">⌗</button><button id="mapZoomClose" aria-label="Cerrar mapa" title="Cerrar mapa">×</button></div>
 <div id="overlay"><div class="modal"><div class="modal-header">✦ LA LEYENDA DEL CABALLERO · AVENTURA RETRO ✦</div><div class="menu-body"><div class="menu-art"><span class="star a">✦</span><span class="star b">✧</span><span class="star c">✦</span><canvas id="heroSprite" width="96" height="96" aria-label="Arden, el caballero aventurero"></canvas></div><div class="menu-copy"><div class="menu-badge">⚔️ LA LEYENDA DE ARDEN</div><h1 id="modalTitle">ARDEN<br>EL CABALLERO</h1><div class="sub" id="modalSub">EL LABERINTO ENCANTADO</div><p id="modalText">Explora un pantano lleno de ruinas, plantas y senderos ocultos. Encuentra llaves, descubre tesoros y esquiva a los monstruos que protegen el laberinto.</p><div class="menu-rule"></div><button class="pixel-btn primary" id="modalStart">▶ COMENZAR AVENTURA</button><div class="small">PC: WASD / FLECHAS · ENTER: ATAQUE · M: MAPA<br>MÓVIL: JOYSTICK + BOTÓN ESPADA</div></div></div><div class="enemy-roster"><div class="enemy-profile"><canvas id="portraitHunter" width="24" height="24"></canvas><span style="color:#ff8592">DEMONIO</span><small>Rastreadora</small></div><div class="enemy-profile"><canvas id="portraitPatrol" width="24" height="24"></canvas><span style="color:#90c2ff">GÓLEM</span><small>Patrullero</small></div><div class="enemy-profile"><canvas id="portraitStalker" width="24" height="24"></canvas><span style="color:#d8a0ff">ESPECTRO</span><small>Acechador</small></div><div class="enemy-profile"><canvas id="portraitChaos" width="24" height="24"></canvas><span style="color:#ffc57f">CÍCLOPE</span><small>Caótica</small></div></div></div></div></div>
-<aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ENCANTADO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA<br><span class="keycap">N</span> NUEVA PARTIDA</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
+<aside><p class="eyebrow">● AVENTURA EN CURSO</p><h2 class="side-title">EL LABERINTO<br>ENCANTADO</h2><div class="stat-row"><span>NIVEL</span><strong id="levelText">01</strong></div><div class="stat-row"><span>LABERINTO</span><strong id="sizeText">81 × 81</strong></div><div class="stat-row"><span>VIDAS DE ARDEN</span><strong id="livesText" class="pink">♥ ♥ ♥</strong></div><div class="stat-row"><span>ARMA</span><strong id="weaponText">ESPADA</strong></div><div class="stat-row"><span>COFRES</span><strong id="chestText">0</strong></div><div class="stat-row"><span>PROTECCIÓN</span><strong id="shieldText" class="green">—</strong></div><div class="stat-row"><span>TIEMPO</span><strong id="timeText">00:00</strong></div><div class="stat-row"><span>SEMILLA</span><strong id="seedText" style="font-size:8px">--------</strong></div><div class="divider"></div><p class="eyebrow">TU MISIÓN</p><div class="objectives-list"><div class="objective-line" id="keysText">🔑 LLAVES: 0 / 3</div><div class="objective-line" id="relicText">✦ RELIQUIAS: 0 / 5</div><div class="objective-line" id="enemyText">☠ ENEMIGOS: 0</div><div class="objective-line" id="exitText">▣ ENCUENTRA LA SALIDA</div></div><div class="divider"></div><p class="eyebrow">EXPLORACIÓN</p><div class="stat-row"><span>MAPA DESCUBIERTO</span><strong id="exploreText">0%</strong></div><div class="progressbar"><div id="exploreBar"></div></div><div class="divider"></div><p class="eyebrow">MINIMAPA</p><div class="mini-shell"><canvas id="minimap" width="210" height="210"></canvas></div><div class="divider"></div><p class="eyebrow">CONTROLES</p><p class="help"><span class="keycap">ENTER</span> ATACAR HACIA DONDE MIRAS<br><span class="keycap">W A S D</span> O <span class="keycap">↑ ← ↓ →</span> MOVER<br><span class="keycap">M</span> MAPA GRANDE<br><span class="keycap">ESC</span> PAUSA</p><p class="footer-text">GENERACIÓN PROCEDURAL: CADA NUEVA PARTIDA REDIBUJA TODOS LOS PASILLOS.</p></aside></div>
 <div id="orientationGate"><div class="rotateGlyph">▣</div><strong>GIRA TU CELULAR</strong><p>ARDEN EL CABALLERO se juega en horizontal. Gira el teléfono y pulsa pantalla completa para aprovechar toda la pantalla.</p><button class="pixel-btn primary" id="rotateFull">⛶ PANTALLA COMPLETA</button></div>
 
 <div id="authGate" role="dialog" aria-modal="true" aria-label="Iniciar sesión">
@@ -232,7 +233,8 @@ let enemies=[],lives=3,shield=0,invulnerable=0,enemyTimer=0,gameOver=false;
 let level=1,maze=[],seen=[],items=new Map(),width=81,height=81,player={x:1,y:1,drawX:1,drawY:1},start={x:1,y:1},exit={x:1,y:1},totalKeys=3,keys=0,relics=0,totalRelics=5,seed=0,elapsed=0,started=false,paused=true,won=false,showMap=false,last=0,moveClock=0,frame=0,toastClock=0,audioOn=true,audioContext=null,walkable=0,explored=0;
 let chestsOpened=0,weaponCharges=0,armor=0,attackCooldown=0,slashTime=0,slashCells=[],slashFace=1,trapCells=new Set(),hazardCooldown=0;
 let mapZoom=1;const mapZoomOptions=[1,1.5,2,3,4,6,8];
-let chambers=[],activeChamber=null,boss=null,bossDefeated=false,bossStarted=false,clearedChambers=0;
+let chambers=[],activeChamber=null,boss=null,bossDefeated=false,bossStarted=false,clearedChambers=0,projectiles=[];
+let pinchStart=null;
 const tile=24;let vw=0,vh=0, DPR=1;const input={up:false,down:false,left:false,right:false};
 function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}};
 const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
@@ -249,20 +251,21 @@ for(let i=0;i<totalRelics;i++){let p=pick(10);if(p)items.set(id(...p),'relic')}
 for(let i=0;i<Math.min(3+level,11);i++){let p=pick(18);if(p)items.set(id(...p),'flower')}
 enemies=[];const types=['hunter','patrol','stalker','chaos'];for(let i=0;i<Math.min(3+level,12);i++){const pool=info.reachable.filter(([x,y])=>info.d[id(x,y)]>24&&!items.has(id(x,y))&&!enemies.some(e=>e.x===x&&e.y===y));if(!pool.length)break;const pos=pool[Math.floor(rnd()*pool.length)];enemies.push({x:pos[0],y:pos[1],drawX:pos[0],drawY:pos[1],type:types[i%4],dir:Math.floor(rnd()*4),wait:0,hp:1+Math.floor(level/3),maxHp:1+Math.floor(level/3)})}
 // Las trampas, cámaras y recompensas se vuelven a generar en cada nivel.
-trapCells=new Set();chambers=[];activeChamber=null;boss=null;bossDefeated=false;bossStarted=false;clearedChambers=0;chestsOpened=0;
+trapCells=new Set();chambers=[];activeChamber=null;boss=null;bossDefeated=false;bossStarted=false;clearedChambers=0;chestsOpened=0;projectiles=[];
 const floorCandidates=info.reachable.filter(([x,y])=>info.d[id(x,y)]>18&&!items.has(id(x,y))&&Math.abs(x-exit.x)+Math.abs(y-exit.y)>5);
 for(let i=0;i<Math.min(18,7+level*2);i++){
  const p=floorCandidates[Math.floor(rnd()*floorCandidates.length)];if(p&&!items.has(id(...p)))trapCells.add(id(...p));
 }
 const deadEnds=info.reachable.filter(([x,y])=> info.d[id(x,y)]>30 && Math.abs(x-exit.x)+Math.abs(y-exit.y)>12 && DIRS.filter(([dx,dy])=>isFloor(x+dx,y+dy)).length===1);
-for(let i=0;i<Math.min(3,1+Math.floor(level/2));i++){
+for(let i=0;i<Math.min(5,2+Math.floor(level/2));i++){
  const valid=deadEnds.filter(([x,y])=> x>5&&y>5&&x<width-6&&y<height-6&&chambers.every(c=>Math.abs(c.x-x)+Math.abs(c.y-y)>13));
  if(!valid.length)break;
  const [x,y]=valid[Math.floor(rnd()*valid.length)];
  // Salón rectangular conectado a un callejón. Jamás cerramos las rutas originales.
  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)maze[y+dy][x+dx]=0;
  const area=new Set();for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)area.add(id(x+dx,y+dy));
- chambers.push({x,y,area,active:false,done:false,guards:0});
+ const roomKind=((i+level)%3===0)?'dart':'guard';
+  chambers.push({x,y,area,active:false,done:false,guards:0,kind:roomKind,shotTimer:0,pattern:((i+seed)%2===0)?'h':'v'});
  trapCells.delete(id(x,y));items.delete(id(x,y));items.set(id(x,y),'sigil');
 }
 for(const c of chambers)for(const k of c.area){trapCells.delete(k);if(k!==id(c.x,c.y)&&items.get(k)!=='key')items.delete(k)}
@@ -290,9 +293,45 @@ function checkChamberClear(){
  if(!activeChamber)return;
  const c=activeChamber;
  if(enemies.some(e=>e.chamber===c))return;
- c.done=true;c.active=false;activeChamber=null;clearedChambers++;
+ c.done=true;c.active=false;activeChamber=null;clearedChambers++;projectiles=projectiles.filter(p=>p.chamber!==c);
  items.set(id(c.x,c.y),'chest');note('¡SALA LIBERADA! COFRE DESBLOQUEADO');beep(880,.2);
 }
+function spawnRoomProjectiles(c){
+ if(!c||!c.active||c.done)return;
+ const dirs=c.pattern==='h'?[[1,0],[-1,0]]:[[0,1],[0,-1]];
+ const origins=c.pattern==='h'?[[c.x-2,c.y],[c.x+2,c.y]]:[[c.x,c.y-2],[c.x,c.y+2]];
+ for(let i=0;i<origins.length;i++){const [sx,sy]=origins[i], [dx,dy]=dirs[i];
+  if(isFloor(sx,sy))projectiles.push({x:sx,y:sy,dx,dy,drawX:sx,drawY:sy,chamber:c,life:6});
+ }
+ c.pattern=c.pattern==='h'?'v':'h';
+}
+function updateProjectiles(dt){
+ for(const c of chambers){
+  if(c.active&&c.kind==='dart'&&!paused&&!showMap){c.shotTimer-=dt;if(c.shotTimer<=0){spawnRoomProjectiles(c);c.shotTimer=.95;}}
+ }
+ for(let i=projectiles.length-1;i>=0;i--){
+  const p=projectiles[i];
+  p.life-=dt;
+  p.drawX+=(p.x-p.drawX)*Math.min(1,dt*16);
+  p.drawY+=(p.y-p.drawY)*Math.min(1,dt*16);
+  if(p.life<=0||!p.chamber?.active){projectiles.splice(i,1);continue}
+  if((p.stepTimer=(p.stepTimer||0)-dt)<=0){
+   p.stepTimer=.12;
+   const nx=p.x+p.dx,ny=p.y+p.dy;
+   if(!isFloor(nx,ny)|| (p.chamber && !p.chamber.area.has(id(nx,ny)))){projectiles.splice(i,1);continue}
+   p.x=nx;p.y=ny;
+   if(nx===player.x&&ny===player.y&&hazardCooldown<=0){hazardCooldown=.8;takeDamage('⚠ ¡TE ALCANZÓ UN DISPARO!');projectiles.splice(i,1);continue}
+  }
+ }
+}
+function drawProjectile(p,camX,camY,t){
+ const sx=p.drawX*tile-camX, sy=p.drawY*tile-camY;
+ pixel(sx+8,sy+8,8,8,'#ffb35d');
+ pixel(sx+10,sy+10,4,4,'#fff3c1');
+ if(p.dx!==0)pixel(sx+(p.dx>0?15:1),sy+10,5,4,'#ff704c');
+ if(p.dy!==0)pixel(sx+10,sy+(p.dy>0?15:1),4,5,'#ff704c');
+}
+
 function collectChest(){
  chestsOpened++;const loot=(seed+chestsOpened*13+level*7)%3;
  if(loot===0){weaponCharges=Math.min(22,weaponCharges+12);note('⚔ ESPADA RÚNICA: 12 GOLPES POTENCIADOS')}
@@ -343,7 +382,7 @@ function step(dx,dy){
  }
  checkCollision();updateUI();drawMinimap();
 }
-function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=shield>0?Math.ceil(shield)+'s':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('combatHint').textContent='⚔ ESPADA '+(attackCooldown>0?'RECARGANDO':'LISTA')+' · FRENTE: '+['↑','→','↓','←'][player.face??1];$('equipmentText').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ARMADURA '+armor:'';$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=activeChamber?'SALA SELLADA · '+enemies.filter(e=>e.chamber===activeChamber).length+' MONSTRUOS':'';$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA';$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
+function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=shield>0?Math.ceil(shield)+'s':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('combatHint').textContent='⚔ ESPADA '+(attackCooldown>0?'RECARGANDO':'LISTA')+' · FRENTE: '+['↑','→','↓','←'][player.face??1];$('equipmentText').textContent=weaponCharges>0?'⚔ RUNA '+weaponCharges:armor>0?'🛡 ARMADURA '+armor:'';$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=activeChamber?('SALA SELLADA · '+enemies.filter(e=>e.chamber===activeChamber).length+' MONSTRUOS'+(activeChamber.kind==='dart'?' · DISPAROS':'')):'';$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA';$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
 function drawMinimap(){
  const c=mctx, size=210, pad=7, inner=size-pad*2;
  c.clearRect(0,0,size,size);
@@ -354,7 +393,7 @@ function drawMinimap(){
  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
   let px=pad+x*scale, py=pad+y*scale;
   if(!seen[y][x]){c.fillStyle='#102a28';c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));continue}
-  c.fillStyle=maze[y][x] ? (((x+y)&1)?'#6b9470':'#4e7b5c') : (((x+y)&1)?'#315c4d':'#22453b');
+  c.fillStyle=maze[y][x] ? (((x+y)&1)?'#173833':'#214942') : (((x+y)&1)?'#b9d7a4':'#90b886');
   c.fillRect(px,py,Math.ceil(scale),Math.ceil(scale));
  }
  for(let [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x])continue;c.fillStyle=v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd';c.fillRect(pad+x*scale,pad+y*scale,Math.max(2,scale),Math.max(2,scale))}
@@ -480,7 +519,7 @@ if(showMap){
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
   let px=ox+x*scale,py=oy+y*scale;
   if(!seen[y][x]){pixel(px,py,scale+.25,scale+.25,'#0d2524');continue}
-  pixel(px,py,scale+.25,scale+.25,maze[y][x]?(((x+y)&1)?'#7ca87e':'#4b7b65'):(((x+y)&1)?'#315d4e':'#204b40'));
+  pixel(px,py,scale+.25,scale+.25,maze[y][x]?(((x+y)&1)?'#143832':'#1b4840'):(((x+y)&1)?'#c2e2ad':'#97c089'));
  }
  for(const [k,v] of items){let x=k%width,y=Math.floor(k/width);if(!seen[y][x]||x<x0||x>x1||y<y0||y>y1)continue;
   pixel(ox+x*scale,oy+y*scale,Math.max(3,scale),Math.max(3,scale),v==='key'?'#ffe76a':v==='flower'?'#7cfb81':v==='chest'?'#ffb157':v==='sigil'?'#75d5f7':'#ff7dbd')}
@@ -501,6 +540,7 @@ for(const e of enemies){if(!seen[e.y][e.x]||Math.abs(e.x-player.x)>vw/tile/2+2||
  if(e.hitFlash>0){pixel(ex+2,ey+2,20,20,'#ffffff55');e.hitFlash=Math.max(0,e.hitFlash-.025)}
  if(e.hp>0){pixel(ex+3,ey-5,18,4,'#190f20');pixel(ex+4,ey-4,Math.max(1,Math.round(16*e.hp/(e.maxHp||2))),2,e.type==='boss'?'#ff6579':'#fbc76a')}
 }
+for(const p of projectiles){if(!seen[p.y]?.[p.x]||Math.abs(p.x-player.x)>vw/tile/2+3||Math.abs(p.y-player.y)>vh/tile/2+3)continue;drawProjectile(p,camX,camY,t)}
 drawPlayer(player.drawX*tile-camX,player.drawY*tile-camY,t);
 if(slashTime>0){
  // Tajo de espada orientado según Arden, con arco progresivo en lugar de rectángulos.
@@ -528,7 +568,7 @@ if(slashTime>0){
 if(vw>340&&!isTouchDevice()){pixel(14,14,160,40,'#0a1027db');ctx.font='9px monospace';ctx.fillStyle='#97b0e6';ctx.fillText(`X:${String(player.x).padStart(3,'0')}  Y:${String(player.y).padStart(3,'0')}`,23,30);ctx.fillStyle='#ffe76a';ctx.fillText(`LLAVES ${keys}/${totalKeys}`,23,45)}
 }
 function victory(){won=true;paused=true;showMap=false;updateMapControls();beep(740,.2);setTimeout(()=>beep(930,.25),180);setTimeout(()=>beep(1200,.28),350);$('modalTitle').textContent='¡ESCAPASTE!';$('modalSub').textContent=`NIVEL ${level} SUPERADO`;$('modalText').textContent=`Venciste al guardián, reuniste ${totalKeys} llaves y escapaste en ${Math.floor(elapsed/60)}m ${Math.floor(elapsed%60)}s. Recuperaste ${relics} de ${totalRelics} reliquias. El siguiente laberinto será aún más grande y completamente diferente.`;$('modalStart').textContent='⌛ GUARDANDO NIVEL...';$('modalStart').disabled=true;$('overlay').classList.remove('hidden');persistVictory()}
-function showWelcome(){paused=true;started=false;$('modalTitle').innerHTML='ARDEN<br>EL CABALLERO';$('modalSub').textContent='EL LABERINTO ENCANTADO';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Evita trampas y vence al jefe de la salida. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
+function showWelcome(){paused=true;started=false;document.body.classList.remove('playing');$('modalTitle').innerHTML='ARDEN<br>EL CABALLERO';$('modalSub').textContent='EL LABERINTO ENCANTADO';$('modalText').textContent='Explora el laberinto, consigue llaves y pelea contra monstruos. Encuentra salas selladas: derrota guardianes para abrir cofres. Algunas salas disparan proyectiles y tendrás que esquivarlos. Evita trampas y vence al jefe de la salida. ENTER para atacar en la dirección a la que miras. Primero acércate a un monstruo, luego deja de caminar y golpea. Espera un instante entre ataques. Tres vidas.';$('modalStart').textContent='▶ COMENZAR AVENTURA';$('overlay').classList.remove('hidden')}
 // Configuración pública de Supabase: no pegues aquí una secret key/service_role.
 const SUPABASE_URL='https://eiellhnpykzikfmjrvvr.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_b8XKRBZMu3p_Xk9n3gzIFQ_uzIEgXGT';
@@ -603,22 +643,24 @@ function openAccount(){if(!account)return;accountWasPlaying=!paused;paused=true;
  $('accountDetails').textContent=(account.email||'Jugador')+' · Nivel desbloqueado: '+(accountProgress?.current_level||level)+' · Niveles completados: '+(accountProgress?.completed_levels||0)+' · Se guarda al vencer al jefe de cada nivel.';
  $('accountPanel').classList.add('open')}
 function closeAccount(){$('accountPanel').classList.remove('open');if(accountWasPlaying&&!won&&!gameOver){paused=false}accountWasPlaying=false}
-async function logout(){closeAccount();paused=true;started=false;won=false;account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
+async function logout(){closeAccount();paused=true;started=false;won=false;document.body.classList.remove('playing');account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
  if(db){const {error}=await db.auth.signOut();setAuthMessage(error?friendlyError(error):'Sesión cerrada. Entra con tu cuenta para continuar.')} }
 
 function togglePause(){if(won)return;if(!started){showWelcome();return}paused=!paused;if(paused){showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
 function updateMapControls(){
  $('game-wrap').classList.toggle('map-open',showMap);
  $('mapZoomLabel').textContent=Math.round(mapZoom*100)+'%';
- $('mapZoomIn').disabled=mapZoom>=8;$('mapZoomOut').disabled=mapZoom<=1;
+ $('mapZoomIn').disabled=mapZoom>=8;$('mapZoomOut').disabled=mapZoom<=1;$('mapZoomReset').disabled=Math.abs(mapZoom-1)<.01;
 }
+function setMapZoomValue(v){mapZoom=Math.max(1,Math.min(8,Math.round(v*100)/100));updateMapControls()}
 function changeMapZoom(dir){if(!showMap)return;
- const ix=mapZoomOptions.indexOf(mapZoom);
- mapZoom=mapZoomOptions[Math.max(0,Math.min(mapZoomOptions.length-1,ix+dir))];
+ const nearest=mapZoomOptions.reduce((best,val,idx)=>Math.abs(val-mapZoom)<Math.abs(mapZoomOptions[best]-mapZoom)?idx:best,0);
+ mapZoom=mapZoomOptions[Math.max(0,Math.min(mapZoomOptions.length-1,nearest+dir))];
  updateMapControls();beep(370,.035);
 }
+function touchDistance(touches){const dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;return Math.hypot(dx,dy)}
 function toggleMap(){if(!started||paused)return;showMap=!showMap;updateMapControls();beep(340,.035)}
-function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);enemyTimer+=dt;if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('attackCharge').style.transform=`scaleX(${1-Math.min(1,attackCooldown/.68)})`;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
+function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);enemyTimer+=dt;updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
 const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
 window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
 // Joystick táctil: movimiento digital preciso en 4 direcciones, sin diagonales.
@@ -644,11 +686,14 @@ $('mapZoomOut').onclick=()=>changeMapZoom(-1);
 $('mapZoomReset').onclick=()=>{mapZoom=1;updateMapControls()};
 $('mapZoomClose').onclick=()=>toggleMap();
 canvas.addEventListener('wheel',e=>{if(showMap){e.preventDefault();changeMapZoom(e.deltaY<0?1:-1)}},{passive:false});
+canvas.addEventListener('touchstart',e=>{if(showMap&&e.touches.length===2){e.preventDefault();pinchStart={dist:touchDistance(e.touches),zoom:mapZoom}}},{passive:false});
+canvas.addEventListener('touchmove',e=>{if(showMap&&e.touches.length===2&&pinchStart){e.preventDefault();const raw=pinchStart.zoom*(touchDistance(e.touches)/Math.max(1,pinchStart.dist));setMapZoomValue(raw)}},{passive:false});
+canvas.addEventListener('touchend',e=>{if(e.touches.length<2)pinchStart=null;},{passive:false});
 $('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn)beep(620,.08)};$('modalStart').onclick=()=>{
  if(!account||saveBusy)return;
  if(won){if(!$('modalSub').textContent.includes('GUARDADO')){persistVictory();return}level=Number(accountProgress.current_level)||level+1;generate()}
  else if(gameOver){level=Number(accountProgress?.current_level)||level;generate()}
- updateMapControls();started=true;paused=false;won=false;$('overlay').classList.add('hidden');note(level===1?'ACÉRCATE, MIRA AL ENEMIGO Y ATACA CON ⚔ / ENTER!':`NIVEL ${level} · NUEVO LABERINTO`)
+ enterFullscreen();updateMapControls();started=true;paused=false;won=false;document.body.classList.add('playing');$('overlay').classList.add('hidden');note(level===1?'ACÉRCATE, MIRA AL ENEMIGO Y ATACA CON ⚔ / ENTER!':`NIVEL ${level} · NUEVO LABERINTO`)
 };
 const isTouchDevice=()=>matchMedia('(hover:none) and (pointer:coarse)').matches;
 async function enterFullscreen(){
@@ -657,9 +702,8 @@ async function enterFullscreen(){
  try{if(screen.orientation && screen.orientation.lock && document.fullscreenElement)await screen.orientation.lock('landscape');}catch(err){console.info('Giro automático no disponible:',err.message)}
  resize();
 }
-$('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen():enterFullscreen());
 $('rotateFull').addEventListener('click',enterFullscreen);
-document.addEventListener('fullscreenchange',()=>{resize();$('fullscreenBtn').textContent=document.fullscreenElement?'⛶ SALIR':'⛶ FULL'});
+document.addEventListener('fullscreenchange',()=>{resize()});
 
 function refreshMobileHud(){
  $('mobileLevel').textContent='N'+level;
