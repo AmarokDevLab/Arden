@@ -13,3 +13,12 @@ Publica todos los archivos de esta carpeta en la raíz de GitHub Pages y abre `a
 **PWA:** `manifest.webmanifest`, `sw.js`, iconos y banner se sirven en HTTPS a través de GitHub Pages. Recarga tras publicar; si una instalación antigua sigue en caché, cierra la PWA y vuelve a abrirla. La instalación y orientación horizontal dependen del navegador.
 
 Controles PC: WASD/flechas, Enter espada, Shift DASH, Q escudo, M mapa, Esc pausa. En móviles usa joystick, DASH, 🛡, espada y mapa.
+
+
+## Versión 6: reintento de jefe y salto
+
+Si Arden pierde todas las vidas en la cámara del jefe, el botón «REINTENTAR JEFE» reinicia únicamente ese combate. Se conservan el nivel, llaves, reliquias y estadísticas reunidas durante el laberinto. Las vidas, los escudos guardados y las cargas de espada se restauran al estado con que entraste a la arena. El contador de tiempo continúa para no dar ventajas artificiales en las estadísticas.
+
+La esquiva (Shift o botón SALTO en móvil) ahora incluye elevación en arco, partículas y estela.
+
+No es necesario cambiar el esquema ni las funciones de Supabase.
