@@ -151,18 +151,13 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 @media(hover:none) and (pointer:coarse){#combatTools{display:flex}#combatHud{right:12px;top:10px;font-size:7px;gap:4px}#combatHud span{padding:4px 6px}#equipmentText{display:none!important}.touch{z-index:6}}
 @media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:420px){#attackTouch{width:65px;height:65px;font-size:28px}#combatTools .map-touch{width:46px;height:46px;min-width:46px;min-height:46px;font-size:18px}#combatHud{top:7px}}
 
-/* Controles táctiles accesibles: joystick 360º, interpretado en cuatro direcciones de pasillo. */
-.joystick{display:none;position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:7;width:154px;height:165px;flex-direction:column;justify-content:center;align-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
-.joystick-ring{width:136px;height:136px;border:4px solid #a2d3a6;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#225a51de,#103c39da);box-shadow:inset 0 5px 12px #041d29b8,0 6px 0 #041b20,0 0 0 5px #0b2d35a6}
-.joystick-arrows{font-size:25px;color:#a2d3a673;pointer-events:none}.joystick-knob{position:absolute;left:50%;top:50%;width:66px;height:66px;border-radius:50%;border:4px solid #e4f7bd;background:radial-gradient(circle at 35% 30%,#7fd4a8,#24776b 72%);box-shadow:inset 0 4px #ffffff45,0 5px 9px #0007;transform:translate(-50%,-50%);pointer-events:none;will-change:transform}
-.joystick-label{display:none}
 #attackTouch{position:relative;flex-direction:column;gap:2px;overflow:hidden;background:linear-gradient(#ba6547,#7c2b3c);border:4px solid #ffe2ad;border-radius:50%!important;width:98px;height:98px;box-shadow:inset 0 4px #ffffff33,0 5px 0 #3a1c27!important;transition:filter .1s}
 #attackTouch span{font-size:35px;line-height:1}#attackTouch small{display:none}#attackTouch i{display:none!important}#attackTouch.cooldown{filter:brightness(.78)}
 #combatTools{gap:14px;bottom:max(19px,env(safe-area-inset-bottom))}#combatTools .map-touch{border-radius:12px!important}
 #combatHint{display:block!important;border-color:#427a80!important;color:#d0f4df!important;max-width:300px;font-size:7px;line-height:1.9}
-@media(hover:none) and (pointer:coarse){.touch{display:none!important}.joystick{display:flex}#combatHud{top:8px}#combatHint{display:none!important}#combatTools{display:flex!important}}
-@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:430px){.joystick{width:132px;height:138px;left:max(14px,env(safe-area-inset-left));bottom:max(7px,env(safe-area-inset-bottom))}.joystick-ring{width:108px;height:108px}.joystick-knob{width:57px;height:57px}.joystick-label{margin-top:7px;font-size:7px}#attackTouch{width:78px;height:78px}#attackTouch span{font-size:28px}#attackTouch small{font-size:6px}#combatTools{gap:9px;bottom:max(11px,env(safe-area-inset-bottom))}}
-@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (min-height:431px){.joystick{width:180px;height:185px}.joystick-ring{width:152px;height:152px}#attackTouch{width:110px;height:110px}}
+@media(hover:none) and (pointer:coarse){.touch{display:none!important}#combatHud{top:8px}#combatHint{display:none!important}#combatTools{display:flex!important}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:430px){#attackTouch{width:78px;height:78px}#attackTouch span{font-size:28px}#attackTouch small{font-size:6px}#combatTools{gap:9px;bottom:max(11px,env(safe-area-inset-bottom))}}
+@media(hover:none) and (pointer:coarse) and (orientation:landscape) and (min-height:431px){#attackTouch{width:110px;height:110px}}
 
 /* Mapa con zoom: controles visibles solo cuando el mapa está abierto. */
 #mapZoomTools{display:none;position:absolute;right:max(14px,env(safe-area-inset-right));top:50%;transform:translateY(-50%);z-index:7;flex-direction:column;align-items:center;gap:9px;pointer-events:auto}
@@ -170,14 +165,13 @@ header{background:linear-gradient(180deg,#113b38,#092824);border-bottom:3px soli
 #mapZoomTools button{min-width:52px;min-height:52px;padding:8px;border:3px solid #87b8a7;border-radius:9px;background:#153b40;color:#f6e7a2;box-shadow:4px 4px 0 #071b24;font:bold 22px monospace;touch-action:manipulation}
 #mapZoomTools button:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #071b24}
 #mapZoomLabel{font:700 12px monospace;color:#d4f6dc;background:#0b282edb;border:2px solid #4d8c75;padding:6px;min-width:52px;text-align:center}
-#game-wrap.map-open .joystick,#game-wrap.map-open #combatTools,#game-wrap.map-open #combatHud,#game-wrap.map-open #mobileHud{display:none!important}
+#game-wrap.map-open #dpad,#game-wrap.map-open #combatTools,#game-wrap.map-open #combatHud,#game-wrap.map-open #mobileHud{display:none!important}
 @media(max-width:690px){#mapZoomTools{right:max(9px,env(safe-area-inset-right))}#mapZoomTools button{min-width:45px;min-height:45px;font-size:19px}}
 @media(max-height:390px){#mapZoomTools{gap:4px}#mapZoomTools button{min-height:36px;min-width:42px}#mapZoomLabel{padding:4px}}
 @media(hover:none) and (pointer:coarse){
 #mapZoomIn,#mapZoomOut,#mapZoomReset{display:none!important}
 body.playing header{display:none!important}
 body.playing .main,body.playing #game-wrap{height:100dvh}
-.joystick{bottom:max(37px,calc(env(safe-area-inset-bottom) + 29px))!important}
 #mapZoomTools{top:15px;right:max(11px,env(safe-area-inset-right));transform:none;gap:5px}
 #mapZoomTools #mapZoomLabel{font-size:11px}
 #game-wrap.map-open canvas{touch-action:none}
@@ -413,11 +407,25 @@ body.playing #combatHud{top:54px}
  #pauseControlGuide .controls-touch{display:block;font-size:12px}
  #pauseControlGuide .controls-desktop{display:none}
 }
+#dpad{display:none;position:absolute;z-index:7;left:max(16px,env(safe-area-inset-left));bottom:max(35px,env(safe-area-inset-bottom));grid-template-columns:repeat(3,clamp(40px,12dvh,64px));grid-template-rows:repeat(3,clamp(34px,11dvh,58px));gap:2px;touch-action:none;user-select:none}
+#dpad::before{content:'';grid-area:2/2;background:#151c21bb;border-radius:5px}
+#dpad button{min-width:0;padding:0;touch-action:none;background:#1c242bd9;border:1px solid #a2b6b8a0;border-radius:7px;color:#f5faff;font:700 clamp(15px,5dvh,23px) system-ui,sans-serif;box-shadow:inset 0 2px #ffffff23,0 2px 4px #0009}
+#dpad button.pressed{background:#8ba6a5;box-shadow:inset 0 2px 5px #193832;color:#101f23}
+#dpad [data-dir=up]{grid-area:1/2}
+#dpad [data-dir=left]{grid-area:2/1}
+#dpad [data-dir=right]{grid-area:2/3}
+#dpad [data-dir=down]{grid-area:3/2}
+@media(hover:none) and (pointer:coarse){body.playing #dpad{display:grid}}
 </style>
 </head>
 <body>
 <nav class="game-actions" aria-label="Controles del juego"><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="pauseTouch" aria-label="Pausar partida">Ⅱ</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></nav>
-<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div class="joystick" id="joystick" aria-label="Joystick de movimiento"><div class="joystick-ring"><div class="joystick-arrows">✦</div><div class="joystick-knob" id="joystickKnob"></div></div><span class="joystick-label"></span></div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Salto de esquiva"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M5 35 Q19 4 41 13" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4"/><path d="M35 8 L43 13 L35 17" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 10 L27 10 L29 15 L27 22 L18 22 L16 16Z" fill="#d5e9ff" stroke="#0a3348" stroke-width="2"/><path d="M20 14H27" stroke="#154b65" stroke-width="2"/><path d="M19 23L14 30M26 23L32 28M17 18L11 22M28 18L35 21" stroke="#b3e9ff" stroke-width="4" stroke-linecap="round"/></svg><small>SALTO</small></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div id="dpad" role="group" aria-label="Cruceta de movimiento">
+ <button type="button" data-dir="up" aria-label="Arriba">▲</button>
+ <button type="button" data-dir="left" aria-label="Izquierda">◀</button>
+ <button type="button" data-dir="down" aria-label="Abajo">▼</button>
+ <button type="button" data-dir="right" aria-label="Derecha">▶</button>
+</div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Salto de esquiva"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M5 35 Q19 4 41 13" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4"/><path d="M35 8 L43 13 L35 17" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 10 L27 10 L29 15 L27 22 L18 22 L16 16Z" fill="#d5e9ff" stroke="#0a3348" stroke-width="2"/><path d="M20 14H27" stroke="#154b65" stroke-width="2"/><path d="M19 23L14 30M26 23L32 28M17 18L11 22M28 18L35 21" stroke="#b3e9ff" stroke-width="4" stroke-linecap="round"/></svg><small>SALTO</small></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
 <div id="mapLegend" aria-label="Leyenda del mapa">
   <span><b class="legend-me">◆</b> ARDEN</span><span><b class="legend-key">⚿</b> LLAVE</span><span><b class="legend-chest">▣</b> COFRE</span><span><b class="legend-room">✦</b> SALA</span><span><b class="legend-exit">⬟</b> SALIDA</span><span><b class="legend-path">▰</b> CAMINO</span><span><b class="legend-wall">▰</b> MURO</span>
 </div>
@@ -445,7 +453,7 @@ body.playing #combatHud{top:54px}
   <div><dt><kbd>Esc</kbd></dt><dd>Pausar o reanudar</dd></div>
  </dl>
  <dl class="controls-touch">
-  <div><dt>◉ Joystick</dt><dd>Arrástralo para mover a Arden.</dd></div>
+  <div><dt>▲ ◀ ▼ ▶ Cruceta</dt><dd>Mantén pulsada una flecha para moverte.</dd></div>
   <div><dt>⚔ Espada</dt><dd>Toca para atacar hacia donde mira Arden.</dd></div>
   <div><dt>↗ Salto</dt><dd>Esquiva en la dirección que estás mirando.</dd></div>
   <div><dt>🛡 Escudo</dt><dd>Activa un escudo si tienes cargas.</dd></div>
@@ -501,7 +509,7 @@ const tile=24;let vw=0,vh=0, DPR=1;const input={up:false,down:false,left:false,r
 function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}};
 const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
 function farthest(px,py){let q=[[px,py]],d=new Int32Array(width*height).fill(-1);d[id(px,py)]=0;let best={x:px,y:py,d:0},k=0;while(k<q.length){let [x,y]=q[k++],dist=d[id(x,y)];if(dist>best.d)best={x,y,d:dist};for(let [dx,dy] of DIRS){let nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&d[id(nx,ny)]<0){d[id(nx,ny)]=dist+1;q.push([nx,ny])}}}return {best,d,reachable:q};}
-function generate(){labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(61,35+(level-1)*4);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
+function generate(){labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
 while(stack.length){let [x,y]=stack[stack.length-1];let options=[];for(let [dx,dy] of DIRS){let nx=x+dx*2,ny=y+dy*2;if(nx>0&&ny>0&&nx<width-1&&ny<height-1&&maze[ny][nx])options.push([dx,dy,nx,ny])}if(!options.length){stack.pop();continue}let [dx,dy,nx,ny]=options[Math.floor(rnd()*options.length)];maze[y+dy][x+dx]=0;maze[ny][nx]=0;stack.push([nx,ny]);}
 // Extra shortcuts make exploration less linear while preserving full connectivity.
 for(let i=0;i<Math.floor(width*height*.075);i++){let x=2+Math.floor(rnd()*(width-4)),y=2+Math.floor(rnd()*(height-4));if(x%2===0&&y%2===1&&isFloor(x-1,y)&&isFloor(x+1,y))maze[y][x]=0;else if(y%2===0&&x%2===1&&isFloor(x,y-1)&&isFloor(x,y+1))maze[y][x]=0;}
@@ -1555,7 +1563,7 @@ function closeAccount(){$('accountPanel').classList.remove('open');if(accountWas
 async function logout(){closeAccount();hideStartMenu();paused=true;started=false;won=false;document.body.classList.remove('playing');account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
  if(db){const {error}=await db.auth.signOut();setAuthMessage(error?friendlyError(error):'Sesión cerrada. Entra con tu cuenta para continuar.')} }
 
-function togglePause(){if(won||gameOver)return;if(!started){showWelcome();return}paused=!paused;$('pauseControls').open=false;$('overlay').classList.toggle('pause-open',paused);if(paused){setOverlayRoster(false);showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
+function togglePause(){if(won||gameOver)return;if(!started){showWelcome();return}paused=!paused;releaseDpad();$('pauseControls').open=false;$('overlay').classList.toggle('pause-open',paused);if(paused){setOverlayRoster(false);showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
 function updateMapControls(){
  $('game-wrap').classList.toggle('map-open',showMap);
  $('mapZoomLabel').textContent=Math.round(mapZoom*100)+'%';
@@ -1568,33 +1576,44 @@ function changeMapZoom(dir){if(!showMap)return;
  updateMapControls();beep(370,.035);
 }
 function touchDistance(touches){const dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;return Math.hypot(dx,dy)}
-function toggleMap(){if(!started||paused)return;showMap=!showMap;if(showMap){mapPanX=0;mapPanY=0;pinchStart=null;mapTouchPan=null;}updateMapControls();beep(340,.035)}
+function toggleMap(){if(!started||paused)return;showMap=!showMap;releaseDpad();if(showMap){mapPanX=0;mapPanY=0;pinchStart=null;mapTouchPan=null;}updateMapControls();beep(340,.035)}
 function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if(!paused){elapsed+=dt;shield=Math.max(0,shield-dt);invulnerable=Math.max(0,invulnerable-dt);attackCooldown=Math.max(0,attackCooldown-dt);slashTime=Math.max(0,slashTime-dt);hazardCooldown=Math.max(0,hazardCooldown-dt);guardTime=Math.max(0,guardTime-dt);dodgeCooldown=Math.max(0,dodgeCooldown-dt);dodgeFlash=Math.max(0,dodgeFlash-dt);comboWindow=Math.max(0,comboWindow-dt);
  if(comboWindow===0)combatCombo=0;
  combatPulse=Math.max(0,combatPulse-dt);
  for(const tr of dashTrail)tr.life-=dt;dashTrail=dashTrail.filter(tr=>tr.life>0);
  for(const fx of hitEffects)fx.life-=dt;hitEffects=hitEffects.filter(fx=>fx.life>0);
- checkStandingTrap();bossTrapHitCooldown=Math.max(0,bossTrapHitCooldown-dt);enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up)dy=-1;else if(input.down)dy=1;else if(input.left)dx=-1;else if(input.right)dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
+ checkStandingTrap();bossTrapHitCooldown=Math.max(0,bossTrapHitCooldown-dt);enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up||touchDirection==='up')dy=-1;else if(input.down||touchDirection==='down')dy=1;else if(input.left||touchDirection==='left')dx=-1;else if(input.right||touchDirection==='right')dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
 const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
-window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('overlay').classList.contains('menu-open')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(paused&&e.key!=='Escape')return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);stopJoystick()});
-// Joystick táctil: movimiento digital preciso en 4 direcciones, sin diagonales.
-const joy=$('joystick'),knob=$('joystickKnob');let joyPointer=null;
-function setJoyDirection(dx,dy){for(const dir of ['up','down','left','right'])input[dir]=false;
- if(Math.abs(dx)<12&&Math.abs(dy)<12)return;
- if(Math.abs(dx)>Math.abs(dy))input[dx>0?'right':'left']=true;
- else input[dy>0?'down':'up']=true;
+window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('overlay').classList.contains('menu-open')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(paused&&e.key!=='Escape')return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);releaseDpad()});
+const dpad=$('dpad');
+let dpadPointer=null,dpadButton=null,touchDirection=null;
+function selectDpadButton(button){
+ if(button===dpadButton)return;
+ dpadButton?.classList.remove('pressed');
+ dpadButton=button;
+ touchDirection=button?.dataset.dir??null;
+ button?.classList.add('pressed');
 }
-function moveJoystick(e){if(joyPointer!==e.pointerId)return;
- const ring=joy.querySelector('.joystick-ring'),rect=ring.getBoundingClientRect();
- let dx=e.clientX-(rect.left+rect.width/2),dy=e.clientY-(rect.top+rect.height/2);
- const distance=Math.hypot(dx,dy),radius=rect.width*.29,scale=distance>radius?radius/distance:1;
- knob.style.transform=`translate(-50%,-50%) translate(${dx*scale}px,${dy*scale}px)`;
- setJoyDirection(dx,dy);
+function releaseDpad(){
+ dpadPointer=null;
+ selectDpadButton(null);
 }
-function stopJoystick(){joyPointer=null;knob.style.transform='translate(-50%,-50%)';setJoyDirection(0,0)}
-joy.addEventListener('pointerdown',e=>{if(joyPointer!==null)return;e.preventDefault();joyPointer=e.pointerId;joy.setPointerCapture(e.pointerId);moveJoystick(e)});
-joy.addEventListener('pointermove',e=>{if(joyPointer!==e.pointerId)return;e.preventDefault();moveJoystick(e)});
-for(const type of ['pointerup','pointercancel','lostpointercapture'])joy.addEventListener(type,e=>{if(joyPointer===e.pointerId)stopJoystick()});
+dpad.addEventListener('pointerdown',event=>{
+ const button=event.target.closest('button[data-dir]');
+ if(!button||dpadPointer!==null||event.button!==0||paused||showMap)return;
+ event.preventDefault();
+ dpadPointer=event.pointerId;
+ dpad.setPointerCapture(dpadPointer);
+ selectDpadButton(button);
+});
+dpad.addEventListener('pointermove',event=>{
+ if(event.pointerId!==dpadPointer)return;
+ const button=document.elementFromPoint(event.clientX,event.clientY)?.closest('#dpad button[data-dir]');
+ selectDpadButton(button??null);
+});
+for(const type of ['pointerup','pointercancel','lostpointercapture']){
+ dpad.addEventListener(type,event=>{if(event.pointerId===dpadPointer)releaseDpad()});
+}
 $('mapZoomIn').onclick=()=>changeMapZoom(1);
 $('mapZoomOut').onclick=()=>changeMapZoom(-1);
 $('mapZoomReset').onclick=()=>{mapZoom=1;updateMapControls()};
