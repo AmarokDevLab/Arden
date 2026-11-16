@@ -1,4 +1,4 @@
-const CACHE_NAME='arden-quest-pwa-v35-mobile-dpad';
+const CACHE_NAME='arden-quest-pwa-v36-mobile-map-legend';
 const ASSETS=['./arden_el_caballero_pwa.html','./manifest.webmanifest','./icons/arden-192.png','./icons/arden-512.png','./icons/apple-touch-icon.png','./assets/arden_banner.png','./assets/arden_labyrinth.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(names=>Promise.all(names.filter(name=>name.startsWith('arden-quest-pwa-')&&name!==CACHE_NAME).map(name=>caches.delete(name)))).then(()=>self.clients.claim()))});

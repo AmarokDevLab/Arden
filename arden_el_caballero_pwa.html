@@ -416,6 +416,15 @@ body.playing #combatHud{top:54px}
 #dpad [data-dir=right]{grid-area:2/3}
 #dpad [data-dir=down]{grid-area:3/2}
 @media(hover:none) and (pointer:coarse){body.playing #dpad{display:grid}}
+@media(hover:none) and (pointer:coarse){
+ #game-wrap.map-open #mapLegend{
+  left:max(8px,env(safe-area-inset-left));top:49px;bottom:auto;transform:none;
+  width:90px;max-width:none;display:grid;grid-template-columns:1fr;
+  gap:3px;padding:5px 7px;font-size:9px
+ }
+ #mapLegend b{display:inline-block;width:15px;font-size:13px;margin-right:2px}
+ body:has(#game-wrap.map-open) .game-actions{visibility:hidden}
+}
 </style>
 </head>
 <body>
@@ -1216,25 +1225,22 @@ function drawBossTelegraph(camX,camY,t){
 function drawScene(t){const theme=labyrinthThemes[labyrinthType];pixel(0,0,vw,vh,theme.background);if(!maze.length)return;
 if(showMap){
  // Muestra el laberinto completo al 100%; al acercar, centra la cámara del mapa en Arden.
- const header=49,footer=37,sidePadding=48;
- const availW=Math.max(80,vw-sidePadding-68),availH=Math.max(80,vh-header-footer-26);
- const baseScale=Math.min(availW/width,availH/height);
- const scale=baseScale*mapZoom;
- const mw=width*scale,mh=height*scale;
- const visibleLeft=13,visibleTop=header,visibleW=vw-26,visibleH=vh-header-footer;
- // Al hacer zoom, centrar inicialmente a Arden; permitir explorar arrastrando.
- const centerX=visibleLeft+visibleW/2,centerY=visibleTop+visibleH/2;
- const wantedX=mapZoom===1?(vw-mw)/2:centerX-(player.x+.5)*scale+mapPanX;
- const wantedY=mapZoom===1?header+(visibleH-mh)/2:centerY-(player.y+.5)*scale+mapPanY;
- const ox=mapZoom===1?Math.round((vw-mw)/2):Math.round(wantedX);
- const oy=mapZoom===1?Math.round(header+(visibleH-mh)/2):Math.round(wantedY);
+ const mobile=isTouchDevice();
+ const header=49,footer=mobile?26:37;
+ const visibleLeft=mobile?Math.ceil($('mapLegend').getBoundingClientRect().right)+8:13;
+ const visibleRight=mobile?Math.floor($('mapZoomTools').getBoundingClientRect().left)-8:vw-13;
+ const visibleW=Math.max(1,visibleRight-visibleLeft),visibleH=Math.max(1,vh-header-footer);
+ const scale=Math.min(Math.max(1,visibleW-8)/width,Math.max(1,visibleH-8)/height)*mapZoom;
+ const centerX=visibleLeft+visibleW/2,centerY=header+visibleH/2;
+ const ox=Math.round(mapZoom===1?centerX-width*scale/2:centerX-(player.x+.5)*scale+mapPanX);
+ const oy=Math.round(mapZoom===1?centerY-height*scale/2:centerY-(player.y+.5)*scale+mapPanY);
  pixel(0,0,vw,vh,'#08191f');
  pixel(9,8,vw-18,32,'#17393b');pixel(12,11,vw-24,26,'#102b31');
  ctx.font='bold 12px monospace';ctx.fillStyle='#f7e89d';ctx.fillText('MAPA DEL LABERINTO',21,29);
  ctx.fillStyle='#c1dfce';ctx.font='10px monospace';ctx.fillText('ARDEN  •  '+keys+'/'+totalKeys+' LLAVES',14,vh-13);
- ctx.save();ctx.beginPath();ctx.rect(13,header,vw-26,vh-header-footer);ctx.clip();
+ ctx.save();ctx.beginPath();ctx.rect(visibleLeft,header,visibleW,visibleH);ctx.clip();
  // Solo dibuja las casillas dentro del área visible para mantener el rendimiento con mucho zoom.
- const x0=Math.max(0,Math.floor((13-ox)/scale)-1),x1=Math.min(width-1,Math.ceil((vw-13-ox)/scale)+1);
+ const x0=Math.max(0,Math.floor((visibleLeft-ox)/scale)-1),x1=Math.min(width-1,Math.ceil((visibleRight-ox)/scale)+1);
  const y0=Math.max(0,Math.floor((header-oy)/scale)-1),y1=Math.min(height-1,Math.ceil((vh-footer-oy)/scale)+1);
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
   let px=ox+x*scale,py=oy+y*scale;
