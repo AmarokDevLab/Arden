@@ -407,15 +407,43 @@ body.playing #combatHud{top:54px}
  #pauseControlGuide .controls-touch{display:block;font-size:12px}
  #pauseControlGuide .controls-desktop{display:none}
 }
-#dpad{display:none;position:absolute;z-index:7;left:max(16px,env(safe-area-inset-left));bottom:max(35px,env(safe-area-inset-bottom));grid-template-columns:repeat(3,clamp(40px,12dvh,64px));grid-template-rows:repeat(3,clamp(34px,11dvh,58px));gap:2px;touch-action:none;user-select:none}
-#dpad::before{content:'';grid-area:2/2;background:#151c21bb;border-radius:5px}
-#dpad button{min-width:0;padding:0;touch-action:none;background:#1c242bd9;border:1px solid #a2b6b8a0;border-radius:7px;color:#f5faff;font:700 clamp(15px,5dvh,23px) system-ui,sans-serif;box-shadow:inset 0 2px #ffffff23,0 2px 4px #0009}
-#dpad button.pressed{background:#8ba6a5;box-shadow:inset 0 2px 5px #193832;color:#101f23}
-#dpad [data-dir=up]{grid-area:1/2}
-#dpad [data-dir=left]{grid-area:2/1}
-#dpad [data-dir=right]{grid-area:2/3}
-#dpad [data-dir=down]{grid-area:3/2}
+#dpad{
+ --pad-size:clamp(43px,12dvh,64px);
+ display:none;position:absolute;z-index:7;left:max(18px,env(safe-area-inset-left));
+ bottom:max(24px,env(safe-area-inset-bottom));
+ grid-template-columns:repeat(3,var(--pad-size));grid-template-rows:repeat(3,var(--pad-size));
+ gap:3px;touch-action:none;isolation:isolate
+}
+#dpad::before{
+ content:'';position:absolute;inset:9%;z-index:-1;pointer-events:none;border-radius:50%;
+ background:radial-gradient(circle,#163c36b0,#081c2066 65%,transparent 67%)
+}
+#dpad::after{
+ content:'✦';grid-area:2/2;display:grid;place-items:center;color:#a3bfa38c;
+ background:#102b2ce6;border:1px solid #72958c66;border-radius:10px;font:20px system-ui;pointer-events:none
+}
+#dpad button{
+ min-width:0;min-height:0;padding:0;touch-action:none;appearance:none;
+ background:linear-gradient(155deg,#36584fdd,#122b2deb);
+ border:2px solid #a6c3acb3;border-radius:13px;color:#e7f8e6;
+ font:700 clamp(20px,5dvh,30px)/1 system-ui,sans-serif;
+ text-shadow:0 2px 2px #051b1c;box-shadow:inset 0 2px #ecffe522,inset 0 -3px #03191f80,0 3px 5px #0008;
+ transition:background .08s,box-shadow .08s
+}
+#dpad button.pressed{
+ background:linear-gradient(155deg,#d2e7a8,#6ea68d);border-color:#edffd1;color:#102e2a;
+ text-shadow:none;box-shadow:inset 0 3px 6px #143b3e66,0 0 13px #a2e8ae55
+}
+#dpad [data-dir=up]{grid-area:1/2;border-radius:16px 16px 8px 8px}
+#dpad [data-dir=left]{grid-area:2/1;border-radius:16px 8px 8px 16px}
+#dpad [data-dir=right]{grid-area:2/3;border-radius:8px 16px 16px 8px}
+#dpad [data-dir=down]{grid-area:3/2;border-radius:8px 8px 16px 16px}
 @media(hover:none) and (pointer:coarse){body.playing #dpad{display:grid}}
+html,body,button,canvas,img,svg{
+ -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent
+}
+input,textarea,[contenteditable=true]{-webkit-user-select:text;user-select:text}
+button img,img{-webkit-user-drag:none}
 @media(hover:none) and (pointer:coarse){
  #game-wrap.map-open #mapLegend{
   left:max(8px,env(safe-area-inset-left));top:49px;bottom:auto;transform:none;
@@ -1783,6 +1811,7 @@ function selectDpadButton(button){
  dpadButton=button;
  touchDirection=button?.dataset.dir??null;
  button?.classList.add('pressed');
+ for(const control of dpad.querySelectorAll('button'))control.setAttribute('aria-pressed',String(control===button));
 }
 function releaseDpad(){
  dpadPointer=null;
