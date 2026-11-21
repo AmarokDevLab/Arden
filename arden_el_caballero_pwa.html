@@ -425,11 +425,50 @@ body.playing #combatHud{top:54px}
  #mapLegend b{display:inline-block;width:15px;font-size:13px;margin-right:2px}
  body:has(#game-wrap.map-open) .game-actions{visibility:hidden}
 }
+
+#sectorName{display:none;position:absolute;left:18px;top:116px;z-index:6;color:#d9eccc;text-shadow:0 2px 4px #000;font:600 12px system-ui;pointer-events:none}
+body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:none}
+#upgradeDialog{width:min(640px,92vw);padding:24px;color:#fff2c7;background:#0c2926;border:2px solid #d8b46b;border-radius:12px}
+#upgradeDialog::backdrop{background:#020d13cc}
+#upgradeDialog h2{font:700 23px system-ui;margin:0 0 10px}
+#upgradeDialog p{font:14px/1.5 system-ui;color:#c4ddce}
+#upgradeChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#upgradeChoices button{white-space:normal;padding:16px 10px;text-align:left}
+#upgradeChoices strong,#upgradeChoices span{display:block;font:700 15px/1.5 system-ui}
+#upgradeChoices span{font-weight:400;font-size:13px;margin-top:8px}
+@media(max-width:550px){#upgradeChoices{grid-template-columns:1fr}#upgradeDialog{padding:14px}#upgradeChoices button{padding:8px}}
+
+.arden-dialog{width:min(760px,94vw);max-height:90dvh;overflow:auto;box-sizing:border-box;background:linear-gradient(145deg,#163f34,#091d22);color:#e6f4df;border:3px solid #8fc99c;border-radius:9px;padding:24px;box-shadow:0 0 0 5px #061a16,12px 14px 0 #0008;font:16px/1.6 system-ui,sans-serif}
+.arden-dialog::backdrop{background:#020e15d9}
+.arden-dialog h2{margin:0;font:700 clamp(18px,3vw,26px)/1.3 system-ui,sans-serif;color:#ffe19b}
+.arden-dialog h3{margin:14px 0 6px;font-size:20px;color:#ffdf98}
+.arden-dialog p{margin:10px 0}
+.dialog-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.dialog-actions .pixel-btn{font-size:10px;white-space:normal}
+.dialog-actions [hidden]{display:none}
+.guide-heading{display:flex;gap:12px;justify-content:space-between;align-items:center}
+#howImage{display:block;width:100%;height:clamp(110px,30dvh,260px);object-fit:contain;background:#06181c;border:1px solid #466e5e;margin-top:14px;border-radius:5px}
+#howControls{color:#b9e7c6;font-size:14px}
+#howError{color:#ffd39c}
+@media(max-height:500px){.arden-dialog{padding:12px;font-size:13px}#howImage{float:left;width:42%;height:42dvh;margin:12px 16px 10px 0}.dialog-actions{clear:both;margin-top:8px}.arden-dialog h3{font-size:16px}}
+
+#manualBrowser[hidden],#howIntro[hidden],#manualClose[hidden]{display:none}
+#manualCategories{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+#manualCategories .pixel-btn{font:700 13px system-ui;padding:9px 12px}
+#manualCategories [aria-pressed=true]{color:#102923;background:#f4d48d;border-color:#ffedb0}
+#manualCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#manualCards article{background:#071d1ddd;padding:12px;border:1px solid #507762;border-radius:7px}
+#manualCards img{width:100%;height:160px;object-fit:contain;image-rendering:pixelated;background:#071b20;border-radius:4px}
+#manualCards small{display:block;font:11px system-ui;color:#a4c7b4;margin-top:4px}
+#manualCards h3{font-size:18px}
+#manualCards p{font:14px/1.6 system-ui}
+#manualClose{display:block;margin:16px 0 0 auto}
+@media(max-width:580px){#manualCards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<nav class="game-actions" aria-label="Controles del juego"><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="pauseTouch" aria-label="Pausar partida">Ⅱ</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></nav>
-<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div id="dpad" role="group" aria-label="Cruceta de movimiento">
+<nav class="game-actions" aria-label="Controles del juego"><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="pauseTouch" aria-label="Pausar partida">Ⅱ</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="howButton">COMO JUGAR</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></nav>
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="sectorName" aria-live="polite"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div id="dpad" role="group" aria-label="Cruceta de movimiento">
  <button type="button" data-dir="up" aria-label="Arriba">▲</button>
  <button type="button" data-dir="left" aria-label="Izquierda">◀</button>
  <button type="button" data-dir="down" aria-label="Abajo">▼</button>
@@ -494,10 +533,23 @@ body.playing #combatHud{top:54px}
   <div class="account-card"><h2>⚔ MI PARTIDA</h2><p id="accountDetails">—</p><div id="accountStats" class="account-stats">Cargando estadísticas…</div><div id="accountAchievements" class="account-achievements"></div><div class="account-actions"><button class="pixel-btn primary" id="accountClose">▶ CONTINUAR</button><button class="pixel-btn" id="logoutBtn">CERRAR SESIÓN</button></div></div>
 </div>
 
+
+<dialog id="leaveDialog" class="arden-dialog" aria-labelledby="leaveTitle">
+ <h2 id="leaveTitle">¿Volver al menú principal?</h2>
+ <p>Perderás el avance de este laberinto. Tu último nivel desbloqueado y tus estadísticas guardadas se conservan.</p>
+ <div class="dialog-actions"><button id="leaveCancel" class="pixel-btn">SEGUIR EN PAUSA</button><button id="leaveConfirm" class="pixel-btn primary">VOLVER AL MENÚ</button></div>
+</dialog>
+<dialog id="howDialog" class="arden-dialog" aria-labelledby="howTitle">
+ <div id="manualBrowser" hidden><h2 id="manualTitle">Guía de Arden</h2><p>Elige un tema para consultar sus ejemplos y consejos.</p><nav id="manualCategories" aria-label="Temas del manual"></nav><div id="manualCards"></div></div><div id="howIntro"><div class="guide-heading"><h2 id="howTitle">Tu aventura en Arden</h2><span id="howStep"></span></div>
+ <img id="howImage" alt="">
+ <h3 id="howHeading"></h3><p id="howText"></p><p id="howControls"></p><p id="howError" role="status"></p>
+ <div class="dialog-actions"><button id="howBack" class="pixel-btn">ANTERIOR</button><button id="howClose" class="pixel-btn">CERRAR</button><button id="howNext" class="pixel-btn primary">SIGUIENTE</button></div></div><button id="manualClose" class="pixel-btn" hidden>CERRAR MANUAL</button>
+</dialog>
+<dialog id="upgradeDialog" aria-labelledby="upgradeTitle"><h2 id="upgradeTitle">Elige una bendición</h2><p>Dura hasta terminar el nivel. Una nueva elección sustituye la anterior.</p><div id="upgradeChoices"></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d',{alpha:false});
+const canvas=document.getElementById('game');let ctx=canvas.getContext('2d',{alpha:false});
 const mini=document.getElementById('minimap'),mctx=mini.getContext('2d');
 ctx.imageSmoothingEnabled=false;mctx.imageSmoothingEnabled=false;
 const $=id=>document.getElementById(id);const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
@@ -518,7 +570,27 @@ const tile=24;let vw=0,vh=0, DPR=1;const input={up:false,down:false,left:false,r
 function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296}};
 const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
 function farthest(px,py){let q=[[px,py]],d=new Int32Array(width*height).fill(-1);d[id(px,py)]=0;let best={x:px,y:py,d:0},k=0;while(k<q.length){let [x,y]=q[k++],dist=d[id(x,y)];if(dist>best.d)best={x,y,d:dist};for(let [dx,dy] of DIRS){let nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&d[id(nx,ny)]<0){d[id(nx,ny)]=dist+1;q.push([nx,ny])}}}return {best,d,reachable:q};}
-function generate(){labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
+
+let runUpgrade=null,landmarkSector='';
+const upgrades=[
+ ['blade','Filo veloz','Ataques más rápidos.'],
+ ['dash','Paso del viento','La esquiva se recarga en 1,9 s.'],
+ ['ward','Amparo','Bloquear con escudo recupera un corazón.']
+];
+function openUpgradeChoice(){
+ paused=true;releaseDpad();
+ const choices=$('upgradeChoices');choices.replaceChildren();
+ for(const [id,title,description] of upgrades){
+  const button=document.createElement('button');button.type='button';button.className='pixel-btn';
+  const name=document.createElement('strong'),detail=document.createElement('span');
+  name.textContent=title;detail.textContent=description;button.append(name,detail);
+  button.onclick=()=>{runUpgrade=id;$('upgradeDialog').close();paused=false;note('✦ '+title.toUpperCase());updateUI()};
+  choices.append(button);
+ }
+ $('upgradeDialog').showModal();
+}
+
+function generate(){runUpgrade=null;landmarkSector='';labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
 while(stack.length){let [x,y]=stack[stack.length-1];let options=[];for(let [dx,dy] of DIRS){let nx=x+dx*2,ny=y+dy*2;if(nx>0&&ny>0&&nx<width-1&&ny<height-1&&maze[ny][nx])options.push([dx,dy,nx,ny])}if(!options.length){stack.pop();continue}let [dx,dy,nx,ny]=options[Math.floor(rnd()*options.length)];maze[y+dy][x+dx]=0;maze[ny][nx]=0;stack.push([nx,ny]);}
 // Extra shortcuts make exploration less linear while preserving full connectivity.
 for(let i=0;i<Math.floor(width*height*.075);i++){let x=2+Math.floor(rnd()*(width-4)),y=2+Math.floor(rnd()*(height-4));if(x%2===0&&y%2===1&&isFloor(x-1,y)&&isFloor(x+1,y))maze[y][x]=0;else if(y%2===0&&x%2===1&&isFloor(x,y-1)&&isFloor(x,y+1))maze[y][x]=0;}
@@ -547,11 +619,13 @@ const deadEnds=info.reachable.filter(([x,y])=> info.d[id(x,y)]>8 && Math.abs(x-e
 for(let i=0;i<Math.min(15,9+Math.floor((level-1)/2));i++){
  const valid=deadEnds.filter(([x,y])=> x>5&&y>5&&x<width-6&&y<height-6&&chambers.every(c=>Math.abs(c.x-x)+Math.abs(c.y-y)>8)&&!items.has(id(x,y))&&!Array.from({length:25},(_,k)=>[x+(k%5)-2,y+Math.floor(k/5)-2]).some(([ax,ay])=>items.get(id(ax,ay))==='key'));
  if(!valid.length)break;
- const [x,y]=valid[Math.floor(rnd()*valid.length)];
+ const targetDistance=info.best.d*(.08+.84*i/Math.max(1,Math.min(15,9+Math.floor((level-1)/2))-1));
+ valid.sort((a,b)=>Math.abs(info.d[id(...a)]-targetDistance)-Math.abs(info.d[id(...b)]-targetDistance));
+ const [x,y]=valid[Math.floor(rnd()*Math.min(4,valid.length))];
  // Salón rectangular conectado a un callejón. Jamás cerramos las rutas originales.
  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)maze[y+dy][x+dx]=0;
  const area=new Set();for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)area.add(id(x+dx,y+dy));
- const roomKinds=['guard','dart','relay','puzzle','waves','treasure','secret'];
+ const roomKinds=['guard','dart','relay','puzzle','waves','blocks','lure','treasure','secret'];
  const roomKind=roomKinds[(i+level-1)%roomKinds.length];
   chambers.push({x,y,area,active:false,done:false,guards:0,kind:roomKind,shotTimer:0,pattern:((i+seed)%2===0)?'h':'v',switchOrder:[],switches:[],puzzleIndex:0,puzzlePreview:0,puzzleTimer:0,puzzleMistakes:0,challengeTimer:0});
  trapCells.delete(id(x,y));items.delete(id(x,y));items.set(id(x,y),'sigil');
@@ -691,7 +765,7 @@ function dodge(){
   if(paused||won||gameOver)break;
  }
  if(!count){invulnerable=Math.min(invulnerable,.1);return}
- dodgeCooldown=3.2;dodgeFlash=.42;moveClock=.15;
+ dodgeCooldown=runUpgrade==='dash'?1.9:3.2;dodgeFlash=.42;moveClock=.15;
  dashTrail.push({sx:dashFrom.x,sy:dashFrom.y,ex:player.x,ey:player.y,face:dashFrom.face,life:.43,total:.43});
  beep(570,.10);updateUI();
 }
@@ -710,7 +784,7 @@ function checkStandingTrap(){
 }
 function takeDamage(message){
  if(invulnerable>0||paused||gameOver)return;
- if(guardTime>0){guardTime=0;invulnerable=1;beep(310,.15);updateUI();return}
+ if(guardTime>0){if(runUpgrade==='ward')lives=Math.min(3,lives+1);guardTime=0;invulnerable=1;beep(310,.15);updateUI();return}
  lives--;combatCombo=0;comboWindow=0;invulnerable=2;beep(145,.25);
  if(lives<=0){
   if(practiceMode)$('overlay').classList.add('pause-open');
@@ -736,6 +810,16 @@ function activateChamber(c){
  c.active=true;activeChamber=c;items.delete(id(c.x,c.y));
  const spots=[[c.x-1,c.y-1],[c.x+1,c.y-1],[c.x+1,c.y+1],[c.x-1,c.y+1]]
    .filter(([x,y])=>isFloor(x,y)&&!(x===player.x&&y===player.y));
+ if(c.kind==='blocks'){
+  c.block={x:c.x,y:c.y-1};c.goal={x:c.x,y:c.y+1};
+  note('▣ EMPUJA EL BLOQUE HASTA LA PLACA DORADA');updateUI();return;
+ }
+ if(c.kind==='lure'){
+  c.goal={x:c.x,y:c.y};c.lureCharge=0;
+  const x=c.x+2,y=c.y+2;
+  enemies.push({x,y,drawX:x,drawY:y,type:'patrol',dir:3,hp:5,maxHp:5,chamber:c});
+  note('✦ ATRAE AL GUARDIÁN A LA PLACA CENTRAL O DERRÓTALO');updateUI();return;
+ }
  if(c.kind==='treasure'){
    c.active=false;activeChamber=null;c.done=true;clearedChambers++;
    items.set(id(c.x,c.y),'chest');note('✦ CÁMARA DEL TESORO: ENCONTRASTE UN COFRE');beep(970,.16);return;
@@ -776,7 +860,14 @@ function activateChamber(c){
 function completeChamber(c){
  if(!c||c.done)return;
  c.done=true;c.active=false;activeChamber=null;clearedChambers++;
+ for(const [dx,dy] of DIRS){
+  const x=c.x+dx*3,y=c.y+dy*3;
+  if(x>1&&y>1&&x<width-2&&y<height-2&&maze[y][x]&&isFloor(x+dx,y+dy)){
+   maze[y][x]=0;walkable++;reveal();break;
+  }
+ }
  projectiles=projectiles.filter(p=>p.chamber!==c);
+ if(clearedChambers===1||clearedChambers%3===0)openUpgradeChoice();
  items.set(id(c.x,c.y),'chest');note('✓ DESAFÍO SUPERADO · COFRE DESBLOQUEADO');beep(880,.2);updateUI();
 }
 function spawnGuardWave(c){
@@ -791,7 +882,7 @@ function spawnGuardWave(c){
 function checkChamberClear(){
  const c=activeChamber;
  if(!c||enemies.some(e=>e.chamber===c))return;
- if(c.kind==='guard')completeChamber(c);
+ if(c.kind==='guard'||c.kind==='lure')completeChamber(c);
  if(c.kind==='waves'){
   if(c.wave===2)completeChamber(c);
   else{c.wave++;spawnGuardWave(c)}
@@ -814,6 +905,14 @@ function visitRoomSwitch(x,y){
 }
 function updateRoomChallenge(dt){
  const c=activeChamber;
+ if(c?.kind==='lure'){
+  const onPlate=enemies.some(e=>e.chamber===c&&e.x===c.goal.x&&e.y===c.goal.y);
+  c.lureCharge=onPlate?c.lureCharge+dt:0;
+  if(c.lureCharge>=.35){
+   enemies=enemies.filter(e=>e.chamber!==c);
+   completeChamber(c);return;
+  }
+ }
  if(c?.kind==='relay'&&(c.puzzleTimer-=dt)<=0){
   c.puzzleIndex=0;c.switchOrder.push(c.switchOrder.shift());c.puzzleTimer=4;
   note('✦ LA SECUENCIA CAMBIÓ · BUSCA LA RUNA DORADA');
@@ -846,7 +945,7 @@ function updateProjectiles(dt){
   p.life-=dt;
   p.drawX+=(p.x-p.drawX)*Math.min(1,dt*16);
   p.drawY+=(p.y-p.drawY)*Math.min(1,dt*16);
-  if(p.life<=0||(p.chamber&&!p.chamber.active)||(!p.chamber&&!boss)){projectiles.splice(i,1);continue}
+  if(p.life<=0||(p.chamber&&!p.chamber.active)||(!p.chamber&&!boss&&!p.enemyShot)){projectiles.splice(i,1);continue}
   if(p.bossBolt&&p.x===player.x&&p.y===player.y&&hazardCooldown<=0){
    hazardCooldown=.8;takeDamage('⚠ ¡TE ALCANZÓ UN DISPARO!');projectiles.splice(i,1);continue;
   }
@@ -907,6 +1006,7 @@ function beginBoss(){
 }
 function updateBossPattern(dt){
  if(!boss||paused||showMap)return;
+ boss.recovery=Math.max(0,(boss.recovery||0)-dt);
  if(bossWarning){
   bossWarning.time-=dt;
   if(bossWarning.time<=0){
@@ -928,7 +1028,7 @@ function updateBossPattern(dt){
     const dir=Math.abs(player.x-boss.x)>=Math.abs(player.y-boss.y)?[dx||1,0]:[0,dy||1];
     projectiles.push({x:boss.x,y:boss.y,drawX:boss.x,drawY:boss.y,dx:dir[0],dy:dir[1],life:3,stepTimer:.12,bossBolt:true});
    }
-   bossWarning=null;bossPatternTimer=boss.hp<=boss.maxHp/2?.7:bossName==='golem'?1.35:1.05;
+   boss.recovery=.85;bossWarning=null;bossPatternTimer=boss.hp<=boss.maxHp/2?.7:bossName==='golem'?1.35:1.05;
   }
   return;
  }
@@ -963,11 +1063,14 @@ function updateBossPattern(dt){
 }
 function attack(){
  if(!started||paused||showMap||gameOver||attackCooldown>0)return;
- attackCooldown=.68;slashTime=.36;slashFace=player.face??1;
+ attackCooldown=runUpgrade==='blade'?.48:.68;slashTime=.36;slashFace=player.face??1;
  const [dx,dy]=DIRS[player.face||0];slashCells=[[player.x+dx,player.y+dy],[player.x+dx+(dy||0),player.y+dy+(dx||0)],[player.x+dx-(dy||0),player.y+dy-(dx||0)]];
  const targets=enemies.filter(e=>e.hp>0&&slashCells.some(([x,y])=>e.x===x&&e.y===y));
  if(targets.length){combatCombo=comboWindow>0?Math.min(3,combatCombo+1):1;comboWindow=2.4;combatPulse=.17}else{combatCombo=0;comboWindow=0}
- for(const e of targets){e.hitFlash=.33;e.stun=.85;
+ for(const e of targets){
+  const [fx,fy]=DIRS[e.dir??0];
+  if(e.type==='patrol'&&!e.stun&&!e.recovery&&(player.x-e.x)*fx+(player.y-e.y)*fy>0){beep(190,.06);note('🛡 GARDA FRONTAL · RODEA AL GUARDIÁN');continue}
+  e.hitFlash=.33;e.stun=.85;
   hitEffects.push({x:e.x,y:e.y,life:.42,total:.42,combo:combatCombo});
   e.hp-=((weaponCharges>0)?2:1)+(combatCombo===3?1:0);if(e.hp<=0){monstersSlain++;const ix=enemies.indexOf(e);if(ix>=0)enemies.splice(ix,1);if(e===boss){bossDefeated=true;boss=null;bossWarning=null;beep(1000,.2);if(bossArenaMode){victory();return}else note('¡GUARDIÁN DERROTADO! REGRESA A LA SALIDA')}}}
  if(weaponCharges>0)weaponCharges--;
@@ -978,8 +1081,25 @@ function step(dx,dy){
  let nx=player.x+dx,ny=player.y+dy;
  if(!isFloor(nx,ny)){beep(115,.025);return}
  if(activeChamber&&!activeChamber.area.has(id(nx,ny))){note('✦ COMPLETA EL DESAFÍO PARA ABRIR LA SALA');beep(130,.04);return}
+ if(activeChamber?.kind==='blocks'&&activeChamber.block.x===nx&&activeChamber.block.y===ny){
+  const bx=nx+dx,by=ny+dy;
+  if(!activeChamber.area.has(id(bx,by)))return;
+  activeChamber.block={x:bx,y:by};beep(160,.08,'triangle');
+  if(bx===activeChamber.goal.x&&by===activeChamber.goal.y)completeChamber(activeChamber);
+ }
  if(boss&&nx===boss.x&&ny===boss.y){takeDamage('¡EL GUARDIÁN BLOQUEA EL PASO!');return}
- player.x=nx;player.y=ny;reveal();const k=id(nx,ny);
+ player.x=nx;player.y=ny;reveal();
+ const sector=Math.floor(nx/(width/3))+3*Math.floor(ny/(height/3));
+ if(sector!==landmarkSector&&!bossArenaMode){
+  landmarkSector=sector;
+  const names=labyrinthType==='golem'?['Jardín hundido','Patio de raíces','Ruinas del pantano']:labyrinthType==='specter'?['Galería de ecos','Cripta de los velos','Patio de las almas']:['Archivo arcano','Patio de los sellos','Galería de cristal'];
+  $('sectorName').textContent=names[(sector%3+3)%3];
+ }
+ if(!activeChamber&&!bossArenaMode&&(nx+ny)%4===0){
+  const nearby=chambers.find(c=>!c.done&&Math.abs(c.x-nx)+Math.abs(c.y-ny)<9);
+  if(nearby){$('sectorName').textContent+=' · ✦ Sala cercana'}
+ }const k=id(nx,ny);
+ if((nx+ny)%3===0)beep(labyrinthType==='specter'?120:85,.025,'triangle');
  if(items.has(k)){
   let item=items.get(k);
   if(item==='sigil'){activateChamber(getRoomFor(nx,ny))}
@@ -1001,7 +1121,7 @@ function step(dx,dy){
  }
  checkCollision();updateUI();drawMinimap();
 }
-function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=guardTime>0?'🛡 '+Math.ceil(guardTime)+'s':armor>0?'🛡 '+armor+' guardados':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('equipmentText').textContent=(weaponCharges>0?'⚔ RUNA '+weaponCharges+' · ':'')+'🛡 '+armor+(guardTime>0?' ACTIVO':'')+' · ↗ '+(dodgeCooldown>0?Math.ceil(dodgeCooldown)+'s':'LISTO');$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=bossArenaMode?('⚔ ARENA DEL JEFE · USA LOS PINCHOS'): (activeChamber?({'waves':'⚔ OLEADA '+activeChamber.wave+'/2','relay':'✦ RUNAS '+activeChamber.puzzleIndex+'/4 · '+Math.ceil(activeChamber.puzzleTimer)+'s','guard':'⚔ GUARDIANES: '+enemies.filter(e=>e.chamber===activeChamber).length,'dart':'🏹 ESQUIVA FLECHAS · '+Math.ceil(activeChamber.challengeTimer)+'s','puzzle':'🧩 '+(activeChamber.puzzlePreview>0?'MEMORIZA: '+activeChamber.switchOrder.map(i=>i+1).join(' → '):'RUNAS '+activeChamber.puzzleIndex+'/4 · '+Math.ceil(activeChamber.puzzleTimer)+'s')}[activeChamber.kind]||'SALA ESPECIAL'):'');$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=bossArenaMode?'⚔ ARENA DEL JEFE':(keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA');$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
+function updateUI(){ $('livesText').textContent='♥ '.repeat(lives).trim()||'—';$('shieldText').textContent=guardTime>0?'🛡 '+Math.ceil(guardTime)+'s':armor>0?'🛡 '+armor+' guardados':'—';$('enemyText').textContent=`☠ MONSTRUOS: ${enemies.length}`;$('weaponText').textContent=weaponCharges>0?'RÚNICA '+weaponCharges:'ESPADA';$('chestText').textContent=chestsOpened+'/'+chambers.length;$('equipmentText').textContent=(weaponCharges>0?'⚔ RUNA '+weaponCharges+' · ':'')+'🛡 '+armor+(guardTime>0?' ACTIVO':'')+' · ↗ '+(dodgeCooldown>0?Math.ceil(dodgeCooldown)+'s':'LISTO');$('bossStatus').textContent=boss?'JEFE ♥ '+boss.hp+'/'+boss.maxHp:'';$('roomStatus').textContent=bossArenaMode?('⚔ ARENA DEL JEFE · USA LOS PINCHOS'): (activeChamber?({'blocks':'▣ EMPUJA HASTA LA PLACA','lure':'✦ ATRAE AL GUARDIÁN A LA PLACA','waves':'⚔ OLEADA '+activeChamber.wave+'/2','relay':'✦ RUNAS '+activeChamber.puzzleIndex+'/4 · '+Math.ceil(activeChamber.puzzleTimer)+'s','guard':'⚔ GUARDIANES: '+enemies.filter(e=>e.chamber===activeChamber).length,'dart':'🏹 ESQUIVA FLECHAS · '+Math.ceil(activeChamber.challengeTimer)+'s','puzzle':'🧩 '+(activeChamber.puzzlePreview>0?'MEMORIZA: '+activeChamber.switchOrder.map(i=>i+1).join(' → '):'RUNAS '+activeChamber.puzzleIndex+'/4 · '+Math.ceil(activeChamber.puzzleTimer)+'s')}[activeChamber.kind]||'SALA ESPECIAL'):'');$('levelText').textContent=String(level).padStart(2,'0');$('sizeText').textContent=`${width} × ${height}`;$('seedText').textContent=seed.toString(16).toUpperCase().padStart(8,'0');$('keysText').textContent=`🔑 LLAVES: ${keys} / ${totalKeys}`;$('relicText').textContent=`✦ RELIQUIAS: ${relics} / ${totalRelics}`;$('exitText').textContent=bossArenaMode?'⚔ ARENA DEL JEFE':(keys===totalKeys?'▣ SALIDA DESBLOQUEADA':'▣ ENCUENTRA LA SALIDA');$('keysText').classList.toggle('complete',keys===totalKeys);$('relicText').classList.toggle('complete',relics===totalRelics);$('exitText').classList.toggle('complete',keys===totalKeys);let pct=Math.floor(explored/walkable*100);$('exploreText').textContent=pct+'%';$('exploreBar').style.width=pct+'%';$('timeText').textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`}
 function drawMinimap(){
  const c=mctx, size=210, pad=7, inner=size-pad*2;
  c.clearRect(0,0,size,size);
@@ -1149,19 +1269,61 @@ function drawMenuSprites(t=0){
  for(const [canvasId,kind] of [['portraitHunter','hunter'],['portraitPatrol','patrol'],['portraitStalker','stalker'],['portraitChaos','chaos']]){
  const c=$(canvasId);if(!c||c.dataset.ready)return;const cc=c.getContext('2d');cc.imageSmoothingEnabled=false;paintCharacter(cc,kind,0,0,1,1,0);c.dataset.ready='1';}
 }
+function enemyMeleeCells(enemy){
+ return [[0,0],[1,0],[-1,0],[0,1],[0,-1]]
+  .map(([dx,dy])=>[enemy.aimX+dx,enemy.aimY+dy])
+  .filter(([x,y])=>isFloor(x,y)&&(!enemy.chamber||enemy.chamber.area.has(id(x,y))));
+}
+function updateEnemyAttacks(dt){
+ for(const e of enemies){
+  if(e.type==='boss')continue;
+  e.recovery=Math.max(0,(e.recovery||0)-dt);
+  if(e.stun>0){e.attackWindup=0;continue}
+  if(e.attackWindup>0){
+   e.attackWindup-=dt;
+   if(e.attackWindup<=0){
+    if(e.type==='chaos'){
+     if(!e.chamber&&enemies.filter(enemy=>enemy.summonedBy===e).length<2){
+      const point=DIRS.map(([dx,dy])=>[e.x+dx,e.y+dy]).find(([x,y])=>isFloor(x,y)&&!(x===player.x&&y===player.y)&&!enemies.some(enemy=>enemy.x===x&&enemy.y===y));
+      if(point){const [x,y]=point;enemies.push({x,y,drawX:x,drawY:y,type:'hunter',dir:0,hp:1,maxHp:1,summonedBy:e})}
+     }
+     const dx=Math.sign(e.aimX-e.x),dy=Math.sign(e.aimY-e.y);
+     const direction=Math.abs(e.aimX-e.x)>=Math.abs(e.aimY-e.y)?[dx||1,0]:[0,dy||1];
+     projectiles.push({x:e.x,y:e.y,drawX:e.x,drawY:e.y,dx:direction[0],dy:direction[1],life:2,chamber:e.chamber,enemyShot:true,stepTimer:.12});
+    }else if(e.type==='hunter'){
+     const dx=Math.sign(e.aimX-e.x),dy=Math.sign(e.aimY-e.y);
+     const [cx,cy]=Math.abs(e.aimX-e.x)>=Math.abs(e.aimY-e.y)?[dx,0]:[0,dy];
+     for(let i=0;i<2;i++){
+      const x=e.x+cx,y=e.y+cy;
+      if(!isFloor(x,y)||(e.chamber&&!e.chamber.area.has(id(x,y))))break;
+      e.x=x;e.y=y;
+      if(x===player.x&&y===player.y)takeDamage('⚠ ¡EMBESTIDA!');
+     }
+    }else if(enemyMeleeCells(e).some(([x,y])=>player.x===x&&player.y===y))takeDamage('⚠ ¡GOLPE DEL GUARDIÁN!');
+    e.recovery=e.type==='hunter'?1.0:1.6;
+   }
+  }else if(!e.recovery&&Math.abs(e.x-player.x)+Math.abs(e.y-player.y)<=(e.type==='chaos'?6:2)){
+   if(e.chamber&&!e.chamber.active)continue;
+   e.attackWindup=e.type==='hunter'?.6:.95;e.aimX=player.x;e.aimY=player.y;
+  }
+ }
+}
 function checkCollision(){
  if(paused||gameOver||invulnerable>0)return;
  for(const e of enemies){
   if(e.x!==player.x||e.y!==player.y)continue;
+  if(e.type!=='boss')continue;
   takeDamage(e.type==='boss'?'¡EL GUARDIÁN GOLPEÓ A ARDEN!':'¡UN MONSTRUO GOLPEÓ A ARDEN!');return;
  }
 }
 function enemyStep(e){
+ if(e.attackWindup>0||e.recovery>0)return;
  if(e.stun>0){e.stun=Math.max(0,e.stun-.82);return}
  if(e.chamber&&(!e.chamber.active||!e.chamber.area.has(id(player.x,player.y))))return;
  const choices=DIRS.map(([dx,dy],i)=>({x:e.x+dx,y:e.y+dy,i})).filter(v=>isFloor(v.x,v.y)&&(!e.chamber||e.chamber.area.has(id(v.x,v.y))));if(!choices.length)return;const dist=Math.abs(e.x-player.x)+Math.abs(e.y-player.y);let target=null;
  if(e.type==='boss'||e.chamber||e.type==='hunter'&&dist<15||e.type==='stalker'&&dist<8){const queue=[[player.x,player.y]], seenDist=new Int16Array(width*height).fill(-1);seenDist[id(player.x,player.y)]=0;let head=0;while(head<queue.length&&head<1100){const [x,y]=queue[head++];for(const [dx,dy] of DIRS){const nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&seenDist[id(nx,ny)]<0){seenDist[id(nx,ny)]=seenDist[id(x,y)]+1;queue.push([nx,ny])}}}const ordered=choices.filter(v=>seenDist[id(v.x,v.y)]>=0).sort((a,b)=>seenDist[id(a.x,a.y)]-seenDist[id(b.x,b.y)]);target=ordered[0]}
  if(!target){if(e.type==='patrol'){target=choices.find(v=>v.i===e.dir)||choices[Math.floor(Math.random()*choices.length)]}else if(e.type==='stalker'&&dist>8&&Math.random()<.75)return;else target=choices[Math.floor(Math.random()*choices.length)]}
+ if(e.type==='boss'&&e.recovery>0)return;
  if(e.type==='boss'&&bossWarning&&bossWarning.kind!=='crossfire')return; e.dir=target.i;e.x=target.x;e.y=target.y}
 
 function drawChest(sx,sy,t){pixel(sx+4,sy+9,16,12,'#462b20');pixel(sx+4,sy+7,16,6,'#ae7139');pixel(sx+6,sy+8,12,3,'#f2b45e');pixel(sx+5,sy+15,14,5,'#6c3e27');pixel(sx+11,sy+11,3,7,'#ffe47c');pixel(sx+12,sy+14,1,3,'#46301d')}
@@ -1192,6 +1354,11 @@ function drawBoss(e,sx,sy,t){
 }
 function drawRoomDetails(sx,sy,x,y,t){
  const c=getRoomFor(x,y);if(!c||c.done)return;
+ if(c.active&&(c.kind==='blocks'||c.kind==='lure')){
+  if(c.goal.x===x&&c.goal.y===y){pixel(sx+3,sy+3,18,18,'#ffe08b');pixel(sx+6,sy+6,12,12,'#8d6835')}
+  if(c.block?.x===x&&c.block?.y===y){pixel(sx+2,sy+2,20,20,'#7d95a1');pixel(sx+5,sy+4,14,3,'#c4dae0');pixel(sx+5,sy+10,14,9,'#415d70')}
+ }
+
  if((c.kind==='puzzle'||c.kind==='relay')&&c.active){const i=c.switches.findIndex(([px,py])=>px===x&&py===y);
   if(i>=0){pixel(sx+4,sy+4,16,16,(c.puzzlePreview>0||c.kind==='relay'&&i===c.switchOrder[c.puzzleIndex])?'#d7b868':c.switchOrder.slice(0,c.puzzleIndex).includes(i)?'#90dd89':'#397f8b');
    pixel(sx+7,sy+7,10,10,'#152d39');ctx.fillStyle='#fff8bb';ctx.font='bold 12px monospace';ctx.fillText(String(i+1),sx+9,sy+17)}
@@ -1277,11 +1444,28 @@ if(showMap){
  return}
 
 const camX=player.drawX*tile+tile/2-vw/2,camY=player.drawY*tile+tile/2-vh/2,x0=Math.max(0,Math.floor(camX/tile)-1),y0=Math.max(0,Math.floor(camY/tile)-1),x1=Math.min(width-1,Math.ceil((camX+vw)/tile)+1),y1=Math.min(height-1,Math.ceil((camY+vh)/tile)+1);
-for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){let sx=Math.floor(x*tile-camX),sy=Math.floor(y*tile-camY);if(!seen[y][x]){pixel(sx,sy,tile,tile,'#0c292a');continue}if(maze[y][x])drawWall(x,y,sx,sy);else drawFloor(x,y,sx,sy);if(!maze[y][x]&&items.has(id(x,y))){if(items.get(id(x,y))==='key')drawKey(sx,sy,t);else if(items.get(id(x,y))==='flower')drawFlower(sx,sy,t);else if(items.get(id(x,y))==='chest')drawChest(sx,sy,t);else if(items.get(id(x,y))==='sigil')drawSigil(sx,sy,t);else drawRelic(sx,sy,t)}if(trapCells.has(id(x,y)))drawTrap(sx,sy,t);drawRoomDetails(sx,sy,x,y,t);if(getRoomFor(x,y)){const c=getRoomFor(x,y);if(c.active){pixel(sx,sy,24,2,'#e38e61');pixel(sx,sy+22,24,2,'#e38e61')}}if(x===exit.x&&y===exit.y)drawExit(sx,sy,t);
+for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){let sx=Math.floor(x*tile-camX),sy=Math.floor(y*tile-camY);if(!seen[y][x]){pixel(sx,sy,tile,tile,'#0c292a');continue}if(maze[y][x])drawWall(x,y,sx,sy);else drawFloor(x,y,sx,sy);if(!maze[y][x]&&x%17===3&&y%17===3){
+ pixel(sx+3,sy+17,18,3,'#071d27');pixel(sx+8,sy+5,8,13,'#697f89');pixel(sx+6,sy+4,12,4,'#c6b98c');
+}
+if(!maze[y][x]&&items.has(id(x,y))){if(items.get(id(x,y))==='key')drawKey(sx,sy,t);else if(items.get(id(x,y))==='flower')drawFlower(sx,sy,t);else if(items.get(id(x,y))==='chest')drawChest(sx,sy,t);else if(items.get(id(x,y))==='sigil')drawSigil(sx,sy,t);else drawRelic(sx,sy,t)}if(trapCells.has(id(x,y)))drawTrap(sx,sy,t);drawRoomDetails(sx,sy,x,y,t);if(getRoomFor(x,y)){const c=getRoomFor(x,y);if(c.active){pixel(sx,sy,24,2,'#e38e61');pixel(sx,sy+22,24,2,'#e38e61')}}if(x===exit.x&&y===exit.y)drawExit(sx,sy,t);
 // Distant discovered tiles are dimmed, but remain visible as navigation landmarks.
 let dist=Math.hypot(x-player.drawX,y-player.drawY);if(dist>5.5){ctx.fillStyle=`rgba(4,25,24,${Math.min(.65,(dist-5.5)*.10)})`;ctx.fillRect(sx,sy,tile,tile)}}
 for(const e of enemies){if(!seen[e.y][e.x]||Math.abs(e.x-player.x)>vw/tile/2+2||Math.abs(e.y-player.y)>vh/tile/2+2)continue;
  const ex=e.drawX*tile-camX,ey=e.drawY*tile-camY;
+ if(e.attackWindup>0){
+  const cells=e.type==='stalker'||e.type==='patrol'?enemyMeleeCells(e):[[e.aimX,e.aimY]];
+  for(const [x,y] of cells){
+   const ax=x*tile-camX,ay=y*tile-camY;
+   const spectral=e.type==='stalker';
+   pixel(ax+1,ay+1,tile-2,tile-2,spectral?'#bd6aff88':'#ffb76066');
+   ctx.strokeStyle=spectral?'#edc8ff':'#ffdb93';ctx.lineWidth=2;
+   ctx.strokeRect(Math.round(ax)+2,Math.round(ay)+2,tile-4,tile-4);
+   pixel(ax+tile/2-1,ay+7,2,6,'#fff2fa');
+   pixel(ax+tile/2-1,ay+15,2,2,'#fff2fa');
+  }
+  pixel(ex+9,ey-12,6,6,'#ffcf7a');
+ }
+ if(e.recovery>0)pixel(ex+9,ey-10,6,3,'#98e6ed');
  e.type==='boss'?drawBoss(e,ex,ey,t):drawEnemy(e,ex,ey,t);
  if(e.hitFlash>0){pixel(ex+2,ey+2,20,20,'#ffffff55');e.hitFlash=Math.max(0,e.hitFlash-.025)}
  if(e.hp>0){pixel(ex+3,ey-5,18,4,'#190f20');pixel(ex+4,ey-4,Math.max(1,Math.round(16*e.hp/(e.maxHp||2))),2,e.type==='boss'?'#ff6579':'#fbc76a')}
@@ -1494,7 +1678,7 @@ async function loadProgress(){
 }
 async function enterAccount(user){
  account=user;syncAccountButton();
- try{await loadProgress();$('authGate').classList.add('hidden');started=false;paused=true;showWelcome();setAuthMessage('');
+ try{await loadProgress();$('authGate').classList.add('hidden');started=false;paused=true;showWelcome();setAuthMessage('');if(user.user_metadata?.arden_tutorial_pending===true)openHowTo(true);
  }catch(e){console.error(e);setAuthMessage('No se pudo cargar tu progreso: '+friendlyError(e));$('authGate').classList.remove('hidden')}
 }
 async function loginOrRegister(mode){
@@ -1504,7 +1688,7 @@ async function loginOrRegister(mode){
  authBusy=true;$('loginBtn').disabled=true;$('registerBtn').disabled=true;setAuthMessage('Conectando...');
  try{
   if(mode==='register'){
-   const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+   const {data,error}=await db.auth.signUp({email,password,options:{data:{arden_tutorial_pending:true},emailRedirectTo:location.origin+location.pathname}});
    if(error)throw error;
    if(data.session&&data.user)await enterAccount(data.user);
    else setAuthMessage('Cuenta solicitada. Revisa tu correo y confirma el registro antes de entrar.');
@@ -1569,7 +1753,7 @@ function closeAccount(){$('accountPanel').classList.remove('open');if(accountWas
 async function logout(){closeAccount();hideStartMenu();paused=true;started=false;won=false;document.body.classList.remove('playing');account=null;accountProgress=null;syncAccountButton();$('authGate').classList.remove('hidden');setAuthMessage('Cerrando sesión...');
  if(db){const {error}=await db.auth.signOut();setAuthMessage(error?friendlyError(error):'Sesión cerrada. Entra con tu cuenta para continuar.')} }
 
-function togglePause(){if(won||gameOver)return;if(!started){showWelcome();return}paused=!paused;releaseDpad();$('pauseControls').open=false;$('overlay').classList.toggle('pause-open',paused);if(paused){setOverlayRoster(false);showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
+function togglePause(){if(document.querySelector('dialog[open]')||won||gameOver)return;if(!started){showWelcome();return}paused=!paused;releaseDpad();$('pauseControls').open=false;$('overlay').classList.toggle('pause-open',paused);if(paused){setOverlayRoster(false);showMap=false;updateMapControls();$('modalTitle').textContent='PAUSA';$('modalSub').textContent='LA AVENTURA TE ESPERA';$('modalText').textContent='Puedes regresar sobre tus pasos en cualquier momento. Los objetos ya recogidos permanecen contigo.';$('modalStart').textContent='▶ CONTINUAR';$('overlay').classList.remove('hidden')}else $('overlay').classList.add('hidden')}
 function updateMapControls(){
  $('game-wrap').classList.toggle('map-open',showMap);
  $('mapZoomLabel').textContent=Math.round(mapZoom*100)+'%';
@@ -1588,9 +1772,9 @@ function loop(now){let dt=Math.min(.05,(now-last)/1000||0);last=now;frame+=dt;if
  combatPulse=Math.max(0,combatPulse-dt);
  for(const tr of dashTrail)tr.life-=dt;dashTrail=dashTrail.filter(tr=>tr.life>0);
  for(const fx of hitEffects)fx.life-=dt;hitEffects=hitEffects.filter(fx=>fx.life>0);
- checkStandingTrap();bossTrapHitCooldown=Math.max(0,bossTrapHitCooldown-dt);enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up||touchDirection==='up')dy=-1;else if(input.down||touchDirection==='down')dy=1;else if(input.left||touchDirection==='left')dx=-1;else if(input.right||touchDirection==='right')dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
+ updateEnemyAttacks(dt);checkStandingTrap();bossTrapHitCooldown=Math.max(0,bossTrapHitCooldown-dt);enemyTimer+=dt;updateRoomChallenge(dt);updateBossPattern(dt);updateProjectiles(dt);if(enemyTimer>.82&&!showMap){enemyTimer=0;for(const e of enemies)enemyStep(e);checkCollision()}moveClock-=dt;let dx=0,dy=0;if(input.up||touchDirection==='up')dy=-1;else if(input.down||touchDirection==='down')dy=1;else if(input.left||touchDirection==='left')dx=-1;else if(input.right||touchDirection==='right')dx=1;if(!showMap&&(dx||dy)&&moveClock<=0){step(dx,dy);moveClock=.185}const ease=Math.min(1,dt*12);player.drawX+=(player.x-player.drawX)*ease;player.drawY+=(player.y-player.drawY)*ease;for(const e of enemies){e.drawX+=(e.x-e.drawX)*ease;e.drawY+=(e.y-e.drawY)*ease}if(toastClock>0){toastClock-=dt;if(toastClock<=0)$('toast').classList.remove('on')}if(Math.floor(elapsed)!==Math.floor(elapsed-dt))updateUI()}const atkButton=$('attackTouch');atkButton.classList.toggle('cooldown',attackCooldown>.02);$('dodgeTouch').disabled=dodgeCooldown>0;$('dodgeTouch').classList.toggle('ready',dodgeCooldown<=0);$('shieldTouch').disabled=armor<=0||guardTime>0;$('shieldTouch').classList.toggle('active',guardTime>0);$('shieldCount').textContent=armor;drawScene(now/1000);if(!$('overlay').classList.contains('hidden'))drawMenuSprites(now/1000);requestAnimationFrame(loop)}
 const directionKeys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
-window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('overlay').classList.contains('menu-open')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(paused&&e.key!=='Escape')return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);releaseDpad()});
+window.addEventListener('keydown',e=>{if(!$('authGate').classList.contains('hidden')||$('overlay').classList.contains('menu-open')||$('accountPanel').classList.contains('open')||['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;if(document.querySelector('dialog[open]'))return;if(paused&&e.key!=='Escape')return;if(directionKeys[e.key]){e.preventDefault();input[directionKeys[e.key]]=true}else if(e.key==='Enter'){e.preventDefault();if(!e.repeat)attack()}else if(e.key==='Shift'){e.preventDefault();if(!e.repeat)dodge()}else if(e.key.toLowerCase()==='q'){e.preventDefault();if(!e.repeat)activateShield()}else if(e.key.toLowerCase()==='m'){e.preventDefault();toggleMap()}else if(showMap&&(e.key==='+'||e.key==='='||e.key==='-')){e.preventDefault();changeMapZoom(e.key==='-'?-1:1)}else if(e.key==='Escape'){e.preventDefault();togglePause()}});window.addEventListener('keyup',e=>{if(directionKeys[e.key])input[directionKeys[e.key]]=false});window.addEventListener('blur',()=>{Object.keys(input).forEach(k=>input[k]=false);releaseDpad()});
 const dpad=$('dpad');
 let dpadPointer=null,dpadButton=null,touchDirection=null;
 function selectDpadButton(button){
@@ -1642,8 +1826,8 @@ $('rankingBack').onclick=()=>{$('startMenu').classList.remove('show-ranking')};
 $('rankingBack').addEventListener('click',refreshRankingPreview);
 $('rankSave').onclick=saveRankingProfile;
 $('attackTouch').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('dodgeTouch').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('shieldTouch').addEventListener('pointerdown',e=>{e.preventDefault();activateShield()});$('pauseTouch').onclick=togglePause;$('mapBtn').onclick=toggleMap;$('mapTouch').onclick=toggleMap;$('accountBtn').onclick=openAccount;$('accountClose').onclick=closeAccount;$('logoutBtn').onclick=logout;$('authForm').addEventListener('submit',e=>{e.preventDefault();loginOrRegister('login')});$('registerBtn').onclick=()=>loginOrRegister('register');$('soundBtn').onclick=()=>{audioOn=!audioOn;$('soundBtn').textContent='SONIDO: '+(audioOn?'ON':'OFF');if(audioOn){beep(620,.08);startScore()}else stopScore()};$('pauseMenuButton').onclick=()=>{
- if(!practiceMode&&!confirm('¿Volver al menú principal? Perderás el avance de este laberinto. Tu nivel guardado se conserva.'))return;
- showWelcome();
+ if(practiceMode){showWelcome();return}
+ $('leaveDialog').showModal();
 };
 $('modalStart').onclick=()=>{
  $('overlay').classList.remove('pause-open');
@@ -1681,6 +1865,147 @@ updateUI=function(){originalUpdateUI();refreshLifeHud()};
 window.addEventListener('resize',resize);
 window.addEventListener('orientationchange',()=>setTimeout(resize,150));
 if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
+
+
+const manualTopics=[
+ ['combate','Combate',[
+ ['attack','Ataque y combos','Mira al enemigo y ataca con Enter o el botón espada. Golpea a corta distancia. Encadenar impactos activa un combo de tres golpes con daño adicional. Un golpe interrumpe la preparación del enemigo.'],
+ ['dodge','Esquiva y escudos','Shift o Salto desplaza a Arden hasta dos casillas hacia donde mira. Espera la recarga antes de repetir. Q o el escudo táctil consume una carga para protegerte.'],
+ ['bless','Bendiciones','El primer desafío completado y después cada tres salas ofrecen una elección. Filo veloz acelera ataques; Paso del viento reduce la recarga de esquiva; Amparo cura al bloquear. Una nueva elección sustituye la anterior y dura hasta terminar el nivel.']]],
+ ['salas','Salas y soluciones',[
+ ['guard','Guardianes','Pisa el símbolo central para empezar. La sala se sella: derrota a todos los guardianes para abrirla y desbloquear el cofre. Rodea a los guardias que bloquean de frente.'],
+ ['waves','Oleadas','Supera dos grupos consecutivos. La segunda oleada llega al derrotar la primera y sus enemigos tienen más vida. Aprovecha los espacios entre ataques para reposicionarte.'],
+ ['puzzle','Memoria de runas','Memoriza el orden que aparece en el aviso de la sala. Cuando termine la observación, pisa las cuatro runas numeradas en ese orden. Un error o agotar el tiempo reinicia la secuencia de la sala.'],
+ ['relay','Relevo de runas','Pisa la runa dorada y busca la siguiente. Completa cuatro antes de agotar sus temporizadores. Si el tiempo termina, la secuencia cambia: vuelve a buscar la runa iluminada.'],
+ ['blocks','Bloque y placa','Empuja el bloque caminando contra él hasta dejarlo sobre la placa dorada. Planea desde qué lado necesitas empujar y evita llevarlo a una esquina, donde puedes quedarte sin espacio.'],
+ ['lure','Placa del guardián','Atrae al guardián hasta la placa central y mantén su posición sobre ella un instante, o derrótalo. La placa activa el mecanismo y desbloquea el cofre.'],
+ ['dart','Cámara de flechas','Resiste el tiempo indicado mientras esquivas. Las flechas alternan filas y columnas y cambian de carril. No necesitas derrotar enemigos.'],
+ ['treasure','Tesoro y sala secreta','Las salas de tesoro ofrecen un cofre. Las secretas conceden dos reliquias y un cofre al activarse. Explorar estas cámaras es opcional.']]],
+ ['objetos','Objetos y mapa',[
+ ['key','Llaves y salida','Reúne todas las llaves indicadas en el HUD. La salida conduce a la arena del jefe cuando tienes el conjunto completo. El mapa solo muestra los objetivos que descubriste.'],
+ ['relic','Reliquias','Cada reliquia equivale a 100 puntos. El ranking usa las reliquias guardadas al completar niveles. Una sala secreta aporta dos reliquias adicionales.'],
+ ['chest','Cofres y flores','Los cofres pueden dar golpes rúnicos, una carga de escudo o una vida. Si tienes todas las vidas, la recompensa curativa se convierte en golpes rúnicos. Las flores recuperan una vida o dan una carga de escudo si estás sano.'],
+ ['map','Mapa','M o el botón de mapa abre la vista. Consulta su leyenda, acerca con + y − y arrastra para moverte. En móvil puedes pellizcar. La zona oscura representa terreno sin descubrir.'],
+ ['trap','Pinchos','Las trampas pasan por estado seguro, aviso y activación. Cruza durante la ventana segura. En la arena dañan al jefe pero debes darle tú el golpe final.']]],
+ ['jefes','Jefes',[
+ ['golem','Gólem · niveles 1, 4, 7…','Te persigue y usa ondas a distancia. Cerca golpea el suelo: sal de las casillas marcadas. A media vida amplía el área y dispara desde cuatro lados. Contraataca durante su recuperación.'],
+ ['specter','Espectro · niveles 2, 5, 8…','Alterna fuego cruzado y teletransporte. Abandona la fila y columna marcadas antes del disparo. A media vida dispara desde cuatro direcciones. Reubícate cuando desaparezca.'],
+ ['mage','Hechicero · niveles 3, 6, 9…','Alterna sellos que detonan sobre tu posición y fuego cruzado desde cuatro direcciones. Muévete fuera del área marcada. A media vida los sellos aumentan de tamaño y el ritmo se acelera. Es el jefe más resistente.']]],
+ ['monstruos','Monstruos',[
+ ['hunter','Demonio cazador','Persigue a Arden y prepara una embestida de hasta dos casillas. Su aviso marca el objetivo. Cambia de línea, deja que termine y aprovecha su recuperación.'],
+ ['patrol','Gólem patrullero','Patrulla los corredores y bloquea los golpes que llegan de frente. Rodéalo, interrumpe su preparación o ataca durante su recuperación.'],
+ ['stalker','Espectro acechador','Se acerca cuando estás cerca y prepara un golpe alrededor de la posición marcada. Sal del área antes de que termine el aviso.'],
+ ['chaos','Cíclope invocador','Dispara en tu dirección y, fuera de las salas, puede crear hasta dos cazadores. Elimina al invocador para detener nuevos refuerzos.']]],
+ ['progreso','Progreso y controles',[
+ ['save','Guardar y practicar','Vence al jefe y espera la confirmación de guardado para avanzar. Salir al menú a mitad del nivel descarta ese recorrido. Práctica de jefes permite repetir combates sin sumar estadísticas.'],
+ ['controls','Controles','PC: WASD/flechas, Enter para atacar, Shift para esquivar, Q para escudo, M para mapa y Esc para pausa. Móvil: cruceta, espada, Salto, escudo, mapa y pausa. Mantén una flecha para seguir moviéndote.']]]
+];
+function openManualCategory(id){
+ const nav=$('manualCategories');nav.replaceChildren();
+ for(const [key,title] of manualTopics){
+  const button=document.createElement('button');button.className='pixel-btn';button.textContent=title;
+  button.setAttribute('aria-pressed',String(key===id));button.onclick=()=>openManualCategory(key);nav.append(button);
+ }
+ const cards=$('manualCards');cards.replaceChildren();
+ for(const [kind,title,text] of manualTopics.find(topic=>topic[0]===id)[2]){
+  const card=document.createElement('article'),image=document.createElement('img'),heading=document.createElement('h3'),body=document.createElement('p'),caption=document.createElement('small');
+  image.src=kind==='map'?'./assets/tutorial-map.png':captureManualExample(kind);
+  image.alt='Ejemplo de '+title;image.loading='lazy';
+  heading.textContent=title;body.textContent=text;caption.textContent=kind==='map'?'Captura del mapa':'Escena de ejemplo con los gráficos del juego';
+  card.append(image,caption,heading,body);cards.append(card);
+ }
+ cards.scrollTop=0;
+}
+function captureManualExample(kind){
+ const target=document.createElement('canvas');target.width=336;target.height=192;
+ const previous=ctx;
+ try{
+  ctx=target.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.scale(2,2);
+  for(let y=0;y<4;y++)for(let x=0;x<7;x++){
+   if(y===0||y===3||x===0||x===6)drawWall(x,y,x*24,y*24);
+   else drawFloor(x,y,x*24,y*24);
+  }
+  paintCharacter(ctx,'kero',30,40,1,1,0);
+  const monsters=['hunter','patrol','stalker','chaos'];
+  if(monsters.includes(kind))paintCharacter(ctx,kind,94,40,1,3,0);
+  else if(['golem','specter','mage'].includes(kind))drawBoss({bossKind:kind,hp:10,maxHp:15},94,40,0);
+  else if(kind==='key'){drawKey(84,36,0);drawExit(118,32,0)}
+  else if(kind==='relic'){drawRelic(84,36,0);drawRelic(112,36,0)}
+  else if(['chest','treasure','save','bless'].includes(kind)){drawChest(84,40,0);drawFlower(112,38,0)}
+  else if(['puzzle','relay','lure','blocks'].includes(kind)){
+   for(const [i,[x,y]] of [[72,28],[108,28],[72,56],[108,56]].entries()){
+    pixel(x,y,14,14,i===0?'#ffe08b':'#397f8b');ctx.fillStyle='#102825';ctx.font='10px monospace';ctx.fillText(String(i+1),x+4,y+11);
+   }
+   if(kind==='blocks'){pixel(88,42,19,19,'#7d95a1');pixel(91,44,13,3,'#c4dae0')}
+   if(kind==='lure')paintCharacter(ctx,'patrol',87,36,1,3,0);
+  }else if(['trap','dart','mage'].includes(kind)){
+   drawTrap(84,40,0,4,4);drawProjectile({drawX:5,drawY:2,dx:-1,dy:0},0,0,0);
+  }else{
+   paintCharacter(ctx,kind==='waves'?'hunter':'patrol',94,40,1,3,0);
+   if(kind==='waves')paintCharacter(ctx,'stalker',114,30,1,3,0);
+   if(kind==='attack'){pixel(60,43,24,3,'#fff3ab');pixel(73,37,4,16,'#79f4d8')}
+   if(kind==='dodge')paintCharacter(ctx,'kero',60,40,1,1,1);
+  }
+  return target.toDataURL('image/png');
+ }finally{ctx=previous}
+}
+$('manualClose').onclick=closeHowTo;
+
+const howPages=[
+ {image:'./assets/tutorial-exploration.png',title:'Explora, reúne las llaves y busca la salida',text:'Recorre los caminos y descubre las zonas ocultas. Reúne todas las llaves que pide el contador para abrir la salida y entrar en la arena del jefe. Los corazones indican tus vidas.',controls:true},
+ {image:'./assets/tutorial-map.png',title:'Usa el mapa para orientarte',text:'El mapa revela las zonas exploradas y sus objetivos. Consulta la leyenda para reconocer a Arden, llaves, cofres, salas y salida. Acerca el mapa y arrástralo para revisar los caminos.'},
+ {image:'./assets/tutorial-exploration.png',title:'Combate y aprovecha las oportunidades',text:'Ataca hacia donde mira Arden. Observa las señales del enemigo, esquiva y contraataca durante su recuperación. Los escudos necesitan cargas. Practica contra cada jefe desde el menú para aprender sus ataques.'},
+ {image:'./assets/tutorial-exploration.png',title:'Resuelve desafíos y mejora tu aventura',text:'Busca salas con runas, bloques, flechas y oleadas. Lee su aviso al entrar. Superarlas desbloquea cofres y algunas ofrecen una bendición que dura el nivel. Cada reliquia vale 100 puntos. El progreso se guarda al vencer al jefe; salir a mitad del nivel descarta ese recorrido.'}
+];
+let howIndex=0,howRequired=false,howWasPaused=true,howSaving=false;
+function openHowTo(required=false){
+ if($('howDialog').open)return;
+ $('howDialog').setAttribute('aria-labelledby',required?'howTitle':'manualTitle');
+ howRequired=required;howIndex=0;howWasPaused=paused;paused=true;releaseDpad();
+ $('manualBrowser').hidden=required;$('howIntro').hidden=!required;$('manualClose').hidden=required;
+ if(required)renderHowTo();else openManualCategory('combate');
+ $('howDialog').showModal();
+}
+function renderHowTo(){
+ const page=howPages[howIndex];
+ $('howStep').textContent=(howIndex+1)+' / '+howPages.length;
+ $('howImage').src=page.image;
+ $('howImage').alt=howIndex===1?'Captura del mapa y su leyenda':'Captura de exploración del laberinto de Arden';
+ $('howHeading').textContent=page.title;
+ $('howText').textContent=page.text;
+ $('howControls').textContent=page.controls?(isTouchDevice()?'Móvil: usa las flechas para moverte, la espada para atacar, Salto para esquivar y el escudo para protegerte.':'PC: WASD o flechas para moverte · Enter para atacar · Shift para esquivar · Q para escudo · M para mapa · Esc para pausa.'):'';
+ $('howBack').disabled=howIndex===0;
+ $('howClose').hidden=howRequired;
+ $('howNext').textContent=howIndex===howPages.length-1?'ENTENDIDO':'SIGUIENTE';
+ $('howError').textContent='';
+}
+function closeHowTo(){
+ $('howDialog').close();paused=howWasPaused;
+}
+$('howButton').onclick=()=>openHowTo();
+$('howBack').onclick=()=>{if(howIndex>0){howIndex--;renderHowTo()}};
+$('howClose').onclick=closeHowTo;
+$('howDialog').addEventListener('cancel',event=>{
+ if(howRequired||howSaving)event.preventDefault();
+ else paused=howWasPaused;
+});
+$('howNext').onclick=async()=>{
+ if(howSaving)return;
+ if(howIndex<howPages.length-1){howIndex++;renderHowTo();return}
+ if(howRequired){
+  howSaving=true;$('howNext').disabled=true;$('howBack').disabled=true;
+  try{
+   const {data,error}=await db.auth.updateUser({data:{arden_tutorial_pending:false}});
+   if(error)throw error;
+   account=data.user;closeHowTo();
+  }catch(error){$('howError').textContent='No se pudo guardar la lectura. Comprueba la conexión y pulsa Entendido otra vez.'}
+  finally{howSaving=false;$('howNext').disabled=false;$('howBack').disabled=howIndex===0}
+ }else closeHowTo();
+};
+$('leaveCancel').onclick=()=>$('leaveDialog').close();
+$('leaveConfirm').onclick=()=>{$('leaveDialog').close();showWelcome()};
+
+$('upgradeDialog').addEventListener('cancel',event=>event.preventDefault());
 resize();generate();updateMapControls();showWelcome();refreshLifeHud();requestAnimationFrame(loop);initializeAuth();
 
 // PWA: el navegador permite instalación solo por HTTPS (GitHub Pages).
