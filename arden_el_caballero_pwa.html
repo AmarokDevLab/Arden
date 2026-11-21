@@ -492,6 +492,36 @@ body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:n
 #manualCards p{font:14px/1.6 system-ui}
 #manualClose{display:block;margin:16px 0 0 auto}
 @media(max-width:580px){#manualCards{grid-template-columns:1fr}}
+@media(hover:none) and (pointer:coarse){
+ #dpad{--pad-size:clamp(44px,11.8dvh,61px);left:max(20px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom))}
+ #combatTools{
+  --ability:clamp(46px,13dvh,60px);
+  --attack:clamp(70px,20dvh,94px);
+  position:absolute;right:max(20px,env(safe-area-inset-right));bottom:max(22px,env(safe-area-inset-bottom));
+  width:calc(var(--ability) + var(--attack) + 28px);height:calc(var(--ability) * 2 + 25px);
+  display:block!important;pointer-events:none
+ }
+ #combatTools button{position:absolute;pointer-events:auto;touch-action:none;box-sizing:border-box}
+ #combatTools #attackTouch{
+  right:0;bottom:0;width:var(--attack);height:var(--attack);
+  border-width:2px;border-color:#ffe4b3;background:linear-gradient(145deg,#a45140d9,#542a37e8);
+  box-shadow:inset 0 2px #ffffff29,0 3px 8px #0007!important
+ }
+ #attackTouch span{font-size:clamp(29px,8dvh,40px)}
+ #combatTools .ability-button{
+  width:var(--ability);height:var(--ability);min-width:0;min-height:0;border-width:2px;
+  border-radius:50%;box-shadow:inset 0 1px #ffffff26,0 3px 6px #0007
+ }
+ #combatTools #dodgeTouch{left:0;bottom:3px;background:linear-gradient(145deg,#306b83df,#123e4ce8)!important}
+ #dodgeTouch .dash-glyph{width:65%;height:65%;filter:none;color:#e4f8ff;pointer-events:none}
+ #combatTools #shieldTouch{left:12px;top:0;background:linear-gradient(145deg,#345f4ddb,#17352de8)}
+ #shieldTouch b{right:-3px;top:-4px;min-width:16px;text-align:center;border-width:1px;font-size:11px}
+ #combatTools #mapTouch{
+  position:absolute!important;right:8px;top:0;width:44px;height:44px;min-width:44px;min-height:44px;
+  border:1px solid #8fb6a4;border-radius:10px!important;background:#102d2cd9;font-size:20px;padding:0
+ }
+ #dodgeTouch.ready{box-shadow:inset 0 1px #ffffff26,0 0 7px #8addff40}
+}
 </style>
 </head>
 <body>
@@ -501,7 +531,7 @@ body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:n
  <button type="button" data-dir="left" aria-label="Izquierda">◀</button>
  <button type="button" data-dir="down" aria-label="Abajo">▼</button>
  <button type="button" data-dir="right" aria-label="Derecha">▶</button>
-</div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Salto de esquiva"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M5 35 Q19 4 41 13" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4"/><path d="M35 8 L43 13 L35 17" fill="none" stroke="#e3fbff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 10 L27 10 L29 15 L27 22 L18 22 L16 16Z" fill="#d5e9ff" stroke="#0a3348" stroke-width="2"/><path d="M20 14H27" stroke="#154b65" stroke-width="2"/><path d="M19 23L14 30M26 23L32 28M17 18L11 22M28 18L35 21" stroke="#b3e9ff" stroke-width="4" stroke-linecap="round"/></svg><small>SALTO</small></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+</div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Esquivar con salto"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M7 34 C9 11 25 7 39 14 M30 5 L40 14 L31 22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
 <div id="mapLegend" aria-label="Leyenda del mapa">
   <span><b class="legend-me">◆</b> ARDEN</span><span><b class="legend-key">⚿</b> LLAVE</span><span><b class="legend-chest">▣</b> COFRE</span><span><b class="legend-room">✦</b> SALA</span><span><b class="legend-exit">⬟</b> SALIDA</span><span><b class="legend-path">▰</b> CAMINO</span><span><b class="legend-wall">▰</b> MURO</span>
 </div>
