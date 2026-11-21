@@ -493,7 +493,7 @@ body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:n
 #manualClose{display:block;margin:16px 0 0 auto}
 @media(max-width:580px){#manualCards{grid-template-columns:1fr}}
 @media(hover:none) and (pointer:coarse){
- #dpad{--pad-size:clamp(44px,11.8dvh,61px);left:max(20px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom))}
+ #dpad{--pad-size:clamp(50px,14dvh,72px);left:max(20px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom))}
  #combatTools{
   --ability:clamp(46px,13dvh,60px);
   --attack:clamp(70px,20dvh,94px);
@@ -1843,12 +1843,29 @@ function selectDpadButton(button){
  button?.classList.add('pressed');
  for(const control of dpad.querySelectorAll('button'))control.setAttribute('aria-pressed',String(control===button));
 }
+function directionFromPad(dx,dy,size,previous){
+ const ax=Math.abs(dx),ay=Math.abs(dy);
+ if(Math.max(ax,ay)>size*.68||Math.hypot(dx,dy)<size*.16)return null;
+ // Keep the current axis near a diagonal to prevent flickering between directions.
+ if(previous==='left'||previous==='right'){
+  if(ax>=ay*.78&&ax>size*.12)return dx>0?'right':'left';
+ }
+ if(previous==='up'||previous==='down'){
+  if(ay>=ax*.78&&ay>size*.12)return dy>0?'down':'up';
+ }
+ return ax>ay?(dx>0?'right':'left'):(dy>0?'down':'up');
+}
+function buttonAtPadPointer(event){
+ const rect=dpad.getBoundingClientRect();
+ const direction=directionFromPad(event.clientX-rect.left-rect.width/2,event.clientY-rect.top-rect.height/2,rect.width,touchDirection);
+ return direction?dpad.querySelector('[data-dir="'+direction+'"]'):null;
+}
 function releaseDpad(){
  dpadPointer=null;
  selectDpadButton(null);
 }
 dpad.addEventListener('pointerdown',event=>{
- const button=event.target.closest('button[data-dir]');
+ const button=buttonAtPadPointer(event);
  if(!button||dpadPointer!==null||event.button!==0||paused||showMap)return;
  event.preventDefault();
  dpadPointer=event.pointerId;
@@ -1857,7 +1874,7 @@ dpad.addEventListener('pointerdown',event=>{
 });
 dpad.addEventListener('pointermove',event=>{
  if(event.pointerId!==dpadPointer)return;
- const button=document.elementFromPoint(event.clientX,event.clientY)?.closest('#dpad button[data-dir]');
+ const button=buttonAtPadPointer(event);
  selectDpadButton(button??null);
 });
 for(const type of ['pointerup','pointercancel','lostpointercapture']){
