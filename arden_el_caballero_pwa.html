@@ -454,8 +454,6 @@ button img,img{-webkit-user-drag:none}
  body:has(#game-wrap.map-open) .game-actions{visibility:hidden}
 }
 
-#sectorName{display:none;position:absolute;left:18px;top:116px;z-index:6;color:#d9eccc;text-shadow:0 2px 4px #000;font:600 12px system-ui;pointer-events:none}
-body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:none}
 #upgradeDialog{width:min(640px,92vw);padding:24px;color:#fff2c7;background:#0c2926;border:2px solid #d8b46b;border-radius:12px}
 #upgradeDialog::backdrop{background:#020d13cc}
 #upgradeDialog h2{font:700 23px system-ui;margin:0 0 10px}
@@ -522,16 +520,31 @@ body.playing #sectorName{display:block}#game-wrap.map-open #sectorName{display:n
  }
  #dodgeTouch.ready{box-shadow:inset 0 1px #ffffff26,0 0 7px #8addff40}
 }
+
+@media(hover:none) and (pointer:coarse){
+ #combatTools{--ability:clamp(52px,14.5dvh,68px);height:calc(var(--ability) * 2 + 32px)}
+ #combatTools .ability-button{
+  border:2px solid #abcbd0;border-radius:19px;
+  box-shadow:inset 0 2px 0 #ffffff30,inset 0 -3px 0 #021f2955,0 4px 9px #0007
+ }
+ #combatTools #dodgeTouch{left:0;bottom:3px;background:linear-gradient(145deg,#367d92e8,#143b52ed)!important;border-color:#a6def1!important}
+ #combatTools #shieldTouch{left:8px;top:0;background:linear-gradient(145deg,#447867e8,#183f3aed);border-color:#b0d9b6}
+ #shieldTouch .shield-glyph{width:57%;height:65%;color:#e4f3ce;pointer-events:none}
+ #combatTools #mapTouch{top:-24px;right:3px;width:46px;height:46px;border-radius:12px!important;color:#dbefd0;box-shadow:inset 0 1px #ffffff26,0 3px 7px #0006}
+ #mapTouch svg{width:29px;height:29px;pointer-events:none}
+ #combatTools .ability-button:active{filter:brightness(1.18);box-shadow:inset 0 2px 5px #031d2980}
+}
+#mapTouch svg{width:29px;height:29px}
 </style>
 </head>
 <body>
 <nav class="game-actions" aria-label="Controles del juego"><div class="top-actions"><button class="pixel-btn" id="fullscreenBtn" title="Pantalla completa">⛶ FULL</button><button class="pixel-btn" id="pauseTouch" aria-label="Pausar partida">Ⅱ</button><button class="pixel-btn" id="mapBtn">MAPA [M]</button><button class="pixel-btn" id="soundBtn">SONIDO: ON</button><button class="pixel-btn" id="howButton">COMO JUGAR</button><button class="pixel-btn" id="accountBtn" title="Cuenta de jugador">👤 CUENTA</button></div></nav>
-<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="sectorName" aria-live="polite"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div id="dpad" role="group" aria-label="Cruceta de movimiento">
+<div class="main"><div id="game-wrap"><canvas id="game" aria-label="Juego de exploración de laberinto"></canvas><div class="scanlines"></div><div id="toast"></div><div id="combatHud"><span id="equipmentText">⚔ ESPADA</span><span id="bossStatus"></span><span id="roomStatus"></span></div><div id="mobileHud" ><div id="lifeMeter" role="img" aria-label="Vidas de Arden"><span class="life-heart"></span><span class="life-heart"></span><span class="life-heart"></span></div><div class="objective-meter"><span id="hudKeys"></span><span id="hudPoints" title="100 puntos por reliquia en este nivel"></span></div></div><div id="dpad" role="group" aria-label="Cruceta de movimiento">
  <button type="button" data-dir="up" aria-label="Arriba">▲</button>
  <button type="button" data-dir="left" aria-label="Izquierda">◀</button>
  <button type="button" data-dir="down" aria-label="Abajo">▼</button>
  <button type="button" data-dir="right" aria-label="Derecha">▶</button>
-</div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Esquivar con salto"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M7 34 C9 11 25 7 39 14 M30 5 L40 14 L31 22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo">🛡<b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa">▣</button></div>
+</div><div id="combatTools"><button id="dodgeTouch" class="ability-button" aria-label="Esquivar con salto"><svg class="dash-glyph" viewBox="0 0 48 42" aria-hidden="true"><path d="M7 34 C9 11 25 7 39 14 M30 5 L40 14 L31 22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="shieldTouch" class="ability-button" aria-label="Activar escudo"><svg class="shield-glyph" viewBox="0 0 32 36" aria-hidden="true"><path d="M16 3 L28 8 V17 Q27 27 16 33 Q5 27 4 17 V8 Z" fill="#8dbab2" fill-opacity=".25" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M16 9 V25 M10 16 H22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b id="shieldCount">0</b></button><button id="attackTouch" aria-label="Atacar con espada"><span>⚔</span><small></small><i id="attackCharge"></i></button><button id="mapTouch" class="map-touch" aria-label="Abrir mapa"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 7 L11 4 L21 8 L29 5 V25 L21 28 L11 24 L3 27 Z M11 4 V24 M21 8 V28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
 <div id="mapLegend" aria-label="Leyenda del mapa">
   <span><b class="legend-me">◆</b> ARDEN</span><span><b class="legend-key">⚿</b> LLAVE</span><span><b class="legend-chest">▣</b> COFRE</span><span><b class="legend-room">✦</b> SALA</span><span><b class="legend-exit">⬟</b> SALIDA</span><span><b class="legend-path">▰</b> CAMINO</span><span><b class="legend-wall">▰</b> MURO</span>
 </div>
@@ -629,7 +642,7 @@ function randGen(s){let x=s>>>0;return ()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^
 const id=(x,y)=>y*width+x, isFloor=(x,y)=>x>=0&&y>=0&&x<width&&y<height&&maze[y][x]===0;
 function farthest(px,py){let q=[[px,py]],d=new Int32Array(width*height).fill(-1);d[id(px,py)]=0;let best={x:px,y:py,d:0},k=0;while(k<q.length){let [x,y]=q[k++],dist=d[id(x,y)];if(dist>best.d)best={x,y,d:dist};for(let [dx,dy] of DIRS){let nx=x+dx,ny=y+dy;if(isFloor(nx,ny)&&d[id(nx,ny)]<0){d[id(nx,ny)]=dist+1;q.push([nx,ny])}}}return {best,d,reachable:q};}
 
-let runUpgrade=null,landmarkSector='';
+let runUpgrade=null;
 const upgrades=[
  ['blade','Filo veloz','Ataques más rápidos.'],
  ['dash','Paso del viento','La esquiva se recarga en 1,9 s.'],
@@ -648,7 +661,7 @@ function openUpgradeChoice(){
  $('upgradeDialog').showModal();
 }
 
-function generate(){runUpgrade=null;landmarkSector='';labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
+function generate(){runUpgrade=null;labyrinthType=BOSS_TYPES[(level-1)%BOSS_TYPES.length];width=Math.min(121,81+(level-1)*10);height=width;seed=(Math.random()*0xffffffff)>>>0;const rnd=randGen(seed);maze=Array.from({length:height},()=>Array(width).fill(1));seen=Array.from({length:height},()=>new Uint8Array(width));items.clear();let stack=[[1,1]];maze[1][1]=0;
 while(stack.length){let [x,y]=stack[stack.length-1];let options=[];for(let [dx,dy] of DIRS){let nx=x+dx*2,ny=y+dy*2;if(nx>0&&ny>0&&nx<width-1&&ny<height-1&&maze[ny][nx])options.push([dx,dy,nx,ny])}if(!options.length){stack.pop();continue}let [dx,dy,nx,ny]=options[Math.floor(rnd()*options.length)];maze[y+dy][x+dx]=0;maze[ny][nx]=0;stack.push([nx,ny]);}
 // Extra shortcuts make exploration less linear while preserving full connectivity.
 for(let i=0;i<Math.floor(width*height*.075);i++){let x=2+Math.floor(rnd()*(width-4)),y=2+Math.floor(rnd()*(height-4));if(x%2===0&&y%2===1&&isFloor(x-1,y)&&isFloor(x+1,y))maze[y][x]=0;else if(y%2===0&&x%2===1&&isFloor(x,y-1)&&isFloor(x,y+1))maze[y][x]=0;}
@@ -1147,16 +1160,7 @@ function step(dx,dy){
  }
  if(boss&&nx===boss.x&&ny===boss.y){takeDamage('¡EL GUARDIÁN BLOQUEA EL PASO!');return}
  player.x=nx;player.y=ny;reveal();
- const sector=Math.floor(nx/(width/3))+3*Math.floor(ny/(height/3));
- if(sector!==landmarkSector&&!bossArenaMode){
-  landmarkSector=sector;
-  const names=labyrinthType==='golem'?['Jardín hundido','Patio de raíces','Ruinas del pantano']:labyrinthType==='specter'?['Galería de ecos','Cripta de los velos','Patio de las almas']:['Archivo arcano','Patio de los sellos','Galería de cristal'];
-  $('sectorName').textContent=names[(sector%3+3)%3];
- }
- if(!activeChamber&&!bossArenaMode&&(nx+ny)%4===0){
-  const nearby=chambers.find(c=>!c.done&&Math.abs(c.x-nx)+Math.abs(c.y-ny)<9);
-  if(nearby){$('sectorName').textContent+=' · ✦ Sala cercana'}
- }const k=id(nx,ny);
+ const k=id(nx,ny);
  if((nx+ny)%3===0)beep(labyrinthType==='specter'?120:85,.025,'triangle');
  if(items.has(k)){
   let item=items.get(k);
